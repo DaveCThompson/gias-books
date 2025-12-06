@@ -245,6 +245,22 @@ Page backgrounds use mood-specific gradients:
 
 ---
 
+## Inline Code Styling
+
+For `[code]text[/code]` DSL tags, use the `.inlineCode` pattern:
+
+```css
+.inlineCode {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.9em;
+  background: var(--color-surface);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+}
+```
+
+This styling is used in both `ExpressiveTextPreview.tsx` (Studio) and `InteractiveText.tsx` (Viewer).
+
 ## Common Patterns
 
 ### Focus Ring Safe Zone

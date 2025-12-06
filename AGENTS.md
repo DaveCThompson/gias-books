@@ -58,6 +58,7 @@ gia-workspace/
 5. **Keep shared dependencies aligned** – both apps should use same versions
 6. **Check contrast** – primary buttons need white text (`--color-neutral-000`) on blue bg
 7. **Import types from `@gia/schemas`** – not local type files
+8. **Prefix unused params with `_`** – eslint ignores `_prefixed` vars
 
 ---
 
@@ -70,6 +71,9 @@ gia-workspace/
 | `packages/utils/src/index.ts` | Shared utilities (`cn()`) |
 | `apps/studio/src/utils/dslConverter.ts` | DSL ↔ HTML for TipTap |
 | `apps/studio/src/utils/fileIO.ts` | Book CRUD via API |
+| `apps/studio/src/components/Preview/PagePreview.tsx` | WYSIWYG page preview (mood, mask, text) |
+| `apps/studio/src/components/Preview/ExpressiveTextPreview.tsx` | DSL text parser for preview |
+| `apps/viewer/src/features/BookReader/InteractiveText.tsx` | DSL text parser for viewer |
 
 ---
 
@@ -98,19 +102,26 @@ interface BookData {
 
 ### DSL Format (Critical)
 
-Text content uses a custom DSL for expressive and interactive text:
+Text content uses a custom DSL for formatting:
 
 ```
+# Standard formatting
+[b]bold[/b]  [i]italic[/i]  [u]underline[/u]  [s]strike[/s]  [code]code[/code]
+
+# Expressive styles
 [expressive:handwritten]styled text[/expressive]
 [expressive:shout]LOUD TEXT[/expressive]
 [expressive:bully]mean text[/expressive]
+
+# Interactive words (with tooltip)
 [interactive:tooltip text]word[/interactive]
 ```
 
-**Viewer** parses this via `InteractiveText.tsx` regex.
-**Studio** converts via `dslConverter.ts`:
-- `dslToHtml()` → TipTap HTML with `data-expressive` and `data-style` attributes
-- `htmlToDsl()` → Back to DSL for saving
+**Nested tags ARE supported**: `[b][u]bold underline[/u][/b]`
+
+**Viewer** parses via `InteractiveText.tsx` (recursive parser).
+**Studio** preview uses `ExpressiveTextPreview.tsx` (recursive parser).
+**Converter** `dslConverter.ts` handles TipTap HTML ↔ DSL.
 
 ### IllustrationData Handling
 

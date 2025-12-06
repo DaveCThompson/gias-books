@@ -64,6 +64,15 @@
   --duration-fade: 200ms;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
+  /* Animation Durations */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+
+  /* Animation Easings */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
   /* Z-Index Layers */
   --z-library: 1;
   --z-lobby-backdrop: 100;
@@ -91,6 +100,9 @@
   /* Expressive Text (for rich text preview) */
   --color-expressive-handwritten: var(--color-interactive);
   --color-expressive-bully: var(--color-expressive-red);
+
+  /* Text Overlay (for fullbleed layouts) */
+  --color-text-overlay-bg: oklch(100% 0 0 / 0.85);
 }
 
 /* Dark Theme Override */
@@ -134,4 +146,7 @@
   /* Expressive Text (dark mode) */
   --color-expressive-handwritten: var(--color-interactive);
   --color-expressive-bully: oklch(65% 0.18 20);
+
+  /* Text Overlay (dark mode) */
+  --color-text-overlay-bg: oklch(15% 0 0 / 0.9);
 }

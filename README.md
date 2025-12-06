@@ -36,6 +36,19 @@ npm run build  # Production build both apps
 npm run dev    # Viewer on :3000, Studio on :3001
 ```
 
+## ✅ Pre-Development Checklist
+
+Before starting development, verify everything works:
+
+```bash
+npm install           # 1. Install dependencies
+npm run lint          # 2. Should show 0 errors, 0 warnings
+npm run build         # 3. Should complete successfully  
+npm run dev           # 4. Viewer at :3000, Studio at :3001
+```
+
+> **Note**: If `npm run dev` shows a port conflict, one app is already running. Use `--workspace` to run individually.
+
 ### Running Apps Individually
 
 **Viewer** (port 3000):
@@ -61,7 +74,7 @@ npm run dev --workspace=gia-studio
 | `@gia/schemas` | Zod schemas, TypeScript types | Both apps |
 | `@gia/design-system` | Shared CSS tokens, fonts, reset | Both apps |
 | `@gia/content` | Book data.json + validation | Both apps |
-| `@gia/utils` | Shared utilities (`cn()`) | Both apps |
+| `@gia/utils` | Shared utilities (`cn()`, `EASING`, `DURATION`) | Both apps |
 
 ---
 
