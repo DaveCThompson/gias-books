@@ -1,0 +1,38 @@
+{
+  "name": "gia-studio",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@gia/content": "*",
+    "@gia/design-system": "*",
+    "@gia/schemas": "*",
+    "@gia/utils": "*",
+    "@phosphor-icons/react": "^2.1.10",
+    "@tiptap/extension-underline": "^3.12.1",
+    "@tiptap/react": "^3.12.1",
+    "@tiptap/starter-kit": "^3.12.1",
+    "next": "^15.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^5.0.9"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
+    "@next/eslint-plugin-next": "^16.0.7",
+    "@types/node": "^20",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "eslint": "8.57.1",
+    "eslint-config-next": "^15.1.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "typescript": "^5",
+    "typescript-eslint": "^8.48.1"
+  }
+}

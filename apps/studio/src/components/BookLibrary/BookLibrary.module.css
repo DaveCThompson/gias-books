@@ -1,0 +1,161 @@
+.container {
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.75rem;
+}
+
+.newButton {
+    padding: 0.75rem 1.5rem;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.newButton:hover {
+    opacity: 0.9;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    font-size: 1.25rem;
+    color: var(--color-text-subtle);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card);
+}
+
+.cardCover {
+    height: 160px;
+    background: linear-gradient(135deg, var(--color-primary), oklch(50% 0.25 290));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.emoji {
+    font-size: 4rem;
+}
+
+.cardInfo {
+    padding: 1rem;
+}
+
+.cardInfo h2 {
+    margin: 0 0 0.25rem;
+    font-size: 1.125rem;
+}
+
+.cardInfo p {
+    margin: 0 0 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-subtle);
+}
+
+.pageCount {
+    font-size: 0.75rem;
+    color: var(--color-text-subtle);
+}
+
+/* Modal */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: oklch(0% 0 0 / 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal {
+    background: var(--color-bg);
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 400px;
+    max-width: 90vw;
+}
+
+.modal h2 {
+    margin: 0 0 1.5rem;
+}
+
+.field {
+    margin-bottom: 1rem;
+}
+
+.field label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-subtle);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+}
+
+.field input {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-bg);
+    color: var(--color-text);
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.modalActions button {
+    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-bg);
+    cursor: pointer;
+}
+
+.primaryButton {
+    background: var(--color-primary) !important;
+    color: var(--color-primary-contrast) !important;
+    border-color: var(--color-primary) !important;
+}

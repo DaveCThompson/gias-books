@@ -1,0 +1,48 @@
+@import '@gia/design-system';
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap');
+
+:root {
+  /* Aliases for Studio CSS modules (maps to design-system canonical names) */
+  --color-bg: var(--color-background);
+  --color-primary: var(--color-interactive);
+  --color-primary-contrast: var(--color-neutral-000);
+  --color-danger-contrast: var(--color-neutral-000);
+  --color-interactive-link: oklch(45% 0.15 260);
+
+  /* Studio-specific shadows */
+  --shadow-modal: 0 20px 60px oklch(0% 0 0 / 0.3);
+}
+
+/* Dark Theme Override */
+:root[data-theme='dark'] {
+  /* Aliases for dark mode */
+  --color-bg: var(--color-background);
+  --color-primary: var(--color-interactive);
+  --color-primary-contrast: var(--color-neutral-000);
+  --color-danger-contrast: var(--color-neutral-000);
+  --color-interactive-link: oklch(70% 0.1 260);
+
+  /* Studio-specific shadows (dark mode) */
+  --shadow-modal: 0 20px 60px oklch(0% 0 0 / 0.6);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-background);
+  color: var(--color-text);
+  margin: 0;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* TipTap editor base styles */
+.ProseMirror {
+  outline: none;
+}
+
+.ProseMirror p {
+  margin: 0 0 0.5em;
+}

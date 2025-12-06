@@ -1,0 +1,60 @@
+/* src/features/BookReader/components/ParallaxIllustration.module.css */
+
+.parallaxContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.layer {
+    position: absolute;
+    inset: 0;
+    object-fit: cover;
+    transition: transform 0.3s ease-out;
+}
+
+.layerBg {
+    composes: layer;
+    z-index: 1;
+    /* Background moves slowest - subtle parallax */
+    transform: scale(1.05);
+}
+
+.layerMid {
+    composes: layer;
+    z-index: 2;
+    /* Midground moves at medium speed */
+    transform: scale(1.1);
+}
+
+.layerFg {
+    composes: layer;
+    z-index: 3;
+    /* Foreground moves fastest - most parallax */
+    transform: scale(1.15);
+}
+
+/* Scroll-based parallax (to be triggered via JS) */
+.parallaxContainer[data-scroll] .layerBg {
+    transform: translateY(calc(var(--scroll-offset, 0) * -0.1)) scale(1.05);
+}
+
+.parallaxContainer[data-scroll] .layerMid {
+    transform: translateY(calc(var(--scroll-offset, 0) * -0.2)) scale(1.1);
+}
+
+.parallaxContainer[data-scroll] .layerFg {
+    transform: translateY(calc(var(--scroll-offset, 0) * -0.3)) scale(1.15);
+}
+
+/* Simple illustration (no parallax) */
+.simpleContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.simpleImage {
+    object-fit: cover;
+}

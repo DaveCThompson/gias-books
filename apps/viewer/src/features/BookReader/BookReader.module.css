@@ -1,0 +1,40 @@
+/* src/features/BookReader/BookReader.module.css */
+
+.bookReaderContainer {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+  /* background-color: var(--color-background); <-- REMOVE THIS so layers show */
+  background-color: transparent;
+  transition: background-color 0.5s ease;
+}
+
+/* 
+  Container for the actual page content.
+  Must be absolute + inset 0 for 'popLayout' transitions so pages can overlap.
+*/
+.pageWrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Ensure it captures clicks/touches */
+  touch-action: pan-y;
+  /* Allow vertical scroll/drag but block horizontal browser nav if needed */
+  will-change: transform;
+  z-index: 2;
+  /* Above mood layers */
+}
+
+.moodLayer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.2s linear;
+  /* Smooth micro-adjustments */
+}

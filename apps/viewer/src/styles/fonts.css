@@ -1,0 +1,9 @@
+/* src/styles/fonts.css */
+
+/*
+  We are importing fonts from Google Fonts:
+  - Nunito: A well-rounded, friendly sans-serif for body text.
+  - Balsamiq Sans: A playful, slightly quirky font for expressive/display text.
+  - Gochi Hand: A handwritten, personal-feeling font for emphasis.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Gochi+Hand&family=Nunito:wght@400;700&display=swap');

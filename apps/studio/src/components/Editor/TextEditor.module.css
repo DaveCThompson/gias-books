@@ -1,0 +1,118 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--color-surface);
+  border-radius: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.toolbar button,
+.toolbar select {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+  background: var(--color-bg);
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+.toolbar button:hover {
+  background: var(--color-surface-hover);
+}
+
+.toolbar button.active {
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  border-color: var(--color-primary);
+}
+
+.divider {
+  width: 1px;
+  background: var(--color-border);
+  margin: 0 0.5rem;
+}
+
+.editor {
+  min-height: 200px;
+  padding: 1rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  line-height: 1.8;
+}
+
+.editor :global([data-expressive][data-style="handwritten"]) {
+  font-family: 'Caveat', cursive;
+  font-size: 1.4em;
+  color: var(--color-expressive-handwritten);
+}
+
+.editor :global([data-expressive][data-style="shout"]) {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.editor :global([data-expressive][data-style="bully"]) {
+  font-weight: bold;
+  color: var(--color-expressive-bully);
+  font-style: italic;
+}
+
+.editor :global([data-interactive]) {
+  color: var(--color-interactive-link);
+  border-bottom: 2px dotted var(--color-interactive-link);
+  cursor: help;
+}
+
+/* Disabled button state */
+.toolbar button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.toolbar button:disabled:hover {
+  background: var(--color-bg);
+}
+
+/* Mood Preview Styles - uses gradient vars from globals.css */
+.mood-calm .editor {
+  background: var(--gradient-calm);
+}
+
+.mood-tense .editor {
+  background: var(--gradient-tense);
+}
+
+.mood-joyful .editor {
+  background: var(--gradient-joyful);
+}
+
+/* Mood Badge */
+.moodBadge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--color-surface);
+  border-radius: 1rem;
+  color: var(--color-text-subtle);
+  text-transform: capitalize;
+}
+
+/* Make container relative for badge positioning */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+}

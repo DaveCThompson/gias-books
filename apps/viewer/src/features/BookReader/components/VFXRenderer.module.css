@@ -1,0 +1,144 @@
+/* src/features/BookReader/components/VFXRenderer.module.css */
+
+.vfxContainer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 10;
+}
+
+/* Sparkle Effect */
+.sparkleContainer {
+    position: absolute;
+    inset: 0;
+}
+
+.sparkle {
+    position: absolute;
+    font-size: 1.5rem;
+    animation: sparkleFloat 2s ease-in-out infinite;
+    opacity: 0;
+}
+
+@keyframes sparkleFloat {
+    0% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+    }
+
+    25% {
+        opacity: 1;
+        transform: scale(1) rotate(90deg);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2) rotate(180deg);
+    }
+
+    75% {
+        opacity: 0.5;
+        transform: scale(0.8) rotate(270deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0) rotate(360deg);
+    }
+}
+
+/* Fade Effect */
+.fadeOverlay {
+    position: absolute;
+    inset: 0;
+    background: oklch(0% 0 0 / 0);
+    transition: background 0.6s ease-in-out;
+}
+
+.fadeIn {
+    background: oklch(0% 0 0 / 0);
+    animation: fadeInAnim 0.6s ease-out forwards;
+}
+
+.fadeOut {
+    animation: fadeOutAnim 0.6s ease-in forwards;
+}
+
+@keyframes fadeInAnim {
+    from {
+        background: oklch(100% 0 0 / 0.8);
+    }
+
+    to {
+        background: oklch(0% 0 0 / 0);
+    }
+}
+
+@keyframes fadeOutAnim {
+    from {
+        background: oklch(0% 0 0 / 0);
+    }
+
+    to {
+        background: oklch(100% 0 0 / 0.8);
+    }
+}
+
+/* Dark mode flash variants - use dark flash instead of white */
+:global([data-theme='dark']) .fadeIn {
+    animation: fadeInAnimDark 0.6s ease-out forwards;
+}
+
+:global([data-theme='dark']) .fadeOut {
+    animation: fadeOutAnimDark 0.6s ease-in forwards;
+}
+
+@keyframes fadeInAnimDark {
+    from {
+        background: oklch(15% 0 0 / 0.9);
+    }
+
+    to {
+        background: oklch(0% 0 0 / 0);
+    }
+}
+
+@keyframes fadeOutAnimDark {
+    from {
+        background: oklch(0% 0 0 / 0);
+    }
+
+    to {
+        background: oklch(15% 0 0 / 0.9);
+    }
+}
+
+/* Slide Effect */
+.slideOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right,
+            oklch(95% 0.01 250 / 0.9),
+            oklch(95% 0.01 250 / 0));
+    transform: translateX(-100%);
+    transition: transform 0.5s ease-out;
+}
+
+.slideIn {
+    animation: slideInAnim 0.8s ease-out forwards;
+}
+
+@keyframes slideInAnim {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    50% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}

@@ -1,0 +1,147 @@
+/* src/features/BookReader/Page.module.css */
+
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.imageContainer {
+  position: relative;
+  width: 80%;
+  max-width: 400px;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 2rem;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+.imageFill {
+  object-fit: cover;
+}
+
+.text {
+  font-size: 1.5rem;
+  line-height: 1.6;
+  text-align: center;
+  max-width: 600px;
+  color: var(--color-text);
+  white-space: pre-wrap;
+}
+
+/* Style for interactive words to give a visual hint */
+.interactiveWord {
+  font-family: var(--font-display);
+  font-weight: bold;
+  color: var(--color-interactive);
+  cursor: help;
+  border-bottom: 2px dotted var(--color-interactive-underline);
+}
+
+/* Styles for our expressive typography library */
+.expressiveDefault,
+.expressiveShout,
+.expressiveBully,
+.expressiveHandwritten {
+  display: inline-block;
+}
+
+.expressiveShout {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.2em;
+  transform: translateY(-2px);
+}
+
+.expressiveBully {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-expressive-bully);
+  transform: skew(-5deg) scale(1.05);
+}
+
+.expressiveHandwritten {
+  font-family: var(--font-handwritten);
+  font-size: 1.3em;
+  color: var(--color-interactive);
+}
+
+/* Styles for the Radix UI Tooltip */
+.tooltipContent {
+  border-radius: 6px;
+  padding: 10px 15px;
+  font-size: 15px;
+  line-height: 1;
+  font-family: var(--font-body);
+  color: var(--color-tooltip-text);
+  background-color: var(--color-tooltip-background);
+  box-shadow: var(--shadow-card);
+  user-select: none;
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+  max-width: 250px;
+  text-align: center;
+}
+
+.tooltipArrow {
+  fill: var(--color-tooltip-background);
+}
+
+/* Layout Variations */
+.layoutSplit {
+  /* Default layout - image and text stacked */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.layoutFullbleed {
+  /* Full-bleed image with text overlay */
+  position: relative;
+}
+
+.layoutFullbleed .imageContainer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  aspect-ratio: auto;
+  z-index: 1;
+}
+
+.layoutFullbleed .text {
+  position: relative;
+  z-index: 2;
+  background: var(--color-text-overlay-bg);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  max-width: 80%;
+}
+
+.layoutTextOnly {
+  /* Text only - no image */
+  justify-content: center;
+}
+
+.layoutTextOnly .text {
+  font-size: 1.75rem;
+  max-width: 700px;
+}
+
+/* Inline code styling */
+.inlineCode {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.9em;
+  background: var(--color-surface);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+}

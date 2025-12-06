@@ -1,0 +1,97 @@
+/* PagePreview.module.css */
+/* Mirrors the Viewer's Page layout for WYSIWYG editing */
+
+.previewContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    overflow: hidden;
+    border-radius: 0.5rem;
+}
+
+/* Mood gradient background - matches viewer's mood system */
+.moodLayer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    transition: background 0.3s ease;
+}
+
+/* Mood-specific gradients using semantic variables from design-system */
+.previewContainer[data-mood='calm'] .moodLayer {
+    background: var(--gradient-calm);
+}
+
+.previewContainer[data-mood='tense'] .moodLayer {
+    background: var(--gradient-tense);
+}
+
+.previewContainer[data-mood='joyful'] .moodLayer {
+    background: var(--gradient-joyful);
+}
+
+/* Illustration container */
+.illustrationContainer {
+    position: relative;
+    z-index: 1;
+    width: 70%;
+    max-width: 280px;
+    aspect-ratio: 4 / 3;
+    margin-bottom: 1rem;
+    /* Mask properties applied via inline style */
+}
+
+.illustration {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Text content */
+.textContainer {
+    position: relative;
+    z-index: 1;
+    max-width: 90%;
+    padding: 0 1rem;
+}
+
+.text {
+    font-size: 1rem;
+    line-height: 1.5;
+    text-align: center;
+    color: var(--color-text);
+    white-space: pre-wrap;
+    margin: 0;
+    /* Limit lines shown in preview */
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* No illustration state */
+.noIllustration {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-subtle);
+    z-index: 1;
+}
+
+.noIllustration span {
+    font-size: 2rem;
+    opacity: 0.4;
+}
+
+.noIllustration p {
+    margin: 0;
+    font-size: 0.875rem;
+}

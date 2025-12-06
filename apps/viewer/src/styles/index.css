@@ -1,0 +1,35 @@
+/* src/styles/index.css */
+
+/* 
+  The Manifest
+  This file serves as the entry point for all global styles.
+  It imports modules in a specific order to ensure correct cascading.
+*/
+
+/* 1-4. Design System (fonts, variables, reset, typography) */
+@import '@gia/design-system';
+
+
+/* 5. View Transitions API Configuration */
+::view-transition-old(book-cover-*),
+::view-transition-new(book-cover-*) {
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  /* ease-out-expo */
+}
+
+/* Backdrop fade */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 300ms;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

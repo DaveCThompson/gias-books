@@ -1,0 +1,48 @@
+/* ExpressiveTextPreview.module.css */
+/* Styles for DSL expressive text rendering in editor preview */
+
+/* Default expressive style */
+.expressiveDefault {
+    display: inline;
+}
+
+/* Shout - bold, larger text */
+.expressiveShout {
+    display: inline;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.2em;
+}
+
+/* Bully - aggressive red styling */
+.expressiveBully {
+    display: inline;
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--color-expressive-bully);
+    font-style: italic;
+}
+
+/* Handwritten - cursive blue styling */
+.expressiveHandwritten {
+    display: inline;
+    font-family: var(--font-handwritten);
+    font-size: 1.3em;
+    color: var(--color-interactive);
+}
+
+/* Interactive words - subtle highlight in preview */
+.interactiveWord {
+    display: inline;
+    color: var(--color-interactive);
+    border-bottom: 1px dotted var(--color-interactive);
+}
+
+/* Inline code */
+.inlineCode {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.9em;
+    background: var(--color-surface);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+}

@@ -1,0 +1,17 @@
+<!-- public/madoodle-logo.svg -->
+<svg width="250" height="60" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .logo-text {
+      font-family: 'Balsamiq Sans', cursive;
+      font-size: 48px;
+      font-weight: 700;
+      fill: #222;
+    }
+    @media (prefers-color-scheme: dark) {
+      .logo-text {
+        fill: #eee;
+      }
+    }
+  </style>
+  <text x="0" y="45" class="logo-text">Madoodle</text>
+</svg>

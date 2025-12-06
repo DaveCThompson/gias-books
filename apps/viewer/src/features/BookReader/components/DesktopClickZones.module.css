@@ -1,0 +1,77 @@
+.zone {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 15%;
+    /* Covers 15% of the screen on each side */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 50;
+    /* Above page content, below UI overlays */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    /* Ensure clicks pass through if disabled? No, we want to block clicks if disabled but maybe not show pointer */
+}
+
+.zone:hover:not(:disabled) {
+    background: oklch(0% 0 0 / 0.03);
+    /* Very subtle hover tint */
+}
+
+.leftZone {
+    left: 0;
+}
+
+.rightZone {
+    right: 0;
+}
+
+.disabled {
+    cursor: default;
+    pointer-events: none;
+}
+
+.indicator {
+    opacity: 0;
+    transform: translateX(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    background: var(--color-button-background);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-card);
+}
+
+.zone:hover:not(:disabled) .indicator {
+    opacity: 1;
+}
+
+.leftZone:hover .indicator {
+    transform: translateX(-10px);
+}
+
+.rightZone:hover .indicator {
+    transform: translateX(10px);
+}
+
+.arrow {
+    font-size: 24px;
+    color: var(--color-button-text);
+    font-weight: bold;
+}
+
+/* Hide on touch devices to prevent conflict with gestures */
+@media (hover: none) {
+    .zone {
+        display: none;
+    }
+}

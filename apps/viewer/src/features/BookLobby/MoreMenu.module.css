@@ -1,0 +1,46 @@
+/* src/features/BookLobby/MoreMenu.module.css */
+
+.trigger {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--color-text);
+    cursor: pointer;
+    padding: 0.5rem;
+    line-height: 1;
+    transition: opacity 0.2s;
+}
+
+.trigger:hover {
+    opacity: 0.7;
+}
+
+.menuContent {
+    background: var(--color-background);
+    border-radius: 8px;
+    padding: 4px;
+    box-shadow: 0 10px 38px -10px oklch(0% 0 0 / 0.35), 0 10px 20px -15px oklch(0% 0 0 / 0.2);
+    border: 1px solid var(--color-button-border);
+    z-index: 120;
+    min-width: 150px;
+}
+
+.menuItem {
+    all: unset;
+    display: block;
+    padding: 0.75rem 1rem;
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.menuItem:hover {
+    background-color: var(--color-button-background-hover);
+}
+
+.menuItem:focus {
+    background-color: var(--color-button-background-hover);
+}

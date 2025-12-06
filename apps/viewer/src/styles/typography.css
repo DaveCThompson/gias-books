@@ -1,0 +1,9 @@
+/* src/styles/typography.css */
+
+/* Base Body Styles & Typography */
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    transition: background-color 0.2s, color 0.2s;
+}
