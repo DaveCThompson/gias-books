@@ -7,8 +7,10 @@ Guidelines for AI agents working on the Madoodle monorepo.
 ## Project Purpose
 
 **Madoodle** is a high-craft, mobile-first interactive storybook platform:
-- **Viewer** (`apps/viewer`): Next.js 15 Pages Router – renders books for reading
-- **Studio** (`apps/studio`): Next.js 16 App Router – WYSIWYG editor for authoring
+- **Viewer** (`apps/viewer`): Next.js 15 Pages Router – renders books for reading  
+  *Package name: `gias-books`*
+- **Studio** (`apps/studio`): Next.js 15 App Router – WYSIWYG editor for authoring  
+  *Package name: `gia-studio`*
 
 ---
 
@@ -24,6 +26,12 @@ gia-workspace/
     ├── design-system/ @gia/design-system – Shared CSS tokens
     ├── content/       @gia/content – Book data
     └── utils/         @gia/utils – Shared utilities (cn, EASING, DURATION)
+
+### Key Libraries
+- **Framer Motion** (as `motion@^12.0.0`) - Page transitions, gestures
+- **@use-gesture/react** - Touch/drag gesture handling
+- **Howler.js** - Unified audio playback
+- **Radix UI** - Accessible component primitives
 ```
 
 ### State Management
@@ -81,6 +89,8 @@ gia-workspace/
 | `apps/studio/src/components/Preview/PagePreview.tsx` | WYSIWYG page preview (mood, mask, text) |
 | `apps/studio/src/components/Preview/ExpressiveTextPreview.tsx` | DSL text parser for preview |
 | `apps/viewer/src/features/BookReader/InteractiveText.tsx` | DSL text parser for viewer |
+| `apps/viewer/src/features/BookReader/components/PageCarousel.tsx` | 3-page carousel with spring physics |
+| `apps/viewer/src/features/BookReader/BookReader.tsx` | Main reader component |
 
 ---
 
@@ -94,7 +104,7 @@ interface PageData {
   pageNumber: number;
   text: string;
   illustration?: IllustrationData;
-  mood?: 'calm' | 'tense' | 'joyful';
+  mood?: 'calm' | 'whimsical' | 'playful' | 'mysterious' | 'adventurous' | 'cozy' | 'dreamy' | 'spooky' | 'tense' | 'joyful';
   effects?: EffectData[];
   layout?: 'fullbleed' | 'split' | 'textOnly';
 }
@@ -123,6 +133,8 @@ Text content uses a custom DSL for formatting:
 # Interactive words (with tooltip)
 [interactive:tooltip text]word[/interactive]
 ```
+
+> **Important**: Interactive words display tooltips on click/hover. They do NOT trigger navigation.
 
 **Nested tags ARE supported**: `[b][u]bold underline[/u][/b]`
 

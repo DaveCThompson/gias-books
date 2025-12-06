@@ -227,20 +227,34 @@ import styles from './Button.module.css';
 
 ## Mood Gradients
 
-Page backgrounds use mood-specific gradients:
+Page backgrounds use mood-specific gradients defined as CSS variables:
 
 | Mood | Hue | Light L | Dark L |
 |------|-----|---------|--------|
-| `calm` | 220-230 (blue) | 85-90% | 25-30% |
-| `tense` | 25-30 (red) | 75-85% | 28-35% |
-| `joyful` | 85-95 (yellow) | 88-92% | 32-38% |
+| `calm` | 200-220 (blue) | 85-90% | 25-30% |
+| `whimsical` | 280-320 (purple/pink) | 75-85% | 22-30% |
+| `playful` | 50-80 (yellow/orange) | 82-88% | 28-35% |
+| `mysterious` | 260-280 (deep purple) | 40-50% | 12-18% |
+| `adventurous` | 30-45 (orange) | 60-70% | 22-28% |
+| `cozy` | 40-60 (warm orange) | 75-80% | 25-30% |
+| `dreamy` | 300-320 (magenta) | 80-85% | 22-28% |
+| `spooky` | 260-280 (dark purple) | 35-45% | 8-12% |
+| `tense` | 25-30 (red) | 75-85% | 22-30% |
+| `joyful` | 85-95 (yellow) | 88-92% | 26-32% |
 
 ```css
-:root {
-  --gradient-calm: linear-gradient(180deg, oklch(90% 0.03 220) 0%, oklch(85% 0.05 230) 100%);
-  --gradient-tense: linear-gradient(180deg, oklch(85% 0.1 30) 0%, oklch(75% 0.15 25) 100%);
-  --gradient-joyful: linear-gradient(180deg, oklch(92% 0.1 95) 0%, oklch(88% 0.12 85) 100%);
-}
+/* Light theme example */
+--gradient-calm: linear-gradient(135deg, oklch(90% 0.08 220), oklch(85% 0.06 200));
+--gradient-whimsical: linear-gradient(135deg, oklch(85% 0.15 320), oklch(75% 0.12 280));
+
+/* Dark theme - reduced L values */
+--gradient-calm: linear-gradient(135deg, oklch(30% 0.06 220), oklch(25% 0.04 200));
+--gradient-whimsical: linear-gradient(135deg, oklch(30% 0.12 320), oklch(22% 0.10 280));
+```
+
+**Usage in components** (via CSS variables):
+```tsx
+const getGradient = (mood: string) => `var(--gradient-${mood})` || 'var(--gradient-calm)';
 ```
 
 ---

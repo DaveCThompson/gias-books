@@ -79,8 +79,15 @@
   --z-lobby-modal: 110;
   --z-lobby-menu: 120;
 
-  /* Mood Gradients */
-  --gradient-calm: linear-gradient(180deg, oklch(90% 0.03 220) 0%, oklch(85% 0.05 230) 100%);
+  /* Mood Gradients - Light Theme (bright, vibrant) */
+  --gradient-calm: linear-gradient(135deg, oklch(90% 0.08 220) 0%, oklch(85% 0.06 200) 100%);
+  --gradient-whimsical: linear-gradient(135deg, oklch(85% 0.15 320) 0%, oklch(75% 0.12 280) 100%);
+  --gradient-playful: linear-gradient(135deg, oklch(88% 0.18 80) 0%, oklch(82% 0.15 50) 100%);
+  --gradient-mysterious: linear-gradient(135deg, oklch(50% 0.12 280) 0%, oklch(40% 0.10 260) 100%);
+  --gradient-adventurous: linear-gradient(135deg, oklch(70% 0.15 30) 0%, oklch(60% 0.18 45) 100%);
+  --gradient-cozy: linear-gradient(135deg, oklch(80% 0.10 60) 0%, oklch(75% 0.08 40) 100%);
+  --gradient-dreamy: linear-gradient(135deg, oklch(85% 0.12 300) 0%, oklch(80% 0.10 320) 100%);
+  --gradient-spooky: linear-gradient(135deg, oklch(45% 0.08 280) 0%, oklch(35% 0.06 260) 100%);
   --gradient-tense: linear-gradient(180deg, oklch(85% 0.1 30) 0%, oklch(75% 0.15 25) 100%);
   --gradient-joyful: linear-gradient(180deg, oklch(92% 0.1 95) 0%, oklch(88% 0.12 85) 100%);
 
@@ -125,10 +132,17 @@
   --shadow-card: 0 8px 24px oklch(0% 0 0 / 0.4);
   --shadow-card-hover: 0 12px 32px oklch(0% 0 0 / 0.5);
 
-  /* Mood Gradients: reduced L values for dark mode */
-  --gradient-calm: linear-gradient(180deg, oklch(30% 0.03 220) 0%, oklch(25% 0.05 230) 100%);
-  --gradient-tense: linear-gradient(180deg, oklch(35% 0.1 30) 0%, oklch(28% 0.15 25) 100%);
-  --gradient-joyful: linear-gradient(180deg, oklch(38% 0.1 95) 0%, oklch(32% 0.12 85) 100%);
+  /* Mood Gradients - Dark Theme (darker, muted) */
+  --gradient-calm: linear-gradient(135deg, oklch(30% 0.06 220) 0%, oklch(25% 0.04 200) 100%);
+  --gradient-whimsical: linear-gradient(135deg, oklch(30% 0.12 320) 0%, oklch(22% 0.10 280) 100%);
+  --gradient-playful: linear-gradient(135deg, oklch(35% 0.14 80) 0%, oklch(28% 0.12 50) 100%);
+  --gradient-mysterious: linear-gradient(135deg, oklch(18% 0.10 280) 0%, oklch(12% 0.08 260) 100%);
+  --gradient-adventurous: linear-gradient(135deg, oklch(28% 0.12 30) 0%, oklch(22% 0.14 45) 100%);
+  --gradient-cozy: linear-gradient(135deg, oklch(30% 0.08 60) 0%, oklch(25% 0.06 40) 100%);
+  --gradient-dreamy: linear-gradient(135deg, oklch(28% 0.10 300) 0%, oklch(22% 0.08 320) 100%);
+  --gradient-spooky: linear-gradient(135deg, oklch(12% 0.06 280) 0%, oklch(8% 0.04 260) 100%);
+  --gradient-tense: linear-gradient(180deg, oklch(30% 0.08 30) 0%, oklch(22% 0.12 25) 100%);
+  --gradient-joyful: linear-gradient(180deg, oklch(32% 0.08 95) 0%, oklch(26% 0.10 85) 100%);
 
   /* Surface Colors (dark mode) */
   --color-surface: var(--color-neutral-800);

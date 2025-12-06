@@ -35,6 +35,5 @@
   height: 100%;
   pointer-events: none;
   z-index: 0;
-  transition: opacity 0.2s linear;
-  /* Smooth micro-adjustments */
+  transition: background 0.4s ease-out;
 }

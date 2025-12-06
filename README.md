@@ -10,7 +10,7 @@ A **Turborepo monorepo** containing the Madoodle platform: an interactive storyb
 gia-workspace/
 ├── apps/
 │   ├── viewer/       Next.js 15 – Pages Router (SSG/SSR for dev)
-│   └── studio/       Next.js 16 – App Router (WYSIWYG editor)
+│   └── studio/       Next.js 15 – App Router (WYSIWYG editor)
 ├── packages/
 │   ├── schemas/      Zod schemas + TypeScript types
 │   ├── design-system/  Shared CSS variables + tokens
@@ -51,10 +51,11 @@ npm run dev           # 4. Viewer at :3000, Studio at :3001
 
 ### Running Apps Individually
 
-**Viewer** (port 3000):
+**Viewer** (port 3000, or next available):
 ```bash
+# Note: Package name is 'gias-books' but directory is apps/viewer
 npm run dev --workspace=gias-books
-# Access at http://localhost:3000
+# Access at http://localhost:3000 (or 3002, 3003 if busy)
 ```
 
 **Studio** (port 3001 - auto-assigned):
@@ -63,7 +64,7 @@ npm run dev --workspace=gia-studio
 # Access at http://localhost:3001
 ```
 
-> **💡 Tip**: Studio automatically uses port 3001 when viewer is running. If you see a "lock" error, that app is already running.
+> **💡 Tip**: Studio automatically uses port 3001 when viewer is running. If you see a "lock" error, that app is already running. If port 3000 is busy, the viewer will auto-increment to 3002, 3003, etc.
 
 ---
 
@@ -105,6 +106,7 @@ npm run dev --workspace=gia-studio
 - **Styling**: CSS Modules + oklch color space (see [CSS-PRINCIPLES.md](./CSS-PRINCIPLES.md))
 - **Validation**: Zod schemas in shared package
 - **Build**: Turborepo for caching + parallel builds
+- **Page Transitions**: 3-page carousel with spring physics + gesture support
 
 ---
 

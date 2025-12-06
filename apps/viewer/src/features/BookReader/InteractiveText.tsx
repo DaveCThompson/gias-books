@@ -63,7 +63,7 @@ function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
       case 'interactive':
         elements.push(
           <Tooltip.Root key={key}>
-            <Tooltip.Trigger asChild>
+            <Tooltip.Trigger asChild onClick={(e) => e.stopPropagation()}>
               <span className={styles.interactiveWord}>{innerContent}</span>
             </Tooltip.Trigger>
             <Tooltip.Portal>
