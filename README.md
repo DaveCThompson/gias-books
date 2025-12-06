@@ -9,13 +9,14 @@ A **Turborepo monorepo** containing the Madoodle platform: an interactive storyb
 ```
 gia-workspace/
 ├── apps/
-│   ├── viewer/       Next.js 15.1.0 – Pages Router (SSG/SSR for dev)
-│   └── studio/       Next.js 15.1.0 – App Router (WYSIWYG editor)
+│   ├── viewer/       Next.js 15 – Pages Router (SSG/SSR for dev)
+│   └── studio/       Next.js 16 – App Router (WYSIWYG editor)
 ├── packages/
 │   ├── schemas/      Zod schemas + TypeScript types
-│   ├── design-system/  Shared CSS variables
-│   └── content/      Book content (data.json + assets)
-├── turbo.json        Turborepo pipeline config
+│   ├── design-system/  Shared CSS variables + tokens
+│   ├── content/      Book content (data.json + assets)
+│   └── utils/        Shared utilities (cn, etc.)
+├── turbo.json        Turborepo task config
 └── package.json      Workspace root
 ```
 
@@ -37,24 +38,19 @@ npm run dev    # Viewer on :3000, Studio on :3001
 
 ### Running Apps Individually
 
-**Option A: Viewer** (port 3000):
+**Viewer** (port 3000):
 ```bash
-cd apps/viewer && npm run dev
+npm run dev --workspace=gias-books
 # Access at http://localhost:3000
 ```
 
-**Option B: Studio** (port 3001):
-```powershell
-# From workspace root (PowerShell)
-$env:PORT='3001'; cd apps/studio; npm run dev
-
-# OR if already in apps/studio/
-$env:PORT='3001'
-npm run dev
+**Studio** (port 3001 - auto-assigned):
+```bash
+npm run dev --workspace=gia-studio
 # Access at http://localhost:3001
 ```
 
-> **💡 Tip**: Studio requires `PORT=3001` environment variable to avoid port conflicts with viewer. If you see a "lock" error, you already have that app running.
+> **💡 Tip**: Studio automatically uses port 3001 when viewer is running. If you see a "lock" error, that app is already running.
 
 ---
 
@@ -63,8 +59,9 @@ npm run dev
 | Package | Purpose | Consumers |
 |---------|---------|-----------|
 | `@gia/schemas` | Zod schemas, TypeScript types | Both apps |
-| `@gia/design-system` | Shared `variables.css` | Both apps |
+| `@gia/design-system` | Shared CSS tokens, fonts, reset | Both apps |
 | `@gia/content` | Book data.json + validation | Both apps |
+| `@gia/utils` | Shared utilities (`cn()`) | Both apps |
 
 ---
 
@@ -127,5 +124,6 @@ Studio runs as a local development tool; deploy via standard Next.js mechanisms 
 
 1. **Single lockfile**: Only root `package-lock.json` – apps must NOT have their own lockfiles
 2. **Turbo 2.x**: Uses `"tasks"` not deprecated `"pipeline"` in `turbo.json`
-3. **ESLint 8.57.1**: Both apps use pinned version with native flat config (`eslint.config.mjs`)
+3. **ESLint 9**: Both apps use native flat config (`eslint.config.mjs`)
 4. **TypeScript 5.x**: Strict mode enabled across workspace
+5. **Shared utils**: Import `cn()` from `@gia/utils`, not local files

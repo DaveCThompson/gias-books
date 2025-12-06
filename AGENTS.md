@@ -21,19 +21,20 @@ gia-workspace/
 │   └── studio/       Editor app (App Router, TipTap)
 └── packages/
     ├── schemas/      @gia/schemas – Zod + TypeScript types
-    ├── design-system/ @gia/design-system – Shared CSS
-    └── content/       @gia/content – Book data
+    ├── design-system/ @gia/design-system – Shared CSS tokens
+    ├── content/       @gia/content – Book data
+    └── utils/         @gia/utils – Shared utilities (cn, etc.)
 ```
 
 ### State Management
-- **Zustand** stores in each app's `src/data/stores/`
+- **Zustand** stores in each app's `src/data/` (flat structure)
 - Use proper selectors: `useStore((s) => s.field)` for reactivity
 
 ### Styling
 - See **[CSS-PRINCIPLES.md](./CSS-PRINCIPLES.md)** for the complete styling guide
 - **CSS Modules** – co-located `*.module.css` per component
 - **oklch color space** – all colors via semantic variables
-- **`cn()` utility** – use for conditional classes (wraps `clsx`)
+- **`cn()` utility** – import from `@gia/utils` for conditional classes
 
 ---
 
@@ -45,6 +46,8 @@ gia-workspace/
 2. **Create app-level lockfiles** – Only root `package-lock.json`
 3. **Use deprecated turbo config** – Use `"tasks"` not `"pipeline"`
 4. **Use FlatCompat with eslint-config-next** – Causes circular reference errors
+5. **Use primitive color vars in components** – Use semantic vars (e.g., `--color-expressive-bully` not `--color-expressive-red`)
+6. **Create duplicate utility files** – Use `@gia/utils` for shared code
 
 ### ✅ Always Do
 
@@ -52,7 +55,9 @@ gia-workspace/
 2. **Use ESLint 9 native flat config** in `eslint.config.mjs`
 3. **Handle `null` returns** from async data fetching
 4. **Use `'use client'`** for interactive components in App Router
-5. **Keep shared dependencies aligned** – both apps should use same versions of `react`, `next`, `eslint`, etc.
+5. **Keep shared dependencies aligned** – both apps should use same versions
+6. **Check contrast** – primary buttons need white text (`--color-neutral-000`) on blue bg
+7. **Import types from `@gia/schemas`** – not local type files
 
 ---
 
@@ -62,9 +67,9 @@ gia-workspace/
 |------|---------|
 | `packages/schemas/src/index.ts` | Canonical types (BookData, PageData) |
 | `packages/design-system/variables.css` | Design tokens (SOURCE OF TRUTH) |
-| `apps/studio/src/utils/fileIO.ts` | Book CRUD via API |
+| `packages/utils/src/index.ts` | Shared utilities (`cn()`) |
 | `apps/studio/src/utils/dslConverter.ts` | DSL ↔ HTML for TipTap |
-| `apps/viewer/src/data/types.ts` | Viewer-side type re-exports |
+| `apps/studio/src/utils/fileIO.ts` | Book CRUD via API |
 
 ---
 
@@ -90,6 +95,22 @@ interface BookData {
   pages: PageData[];
 }
 ```
+
+### DSL Format (Critical)
+
+Text content uses a custom DSL for expressive and interactive text:
+
+```
+[expressive:handwritten]styled text[/expressive]
+[expressive:shout]LOUD TEXT[/expressive]
+[expressive:bully]mean text[/expressive]
+[interactive:tooltip text]word[/interactive]
+```
+
+**Viewer** parses this via `InteractiveText.tsx` regex.
+**Studio** converts via `dslConverter.ts`:
+- `dslToHtml()` → TipTap HTML with `data-expressive` and `data-style` attributes
+- `htmlToDsl()` → Back to DSL for saving
 
 ### IllustrationData Handling
 
@@ -137,30 +158,42 @@ const editor = useEditor({
 });
 ```
 
-### 3. API Result Types
+### 3. DSL Converter Patterns
 
-Return result objects from async operations for proper error handling:
+The DSL format must match between content files and the converter:
 
 ```typescript
-// ✅ Good - explicit result type
-interface SaveResult { success: boolean; error?: string; }
-async function saveBook(book: BookData): Promise<SaveResult> { ... }
+// Content uses: [expressive:STYLE]text[/expressive]
+// NOT: [STYLE]text[/STYLE]
 
-// ❌ Bad - throws make error handling harder
-async function saveBook(book: BookData): Promise<void> { throw new Error('...'); }
+// dslToHtml must output BOTH attributes for CSS targeting:
+`<span data-expressive data-style="${style}">${content}</span>`
 ```
 
-### 4. View Transitions API
+### 4. Color Contrast
+
+Primary buttons need sufficient contrast:
+
+```css
+/* ✅ CORRECT - white on blue */
+.button.active {
+  background: var(--color-primary);        /* L=55% blue */
+  color: var(--color-neutral-000);         /* L=100% white */
+}
+
+/* ❌ WRONG - dark on blue = poor contrast */
+.button.active {
+  color: var(--color-button-text);         /* L=25% = fails WCAG */
+}
+```
+
+### 5. View Transitions API
 
 Types are now available in TypeScript 5.4+ – remove outdated @ts-expect-error:
 
 ```typescript
 // ✅ Current (types available)
 document.startViewTransition(() => router.push(url));
-
-// ❌ Outdated - causes lint error
-// @ts-expect-error - View Transitions API types not in standard lib
-document.startViewTransition(...);
 ```
 
 ---
@@ -183,11 +216,11 @@ Remember to:
 
 ### Shared Styles
 
-Import from design-system package in app CSS:
+Import design-system package in app entry CSS:
 
 ```css
-/* apps/viewer/src/styles/globals.css */
-@import '@gia/design-system/variables.css';
+/* apps/viewer/src/styles/index.css */
+@import '@gia/design-system';
 ```
 
 ---
@@ -196,8 +229,8 @@ Import from design-system package in app CSS:
 
 1. Run `npm run lint` – catches TypeScript and style issues
 2. Run `npm run build` – validates production builds
-3. Test viewer: `cd apps/viewer && npm run dev`
-4. Test studio: `$env:PORT='3001'; cd apps/studio; npm run dev`
+3. Test viewer: `npm run dev --workspace=gias-books`
+4. Test studio: `npm run dev --workspace=gia-studio` (auto-uses port 3001)
 5. Verify content renders correctly in both apps
 
 ---
@@ -214,7 +247,3 @@ npm run build
 ```
 
 This enables `output: 'export'` and sets `basePath: '/gias-books'`.
-
-### Why Not NODE_ENV?
-
-`NODE_ENV=production` is always set during `next build`, so using it for deploy decisions would fail builds that use `getServerSideProps`. The explicit `DEPLOY_TARGET` variable provides proper control.

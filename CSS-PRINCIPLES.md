@@ -8,16 +8,19 @@ This document defines the **styling architecture** shared between Viewer and Stu
 
 ```
 packages/design-system/
-└── variables.css       ← SOURCE OF TRUTH (design tokens)
+├── index.css           ← Entry point (imports all below)
+├── fonts.css           ← Google Fonts imports
+├── reset.css           ← CSS reset
+├── variables.css       ← Design tokens (SOURCE OF TRUTH)
+└── typography.css      ← Base typography
 
 apps/viewer/
 ├── src/styles/
-│   ├── globals.css     ← Imports variables, reset, typography
-│   └── index.css
+│   └── index.css       ← Imports @gia/design-system + view transitions
 └── src/features/**/*.module.css
 
 apps/studio/
-├── src/app/globals.css ← Imports shared variables
+├── src/app/globals.css ← Imports @gia/design-system + Studio aliases
 └── src/components/**/*.module.css
 ```
 
@@ -89,6 +92,9 @@ All colors use `oklch(L C H / alpha)` format:
   /* Brand colors */
   --color-brand-500: oklch(55% 0.23 260);  /* primary blue */
   --color-brand-400: oklch(65% 0.2 255);   /* lighter variant */
+
+  /* Expressive primitives */
+  --color-expressive-red: oklch(55% 0.2 20);
 }
 ```
 
@@ -101,6 +107,10 @@ All colors use `oklch(L C H / alpha)` format:
   --color-text: var(--color-neutral-900);
   --color-surface: var(--color-neutral-050);
   --color-interactive: var(--color-brand-500);
+
+  /* Expressive text */
+  --color-expressive-handwritten: var(--color-interactive);
+  --color-expressive-bully: var(--color-expressive-red);
 }
 
 :root[data-theme='dark'] {
@@ -109,12 +119,63 @@ All colors use `oklch(L C H / alpha)` format:
   --color-text: var(--color-neutral-100);
   --color-surface: var(--color-neutral-800);
   --color-interactive: var(--color-brand-400);
+
+  /* Expressive text (dark mode) */
+  --color-expressive-bully: oklch(65% 0.18 20);
 }
 ```
 
 ---
 
-### 4. Dark Mode via `data-theme`
+### 4. Contrast Guidelines
+
+Ensure sufficient contrast between background and foreground:
+
+| Pairing | Minimum ΔL | Example |
+|---------|------------|---------|
+| Primary button | 40%+ | Blue bg (L=55%) + White text (L=100%) ✅ |
+| Surface text | 60%+ | Surface (L=97%) + Text (L=15%) ✅ |
+| Subtle text | 50%+ | Background (L=100%) + Subtle (L=35%) ✅ |
+
+**Common mistake:**
+```css
+/* ❌ WRONG - dark text on blue = poor contrast */
+.button.active {
+  background: var(--color-primary);        /* L=55% */
+  color: var(--color-button-text);         /* L=25% → ΔL=30% FAILS */
+}
+
+/* ✅ CORRECT - white text on blue */
+.button.active {
+  background: var(--color-primary);
+  color: var(--color-neutral-000);         /* L=100% → ΔL=45% */
+}
+```
+
+---
+
+### 5. Expressive Text Tokens
+
+For styled text in stories (handwritten, shout, bully):
+
+| Style | Font | Color Variable | Effect |
+|-------|------|----------------|--------|
+| `handwritten` | `--font-handwritten` | `--color-expressive-handwritten` | Cursive blue |
+| `shout` | `--font-display` | (inherit) | Bold, larger |
+| `bully` | `--font-display` | `--color-expressive-bully` | Bold, italic, red |
+
+**Always use semantic variables**, not primitives:
+```css
+/* ✅ CORRECT */
+.expressiveBully { color: var(--color-expressive-bully); }
+
+/* ❌ WRONG - primitive won't adapt to dark mode */
+.expressiveBully { color: var(--color-expressive-red); }
+```
+
+---
+
+### 6. Dark Mode via `data-theme`
 
 Theme is controlled by `data-theme` attribute on `<html>`:
 
@@ -130,7 +191,7 @@ Theme is controlled by `data-theme` attribute on `<html>`:
 
 ---
 
-### 5. CSS Modules (Component Scoping)
+### 7. CSS Modules (Component Scoping)
 
 Every component MUST have a co-located module file:
 
@@ -147,12 +208,12 @@ Button/
 
 ---
 
-### 6. Conditional Classes with `cn()`
+### 8. Conditional Classes with `cn()`
 
-Use the `cn()` utility (wraps `clsx`) for conditional classes:
+Use the `cn()` utility from `@gia/utils` for conditional classes:
 
 ```tsx
-import { cn } from '@/utils/cn';
+import { cn } from '@gia/utils';
 import styles from './Button.module.css';
 
 <button className={cn(
@@ -160,15 +221,6 @@ import styles from './Button.module.css';
   isActive && styles.active,
   variant === 'primary' && styles.primary
 )} />
-```
-
-**Implementation:**
-```typescript
-// src/utils/cn.ts
-import { clsx, type ClassValue } from 'clsx';
-export function cn(...inputs: ClassValue[]): string {
-  return clsx(inputs);
-}
 ```
 
 ---
@@ -206,22 +258,6 @@ Containers with `overflow: hidden` need padding for focus rings:
 }
 ```
 
-### Component Dimension Variables
-
-Components can expose their dimensions as CSS variables:
-
-```css
-.header {
-  --header-height: 60px;
-  height: var(--header-height);
-}
-
-/* Other components can reference */
-.content {
-  padding-top: var(--header-height);
-}
-```
-
 ### Theme-Specific Overrides in Modules
 
 Use `:global()` selector for theme-specific styling within CSS Modules:
@@ -244,7 +280,7 @@ Use `:global()` selector for theme-specific styling within CSS Modules:
 ### Component Styles
 
 1. Create `ComponentName.module.css` next to component
-2. Use only semantic variables from `variables.css`
+2. Use only semantic variables from design-system
 3. Import and use with `styles.className`
 4. Add dark mode overrides only if needed (most "just work")
 
@@ -266,3 +302,4 @@ Use `:global()` selector for theme-specific styling within CSS Modules:
 | **CSS Modules** | Scoping without runtime, familiar CSS syntax |
 | **Shared package** | Single source of truth, npm versioning |
 | **data-theme attribute** | SSR-compatible, no FOUC, explicit control |
+| **Semantic tokens** | Future-proof, dark mode "just works" |
