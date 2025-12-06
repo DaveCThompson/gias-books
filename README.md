@@ -86,6 +86,8 @@ npm run dev --workspace=gia-studio
 | `npm run build` | Production build (both apps) |
 | `npm run lint` | ESLint check across workspace |
 | `npm run clean` | Remove all build artifacts |
+| `npm run reset-dev` | Remove dev caches (Next.js) |
+
 
 ### App-Specific Commands
 

@@ -23,11 +23,13 @@ gia-workspace/
     ├── schemas/      @gia/schemas – Zod + TypeScript types
     ├── design-system/ @gia/design-system – Shared CSS tokens
     ├── content/       @gia/content – Book data
-    └── utils/         @gia/utils – Shared utilities (cn, etc.)
+    └── utils/         @gia/utils – Shared utilities (cn, EASING, DURATION)
 ```
 
 ### State Management
-- **Zustand** stores in each app's `src/data/` (flat structure)
+- **Zustand** stores in each app's `src/data/` (stores only)
+- **Custom hooks** in each app's `src/hooks/` (flat structure)
+- **Shared components** in `src/components/` (ErrorBoundary, etc.)
 - Use proper selectors: `useStore((s) => s.field)` for reactivity
 
 ### Styling
@@ -48,6 +50,7 @@ gia-workspace/
 4. **Use FlatCompat with eslint-config-next** – Causes circular reference errors
 5. **Use primitive color vars in components** – Use semantic vars (e.g., `--color-expressive-bully` not `--color-expressive-red`)
 6. **Create duplicate utility files** – Use `@gia/utils` for shared code
+7. **Put hooks in `/data` folder** – `/data` is for Zustand stores only; hooks go in `/hooks`
 
 ### ✅ Always Do
 
@@ -68,7 +71,11 @@ gia-workspace/
 |------|---------|
 | `packages/schemas/src/index.ts` | Canonical types (BookData, PageData) |
 | `packages/design-system/variables.css` | Design tokens (SOURCE OF TRUTH) |
-| `packages/utils/src/index.ts` | Shared utilities (`cn()`) |
+| `packages/utils/src/index.ts` | Shared utilities (`cn()`, `EASING`, `DURATION`) |
+| `apps/viewer/src/hooks/useNarration.ts` | Unified audio hook (Howler-based, with error handling) |
+| `apps/viewer/src/hooks/useThemeManager.ts` | Theme management (data-theme attribute) |
+| `apps/viewer/src/components/ErrorBoundary.tsx` | Error boundary with retry fallback UI |
+| `apps/viewer/src/data/constants.ts` | Navigation, VFX, and audio timing constants |
 | `apps/studio/src/utils/dslConverter.ts` | DSL ↔ HTML for TipTap |
 | `apps/studio/src/utils/fileIO.ts` | Book CRUD via API |
 | `apps/studio/src/components/Preview/PagePreview.tsx` | WYSIWYG page preview (mood, mask, text) |

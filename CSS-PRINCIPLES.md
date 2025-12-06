@@ -184,7 +184,7 @@ Theme is controlled by `data-theme` attribute on `<html>`:
 <html>                    <!-- light mode (default) -->
 ```
 
-**Managed by `useThemeManager` hook** in each app:
+**Managed by `useThemeManager` hook** (located in `src/hooks/`):
 - Reads preference from localStorage
 - Falls back to system preference
 - Sets attribute on document element
@@ -240,6 +240,56 @@ Page backgrounds use mood-specific gradients:
   --gradient-calm: linear-gradient(180deg, oklch(90% 0.03 220) 0%, oklch(85% 0.05 230) 100%);
   --gradient-tense: linear-gradient(180deg, oklch(85% 0.1 30) 0%, oklch(75% 0.15 25) 100%);
   --gradient-joyful: linear-gradient(180deg, oklch(92% 0.1 95) 0%, oklch(88% 0.12 85) 100%);
+}
+```
+
+---
+
+### 9. Animation Tokens
+
+Animation durations and easings are defined as CSS custom properties:
+
+```css
+:root {
+  /* Durations */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  
+  /* Easings */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+```
+
+For JavaScript/Framer Motion, import from `@gia/utils`:
+
+```typescript
+import { EASING, DURATION } from '@gia/utils';
+
+// Use in motion components
+transition={{ duration: DURATION.normal, ease: EASING.outExpo }}
+```
+
+---
+
+### 10. Accessibility Utilities
+
+The design system includes a `.sr-only` class for screen-reader-only content:
+
+```css
+/* In reset.css */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 ```
 
