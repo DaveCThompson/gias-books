@@ -1,0 +1,9 @@
+{
+    "name": "@gia/content",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Book content (data.json + assets)",
+    "scripts": {
+        "validate": "node scripts/validate-content.mjs"
+    }
+}

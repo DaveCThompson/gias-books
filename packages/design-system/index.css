@@ -1,0 +1,5 @@
+/* @gia/design-system entry point */
+@import './fonts.css';
+@import './reset.css';
+@import './variables.css';
+@import './typography.css';

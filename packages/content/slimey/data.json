@@ -1,0 +1,66 @@
+{
+  "slug": "slimey",
+  "title": "Slimey",
+  "author": "Gia",
+  "pages": [
+    {
+      "pageNumber": 1,
+      "text": "One day, in a peaceful little town of ghosts, was a ghost that was a little bit [expressive:handwritten]different[/expressive].",
+      "illustration": "/books/slimey/assets/page-1-illustration.png",
+      "mask": "/books/slimey/assets/watercolor-mask.svg",
+      "narrationUrl": "/books/slimey/assets/narration-1.m4a",
+      "mood": "calm",
+      "layout": "split"
+    },
+    {
+      "pageNumber": 2,
+      "text": "His name was Slimey. Slimey had a special condition that made him a slime ghost. A slime ghost was a ghost that was..well… a blob of green slime. Slimey was still a ghost, just not the same as other little ghosts.",
+      "narrationUrl": "/books/slimey/assets/narration-2.m4a",
+      "mood": "calm"
+    },
+    {
+      "pageNumber": 3,
+      "text": "Today was a day that was very special for Slimey; today was his first day of kindergarten! Slimey was very [expressive:shout]excited![/expressive]",
+      "narrationUrl": "/books/slimey/assets/narration-3.m4a",
+      "mood": "joyful"
+    },
+    {
+      "pageNumber": 4,
+      "text": "Slimey decided he did not want to be late, so he got ready very quickly. He was not going to be late! Soon, Slimey was all ready! Last night, Slimey’s parents got him an electric blue backpack, with cute red and yellow polka dots. Slimey loved it and promised to not get it dirty. Slimey’s mom and dad also bought him a purple and orange striped lunchkit and green waterbottle for his food and water.",
+      "narrationUrl": "/books/slimey/assets/narration-4.m4a",
+      "mood": "joyful"
+    },
+    {
+      "pageNumber": 5,
+      "text": "So with lots of excitement, Slimey left his cozy little house and looked for the yellow school bus that his mom and dad told him about. Today, Slimey would actually ride on it! Soon, the school bus came! It stopped right at Slimey’s house. Excitedly, Slimey climbed onto the big bus, wondering what school would be like.",
+      "illustration": "/books/slimey/assets/page-5-illustration.png",
+      "mask": "/books/slimey/assets/watercolor-mask.svg",
+      "narrationUrl": "/books/slimey/assets/narration-5.m4a",
+      "mood": "joyful"
+    },
+    {
+      "pageNumber": 6,
+      "text": "There were many other little ghosts on the bus. Slimey grinned ear to ear; he was very excited to make some friends! Slimey decided to sit next to a group of ghosts in the back of the bus. But when Slimey walked to them, a boy, similar age to Slimey snickered, [expressive:bully]“what’re ‘ya ‘doin snot face?’’[/expressive] Slimey was confused and hurt. “Why are you saying this?’’ Slimey said, frowning. “Look at yourself!’’ cried a girl ghost. “You have snot all over yourself!” tears were streaming out of Slimey's eyes. [expressive:shout]“It’s not Snot!’’[/expressive] Slimey yelled at the top of his lungs, clenching his fists. Slimey ran to a nearby seat with no one in it.",
+      "narrationUrl": "/books/slimey/assets/narration-6.m4a",
+      "mood": "tense"
+    },
+    {
+      "pageNumber": 7,
+      "text": "The start of his day couldn't have gone worse. He was hoping that at least his teacher would be better. Slimey was so upset, he had no clue that in the seat behind him, was a little ghost who was also different; she was a purple ghost, a nice and friendly one……………………..",
+      "narrationUrl": "/books/slimey/assets/narration-7.m4a",
+      "mood": "tense"
+    },
+    {
+      "pageNumber": 8,
+      "text": "Soon the bus stopped. Every little ghost peered outside, to find a big school. It was quite colorful, and had many windows. On the windows were loads of artwork ghosts had made. Slimey wondered if he would do any art. [expressive:shout]“Woah!”[/expressive] Slimey exclaimed. He was excited to go into the building! The ghosts hopped off the bus. Outside were beautiful flowers and plants. A teacher was waiting outside. She was [interactive:wearing glasses]bespectacled[/interactive], and had rosy cheeks. “Hello! I will be your teacher for your first year at Maplewood Elementary! I am Mrs.Petunia!\" She beamed. She looked very nice.",
+      "narrationUrl": "/books/slimey/assets/narration-8.m4a",
+      "mood": "calm"
+    },
+    {
+      "pageNumber": 9,
+      "text": "Slimey felt a [interactive:tiny or small]mere[/interactive] buzz of excitement, forgetting the problems on the bus. Slimey; at the front of the line walked inside the building. His classroom was another story….",
+      "narrationUrl": "/books/slimey/assets/narration-9.m4a",
+      "mood": "calm"
+    }
+  ]
+}

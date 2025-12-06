@@ -1,0 +1,10 @@
+{
+    "name": "@gia/design-system",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Shared design system (OKLCH tokens, typography, reset styles)",
+    "main": "index.css",
+    "files": [
+        "*.css"
+    ]
+}
