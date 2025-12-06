@@ -1,0 +1,18 @@
+{
+    "name": "@gia/utils",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Shared utilities for the Gia workspace",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "clean": "rm -rf dist"
+    },
+    "dependencies": {
+        "clsx": "^2.1.1"
+    },
+    "devDependencies": {
+        "typescript": "^5.6.0"
+    }
+}

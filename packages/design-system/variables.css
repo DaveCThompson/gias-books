@@ -74,6 +74,23 @@
   --gradient-calm: linear-gradient(180deg, oklch(90% 0.03 220) 0%, oklch(85% 0.05 230) 100%);
   --gradient-tense: linear-gradient(180deg, oklch(85% 0.1 30) 0%, oklch(75% 0.15 25) 100%);
   --gradient-joyful: linear-gradient(180deg, oklch(92% 0.1 95) 0%, oklch(88% 0.12 85) 100%);
+
+  /* Surface Colors (for panels, cards, sidebars) */
+  --color-surface: var(--color-neutral-050);
+  --color-surface-hover: var(--color-neutral-100);
+  --color-border: var(--color-neutral-200);
+  --color-text-subtle: var(--color-neutral-700);
+
+  /* Status Colors */
+  --color-danger: oklch(50% 0.2 25);
+  --color-success: oklch(55% 0.2 145);
+
+  /* Focus Ring (for accessibility) */
+  --color-focus-ring: oklch(55% 0.23 260 / 0.25);
+
+  /* Expressive Text (for rich text preview) */
+  --color-expressive-handwritten: var(--color-interactive);
+  --color-expressive-bully: var(--color-expressive-red);
 }
 
 /* Dark Theme Override */
@@ -100,4 +117,21 @@
   --gradient-calm: linear-gradient(180deg, oklch(30% 0.03 220) 0%, oklch(25% 0.05 230) 100%);
   --gradient-tense: linear-gradient(180deg, oklch(35% 0.1 30) 0%, oklch(28% 0.15 25) 100%);
   --gradient-joyful: linear-gradient(180deg, oklch(38% 0.1 95) 0%, oklch(32% 0.12 85) 100%);
+
+  /* Surface Colors (dark mode) */
+  --color-surface: var(--color-neutral-800);
+  --color-surface-hover: var(--color-neutral-700);
+  --color-border: var(--color-neutral-700);
+  --color-text-subtle: var(--color-neutral-300);
+
+  /* Status Colors (dark mode) */
+  --color-danger: oklch(60% 0.18 25);
+  --color-success: oklch(60% 0.18 145);
+
+  /* Focus Ring (dark mode) */
+  --color-focus-ring: oklch(65% 0.2 255 / 0.35);
+
+  /* Expressive Text (dark mode) */
+  --color-expressive-handwritten: var(--color-interactive);
+  --color-expressive-bully: oklch(65% 0.18 20);
 }
