@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { getEmotionStyle, getSizeScale } from '@gia/schemas';
 import styles from './ExpressiveTextPreview.module.css';
 
 interface ExpressiveTextPreviewProps {
@@ -60,19 +61,32 @@ function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
                 elements.push(<code key={key} className={styles.inlineCode}>{innerContent}</code>);
                 break;
             case 'expressive': {
-                let className = styles.expressiveDefault;
-                switch (value) {
-                    case 'shout':
-                        className = styles.expressiveShout;
-                        break;
-                    case 'bully':
-                        className = styles.expressiveBully;
-                        break;
-                    case 'handwritten':
-                        className = styles.expressiveHandwritten;
-                        break;
+                // Parse value as "emotion" or "emotion:size"
+                const parts = (value || '').split(':');
+                const emotionId = parts[0] || 'normal';
+                const size = parts[1] || 'regular';
+
+                const emotionStyle = getEmotionStyle(emotionId);
+
+                // Build inline styles from config (no animations in preview)
+                const inlineStyle: React.CSSProperties = {
+                    display: 'inline-block',
+                    fontFamily: emotionStyle.fontFamily,
+                    fontSize: getSizeScale(size),
+                };
+
+                if (emotionStyle.fontVariationSettings) {
+                    inlineStyle.fontVariationSettings = emotionStyle.fontVariationSettings;
                 }
-                elements.push(<span key={key} className={className}>{innerContent}</span>);
+                if (emotionStyle.color) {
+                    inlineStyle.color = emotionStyle.color;
+                }
+
+                elements.push(
+                    <span key={key} className={styles.expressive} style={inlineStyle}>
+                        {innerContent}
+                    </span>
+                );
                 break;
             }
             case 'interactive':
@@ -94,5 +108,4 @@ function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
 export function ExpressiveTextPreview({ text }: ExpressiveTextPreviewProps) {
     return <>{parseText(text)}</>;
 }
-
 

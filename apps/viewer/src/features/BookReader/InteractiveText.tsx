@@ -2,10 +2,13 @@
 
 import React from 'react';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import { getEmotionStyle, getSizeScale } from '@gia/schemas';
+import { cn } from '@gia/utils';
 import styles from './Page.module.css';
 
 interface InteractiveTextProps {
   text: string;
+  animateText?: boolean;
 }
 
 // Regex to match outermost DSL tag
@@ -15,7 +18,11 @@ const tagRegex = /\[(\w+)(?::([^\]]+))?\](.*?)\[\/\1\]/;
  * Recursively parses DSL text and renders all formatting.
  * Handles nested tags like [b][u]text[/u][/b].
  */
-function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
+function parseText(
+  text: string,
+  keyPrefix: string = '',
+  animateText: boolean = true
+): React.ReactNode[] {
   const elements: React.ReactNode[] = [];
   let remaining = text;
   let matchIndex = 0;
@@ -40,7 +47,7 @@ function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
     }
 
     // Recursively parse content inside the tag
-    const innerContent = parseText(content, `${keyPrefix}${tag}-${matchIndex}-`);
+    const innerContent = parseText(content, `${keyPrefix}${tag}-${matchIndex}-`, animateText);
     const key = `${keyPrefix}${tag}-${matchIndex}`;
 
     // Render the tag with parsed inner content
@@ -76,19 +83,40 @@ function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
         );
         break;
       case 'expressive': {
-        let className = styles.expressiveDefault;
-        switch (value) {
-          case 'shout':
-            className = styles.expressiveShout;
-            break;
-          case 'bully':
-            className = styles.expressiveBully;
-            break;
-          case 'handwritten':
-            className = styles.expressiveHandwritten;
-            break;
+        // Parse value as "emotion" or "emotion:size"
+        const parts = (value || '').split(':');
+        const emotionId = parts[0] || 'normal';
+        const size = parts[1] || 'regular';
+
+        const emotionStyle = getEmotionStyle(emotionId);
+
+        // Build inline styles from config
+        const inlineStyle: React.CSSProperties = {
+          fontFamily: emotionStyle.fontFamily,
+          fontSize: getSizeScale(size),
+        };
+
+        if (emotionStyle.fontVariationSettings) {
+          inlineStyle.fontVariationSettings = emotionStyle.fontVariationSettings;
         }
-        elements.push(<span key={key} className={className}>{innerContent}</span>);
+        if (emotionStyle.color) {
+          inlineStyle.color = emotionStyle.color;
+        }
+
+        // Only apply animation class if animateText is true and emotion has an animation
+        const animationClass = (animateText && emotionStyle.animation)
+          ? `animate-${emotionStyle.animation}`
+          : '';
+
+        elements.push(
+          <span
+            key={key}
+            className={cn(styles.expressive, animationClass)}
+            style={inlineStyle}
+          >
+            {innerContent}
+          </span>
+        );
         break;
       }
       default:
@@ -104,8 +132,10 @@ function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
   return elements;
 }
 
-export const InteractiveText: React.FC<InteractiveTextProps> = ({ text }) => {
-  return <>{parseText(text)}</>;
+export const InteractiveText: React.FC<InteractiveTextProps> = ({
+  text,
+  animateText = true
+}) => {
+  return <>{parseText(text, '', animateText)}</>;
 };
-
 

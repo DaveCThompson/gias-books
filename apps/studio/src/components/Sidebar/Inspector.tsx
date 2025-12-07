@@ -62,6 +62,19 @@ export function Inspector() {
                 </div>
 
                 <div className={styles.field}>
+                    <label htmlFor="animateText">Animate Text</label>
+                    <div className={styles.toggleRow}>
+                        <input
+                            type="checkbox"
+                            id="animateText"
+                            checked={page.animateText !== false}
+                            onChange={(e) => updatePage({ animateText: e.target.checked })}
+                        />
+                        <span className={styles.hint}>Enable expressive text animations</span>
+                    </div>
+                </div>
+
+                <div className={styles.field}>
                     <label>Illustration</label>
                     <button
                         className={styles.assetButton}

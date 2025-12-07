@@ -5,6 +5,7 @@
  * 
  * Supported DSL formats:
  * - [expressive:STYLE]content[/expressive] → <span data-expressive data-style="STYLE">
+ * - [expressive:STYLE:SIZE]content[/expressive] → <span data-expressive data-style="STYLE" data-size="SIZE">
  * - [interactive:TOOLTIP]word[/interactive] → <span data-interactive data-tooltip="TOOLTIP">
  * - [b]text[/b] → <strong>
  * - [i]text[/i] → <em>
@@ -14,7 +15,8 @@
  */
 
 // Regex patterns for DSL → HTML
-const EXPRESSIVE_DSL_REGEX = /\[expressive:(\w+)\](.*?)\[\/expressive\]/g;
+// Updated: now captures optional :size
+const EXPRESSIVE_DSL_REGEX = /\[expressive:([a-z_]+)(?::([a-z]+))?\](.*?)\[\/expressive\]/gi;
 const INTERACTIVE_DSL_REGEX = /\[interactive:([^\]]+)\](.*?)\[\/interactive\]/g;
 const BOLD_DSL_REGEX = /\[b\](.*?)\[\/b\]/g;
 const ITALIC_DSL_REGEX = /\[i\](.*?)\[\/i\]/g;
@@ -42,9 +44,10 @@ export function dslToHtml(dsl: string): string {
     html = html.replace(STRIKE_DSL_REGEX, '<s>$1</s>');
     html = html.replace(CODE_DSL_REGEX, '<code>$1</code>');
 
-    // Convert expressive tags
-    html = html.replace(EXPRESSIVE_DSL_REGEX, (_, style, content) => {
-        return `<span data-expressive data-style="${style}">${content}</span>`;
+    // Convert expressive tags (with optional size)
+    html = html.replace(EXPRESSIVE_DSL_REGEX, (_, style, size, content) => {
+        const sizeAttr = size && size !== 'regular' ? ` data-size="${size}"` : '';
+        return `<span data-expressive data-style="${style}"${sizeAttr}>${content}</span>`;
     });
 
     // Convert interactive tags
@@ -78,13 +81,26 @@ export function htmlToDsl(html: string): string {
     dsl = dsl.replace(STRIKE_HTML_REGEX, '[s]$1[/s]');
     dsl = dsl.replace(CODE_HTML_REGEX, '[code]$1[/code]');
 
-    // Convert expressive spans back to DSL
-    dsl = dsl.replace(/<span[^>]*data-expressive[^>]*data-style="(\w+)"[^>]*>(.*?)<\/span>/g,
-        (_, style, content) => `[expressive:${style}]${content}[/expressive]`);
+    // Convert expressive spans back to DSL (with optional size)
+    // Pattern: data-expressive and data-style, optionally data-size
+    dsl = dsl.replace(
+        /<span[^>]*data-expressive[^>]*data-style="([^"]+)"(?:[^>]*data-size="([^"]+)")?[^>]*>(.*?)<\/span>/gi,
+        (_, style, size, content) => {
+            return size && size !== 'regular'
+                ? `[expressive:${style}:${size}]${content}[/expressive]`
+                : `[expressive:${style}]${content}[/expressive]`;
+        }
+    );
 
-    // Handle alternate attribute order
-    dsl = dsl.replace(/<span[^>]*data-style="(\w+)"[^>]*data-expressive[^>]*>(.*?)<\/span>/g,
-        (_, style, content) => `[expressive:${style}]${content}[/expressive]`);
+    // Handle alternate attribute order (data-style before data-expressive)
+    dsl = dsl.replace(
+        /<span[^>]*data-style="([^"]+)"[^>]*data-expressive(?:[^>]*data-size="([^"]+)")?[^>]*>(.*?)<\/span>/gi,
+        (_, style, size, content) => {
+            return size && size !== 'regular'
+                ? `[expressive:${style}:${size}]${content}[/expressive]`
+                : `[expressive:${style}]${content}[/expressive]`;
+        }
+    );
 
     // Convert interactive spans back to DSL
     dsl = dsl.replace(/<span[^>]*data-interactive[^>]*data-tooltip="([^"]+)"[^>]*>(.*?)<\/span>/g,

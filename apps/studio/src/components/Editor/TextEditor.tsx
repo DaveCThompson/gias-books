@@ -9,10 +9,9 @@ import { dslToHtml, htmlToDsl } from '@/utils/dslConverter';
 import { useBookStore } from '@/data/stores/bookStore';
 import { useEffect, useState } from 'react';
 import { InteractiveModal } from './InteractiveModal';
+import { ExpressiveToolbar } from './ExpressiveToolbar';
 import { cn } from '@gia/utils';
 import styles from './TextEditor.module.css';
-
-const EXPRESSIVE_STYLES = ['handwritten', 'shout', 'bully'];
 
 export function TextEditor() {
     const currentPageIndex = useBookStore((state) => state.currentPageIndex);
@@ -108,22 +107,10 @@ export function TextEditor() {
 
                     <span className={styles.divider} />
 
-                    <select
-                        onChange={(e) => {
-                            if (e.target.value) {
-                                editor.chain().focus().setExpressive(e.target.value).run();
-                            } else {
-                                editor.chain().focus().unsetExpressive().run();
-                            }
-                            e.target.value = '';
-                        }}
-                        defaultValue=""
-                    >
-                        <option value="">Expressive...</option>
-                        {EXPRESSIVE_STYLES.map((s) => (
-                            <option key={s} value={s}>{s}</option>
-                        ))}
-                    </select>
+                    <ExpressiveToolbar
+                        editor={editor}
+                        disabled={editor.state.selection.empty}
+                    />
 
                     <button
                         onClick={handleInteractiveClick}

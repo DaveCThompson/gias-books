@@ -5,5 +5,11 @@
   - Nunito: A well-rounded, friendly sans-serif for body text.
   - Balsamiq Sans: A playful, slightly quirky font for expressive/display text.
   - Gochi Hand: A handwritten, personal-feeling font for emphasis.
+  - Fredoka: Variable font for happy/shout emotions (weight + width axes).
+  - Playpen Sans: Variable font for nervous/silly emotions (weight axis).
+  - Roboto Flex: Variable font for angry/brave emotions (weight + width axes).
 */
 @import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&family=Gochi+Hand&family=Nunito:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wdth,wght@75..125,300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,75..125,100..1000&display=swap');

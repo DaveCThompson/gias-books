@@ -58,7 +58,10 @@ const Page: React.FC<PageProps> = ({ pageData, isActive }) => {
 
         {/* Text Content */}
         <p className={styles.text}>
-          <InteractiveText text={pageData.text} />
+          <InteractiveText
+            text={pageData.text}
+            animateText={pageData.animateText !== false}
+          />
         </p>
       </div>
     </Tooltip.Provider>

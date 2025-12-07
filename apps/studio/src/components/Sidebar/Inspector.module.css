@@ -71,3 +71,21 @@
     border-color: var(--color-primary);
     box-shadow: 0 0 0 2px var(--color-focus-ring);
 }
+
+/* Toggle Row (checkbox + hint) */
+.toggleRow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.toggleRow input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    accent-color: var(--color-primary);
+}
+
+.hint {
+    font-size: 0.75rem;
+    color: var(--color-text-subtle);
+}

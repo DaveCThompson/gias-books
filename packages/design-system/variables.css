@@ -290,6 +290,11 @@
    --font-display: 'Balsamiq Sans', cursive;
    --font-handwritten: 'Gochi Hand', cursive;
 
+   /* ─── Variable Fonts (Expressive Text) ─── */
+   --font-fredoka: 'Fredoka', var(--font-display);
+   --font-playpen: 'Playpen Sans', var(--font-handwritten);
+   --font-roboto-flex: 'Roboto Flex', var(--font-body);
+
    /* ─── Animation Durations ─── */
    --duration-fast: 150ms;
    --duration-normal: 300ms;

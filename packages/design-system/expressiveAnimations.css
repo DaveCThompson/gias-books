@@ -1,0 +1,153 @@
+/* Expressive Text Animations
+   All animations respect prefers-reduced-motion for accessibility */
+
+/* ============================================================================
+   KEYFRAMES
+   ============================================================================ */
+
+@keyframes expressive-shout {
+    from {
+        font-variation-settings: "wght" 600;
+    }
+
+    to {
+        font-variation-settings: "wght" 800;
+    }
+}
+
+@keyframes expressive-clench {
+    from {
+        font-variation-settings: "wght" 650, "wdth" 95;
+    }
+
+    to {
+        font-variation-settings: "wght" 900, "wdth" 85;
+    }
+}
+
+@keyframes expressive-wiggle {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(-1px) rotate(-1deg);
+    }
+
+    50% {
+        transform: translateY(1px) rotate(1deg);
+    }
+
+    75% {
+        transform: translateY(-0.5px) rotate(0.5deg);
+    }
+}
+
+@keyframes expressive-bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes expressive-shimmer {
+
+    0%,
+    100% {
+        opacity: 1;
+        filter: brightness(1);
+    }
+
+    50% {
+        opacity: 0.85;
+        filter: brightness(1.15);
+    }
+}
+
+@keyframes expressive-sway {
+
+    0%,
+    100% {
+        transform: rotate(-1deg);
+    }
+
+    50% {
+        transform: rotate(1deg);
+    }
+}
+
+@keyframes expressive-flicker {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    10% {
+        opacity: 0.7;
+    }
+
+    30% {
+        opacity: 0.5;
+    }
+
+    40% {
+        opacity: 1;
+    }
+}
+
+/* ============================================================================
+   ANIMATION UTILITY CLASSES
+   Only animate when user hasn't requested reduced motion
+   ============================================================================ */
+
+@media (prefers-reduced-motion: no-preference) {
+    .animate-shout {
+        animation: expressive-shout 900ms ease-in-out infinite alternate;
+    }
+
+    .animate-clench {
+        animation: expressive-clench 700ms ease-in-out infinite alternate;
+    }
+
+    .animate-wiggle {
+        animation: expressive-wiggle 1.2s ease-in-out infinite;
+    }
+
+    .animate-bounce {
+        animation: expressive-bounce 1s ease-in-out infinite;
+    }
+
+    .animate-shimmer {
+        animation: expressive-shimmer 2s ease-in-out infinite;
+    }
+
+    .animate-sway {
+        animation: expressive-sway 3s ease-in-out infinite;
+    }
+
+    .animate-flicker {
+        animation: expressive-flicker 0.8s step-end infinite;
+    }
+}
+
+/* Disable all animations for reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+
+    .animate-shout,
+    .animate-clench,
+    .animate-wiggle,
+    .animate-bounce,
+    .animate-shimmer,
+    .animate-sway,
+    .animate-flicker {
+        animation: none !important;
+    }
+}

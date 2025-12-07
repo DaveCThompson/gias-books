@@ -46,32 +46,10 @@
   border-bottom: 2px dotted var(--color-interactive-underline);
 }
 
-/* Styles for our expressive typography library */
-.expressiveDefault,
-.expressiveShout,
-.expressiveBully,
-.expressiveHandwritten {
+/* Base expressive text style - specific styling via inline styles from config */
+.expressive {
   display: inline-block;
-}
-
-.expressiveShout {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.2em;
-  transform: translateY(-2px);
-}
-
-.expressiveBully {
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--color-expressive-bully);
-  transform: skew(-5deg) scale(1.05);
-}
-
-.expressiveHandwritten {
-  font-family: var(--font-handwritten);
-  font-size: 1.3em;
-  color: var(--color-interactive);
+  transition: font-variation-settings var(--duration-fast) var(--ease-out);
 }
 
 /* Styles for the Radix UI Tooltip */
