@@ -26,9 +26,66 @@ apps/studio/
 
 ---
 
-## Core Principles
+## Token Architecture
 
-### 1. OKLCH Color Space
+### Three-Tier System
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  PRIMITIVES         → Raw OKLCH values (never use in components)   │
+│  --primitive-*         e.g., --primitive-neutral-500               │
+├─────────────────────────────────────────────────────────────────────┤
+│  SEMANTIC TOKENS    → Role-based, theme-aware (USE THESE)          │
+│  --bg-*, --fg-*        e.g., --bg-primary, --fg-secondary          │
+│  --border-*, --shadow-*                                             │
+├─────────────────────────────────────────────────────────────────────┤
+│  BACKWARD-COMPAT    → Legacy aliases for migration                 │
+│  --color-*             e.g., --color-background → --bg-primary     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Semantic Token Naming
+
+### Convention
+
+```
+--<category>-<role>[-<variant>][-<state>]
+```
+
+| Category | Purpose | Examples |
+|----------|---------|----------|
+| `--bg-` | Backgrounds | `--bg-primary`, `--bg-brand-faint` |
+| `--fg-` | Foreground (text/icons) | `--fg-primary`, `--fg-alert` |
+| `--border-` | Border colors | `--border-primary-hover` |
+| `--shadow-` | Box shadows | `--shadow-lg`, `--shadow-card` |
+
+### Common Tokens
+
+```css
+/* ✅ CORRECT - Use semantic tokens */
+.card {
+  background: var(--bg-secondary);
+  color: var(--fg-primary);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-card);
+}
+.card:hover {
+  background: var(--bg-secondary-hover);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ❌ WRONG - Never use primitives directly */
+.card {
+  background: var(--primitive-neutral-050);
+  color: oklch(15% 0 0);
+}
+```
+
+---
+
+## OKLCH Color Space
 
 All colors use `oklch(L C H / alpha)` format:
 
@@ -43,191 +100,114 @@ All colors use `oklch(L C H / alpha)` format:
 - **Wide gamut** – P3 display support
 - **Easy theming** – Shift L for dark mode, H for brand variants
 
-```css
-/* Light mode: high L */
---gradient-calm: linear-gradient(180deg, oklch(90% 0.03 220) 0%, oklch(85% 0.05 230) 100%);
-
-/* Dark mode: low L */
---gradient-calm: linear-gradient(180deg, oklch(30% 0.03 220) 0%, oklch(25% 0.05 230) 100%);
-```
-
 ---
 
-### 2. Semantic CSS Variables
+## Theming System
 
-**Never use raw values in component styles.** Always reference semantic tokens:
+### Two-Axis Themes
 
-```css
-/* ✅ CORRECT */
-.card {
-  background: var(--color-surface);
-  color: var(--color-text);
-  box-shadow: var(--shadow-card);
-}
-
-/* ❌ WRONG - hardcoded values */
-.card {
-  background: #f0f0f0;           /* No hex codes */
-  color: oklch(15% 0 0);         /* No raw oklch */
-  box-shadow: 0 4px 8px black;   /* No inline values */
-}
-```
-
----
-
-### 3. Design Token Categories
-
-#### Primitives (raw values)
-
-```css
-:root {
-  /* Neutrals - lightness ramp */
-  --color-neutral-000: oklch(100% 0 0);  /* white */
-  --color-neutral-050: oklch(97% 0 0);
-  --color-neutral-100: oklch(92% 0 0);
-  --color-neutral-800: oklch(25% 0 0);
-  --color-neutral-900: oklch(15% 0 0);
-  --color-neutral-950: oklch(10% 0 0);   /* near-black */
-
-  /* Brand colors */
-  --color-brand-500: oklch(55% 0.23 260);  /* primary blue */
-  --color-brand-400: oklch(65% 0.2 255);   /* lighter variant */
-
-  /* Expressive primitives */
-  --color-expressive-red: oklch(55% 0.2 20);
-}
-```
-
-#### Semantic Tokens (mapped by theme)
-
-```css
-:root {
-  /* Light theme (default) */
-  --color-background: var(--color-neutral-000);
-  --color-text: var(--color-neutral-900);
-  --color-surface: var(--color-neutral-050);
-  --color-interactive: var(--color-brand-500);
-
-  /* Expressive text */
-  --color-expressive-handwritten: var(--color-interactive);
-  --color-expressive-bully: var(--color-expressive-red);
-}
-
-:root[data-theme='dark'] {
-  /* Dark theme overrides */
-  --color-background: var(--color-neutral-900);
-  --color-text: var(--color-neutral-100);
-  --color-surface: var(--color-neutral-800);
-  --color-interactive: var(--color-brand-400);
-
-  /* Expressive text (dark mode) */
-  --color-expressive-bully: oklch(65% 0.18 20);
-}
-```
-
----
-
-### 4. Contrast Guidelines
-
-Ensure sufficient contrast between background and foreground:
-
-| Pairing | Minimum ΔL | Example |
-|---------|------------|---------|
-| Primary button | 40%+ | Blue bg (L=55%) + White text (L=100%) ✅ |
-| Surface text | 60%+ | Surface (L=97%) + Text (L=15%) ✅ |
-| Subtle text | 50%+ | Background (L=100%) + Subtle (L=35%) ✅ |
-
-**Common mistake:**
-```css
-/* ❌ WRONG - dark text on blue = poor contrast */
-.button.active {
-  background: var(--color-primary);        /* L=55% */
-  color: var(--color-button-text);         /* L=25% → ΔL=30% FAILS */
-}
-
-/* ✅ CORRECT - white text on blue */
-.button.active {
-  background: var(--color-primary);
-  color: var(--color-neutral-000);         /* L=100% → ΔL=45% */
-}
-```
-
----
-
-### 5. Expressive Text Tokens
-
-For styled text in stories (handwritten, shout, bully):
-
-| Style | Font | Color Variable | Effect |
-|-------|------|----------------|--------|
-| `handwritten` | `--font-handwritten` | `--color-expressive-handwritten` | Cursive blue |
-| `shout` | `--font-display` | (inherit) | Bold, larger |
-| `bully` | `--font-display` | `--color-expressive-bully` | Bold, italic, red |
-
-**Always use semantic variables**, not primitives:
-```css
-/* ✅ CORRECT */
-.expressiveBully { color: var(--color-expressive-bully); }
-
-/* ❌ WRONG - primitive won't adapt to dark mode */
-.expressiveBully { color: var(--color-expressive-red); }
-```
-
----
-
-### 6. Dark Mode via `data-theme`
-
-Theme is controlled by `data-theme` attribute on `<html>`:
+| Attribute | Values | Purpose |
+|-----------|--------|---------|
+| `data-theme` | `light`, `dark` | Appearance (lightness) |
+| `data-vibrancy` | `minimal`, `standard`, `high-contrast` | Color intensity |
 
 ```html
-<html data-theme="dark">  <!-- dark mode -->
-<html>                    <!-- light mode (default) -->
+<!-- Default: light + standard -->
+<html data-theme="light" data-vibrancy="standard">
+
+<!-- Dark minimal -->
+<html data-theme="dark" data-vibrancy="minimal">
+
+<!-- Light high-contrast (accessibility) -->
+<html data-theme="light" data-vibrancy="high-contrast">
 ```
 
-**Managed by `useThemeManager` hook** (located in `src/hooks/`):
-- Reads preference from localStorage
-- Falls back to system preference
-- Sets attribute on document element
+### Vibrancy Effects
+
+| Vibrancy | Effect |
+|----------|--------|
+| `minimal` | 50% chroma, softer shadows, calmer feel |
+| `standard` | Full vibrancy (default) |
+| `high-contrast` | 120% chroma, stronger borders, accessibility |
+
+### Managing Theme in JS
+
+```typescript
+// Set theme
+document.documentElement.dataset.theme = 'dark';
+document.documentElement.dataset.vibrancy = 'minimal';
+
+// Read theme
+const isDark = document.documentElement.dataset.theme === 'dark';
+```
 
 ---
 
-### 7. CSS Modules (Component Scoping)
+## Primitive Color Ramps
 
-Every component MUST have a co-located module file:
+Extended fidelity at light and dark ends:
 
+```css
+/* Light end (extra fidelity for surfaces) */
+--primitive-neutral-000: oklch(100% 0 0);   /* pure white */
+--primitive-neutral-025: oklch(98.5% 0 0);  /* barely off-white */
+--primitive-neutral-050: oklch(97% 0 0);    /* subtle off-white */
+--primitive-neutral-075: oklch(95% 0 0);    /* light surface */
+--primitive-neutral-100: oklch(92% 0 0);    /* surface hover */
+--primitive-neutral-150: oklch(88% 0 0);    /* pressed/active */
+
+/* Mid-range */
+--primitive-neutral-200 through --primitive-neutral-700
+
+/* Dark end (extra fidelity for dark mode) */
+--primitive-neutral-750: oklch(30% 0 0);
+--primitive-neutral-800: oklch(25% 0 0);
+--primitive-neutral-850: oklch(20% 0 0);
+--primitive-neutral-900: oklch(15% 0 0);
+--primitive-neutral-925: oklch(12% 0 0);
+--primitive-neutral-950: oklch(8% 0 0);
+--primitive-neutral-975: oklch(5% 0 0);
 ```
-Button/
-├── Button.tsx
-└── Button.module.css
-```
-
-**Benefits:**
-- Class names are automatically scoped (no collisions)
-- IDE support (autocomplete, go-to-definition)
-- Standard CSS syntax (no learning curve)
 
 ---
 
-### 8. Conditional Classes with `cn()`
+## Status Colors
 
-Use the `cn()` utility from `@gia/utils` for conditional classes:
+| Status | Semantic Token | Usage |
+|--------|----------------|-------|
+| Success | `--fg-success`, `--bg-success-faint` | Positive feedback |
+| Warning | `--fg-warning`, `--bg-warning-faint` | Caution states |
+| Alert | `--fg-alert`, `--bg-alert-faint` | Errors, destructive |
+| Info | `--fg-info`, `--bg-info-faint` | Informational |
 
-```tsx
-import { cn } from '@gia/utils';
-import styles from './Button.module.css';
+```css
+.success-message {
+  background: var(--bg-success-faint);
+  color: var(--fg-success);
+  border: 1px solid var(--border-success);
+}
+```
 
-<button className={cn(
-  styles.button,
-  isActive && styles.active,
-  variant === 'primary' && styles.primary
-)} />
+---
+
+## Interactive States
+
+Each semantic token has explicit hover/pressed variants:
+
+```css
+/* Base → Hover → Pressed */
+--bg-primary         → --bg-primary-hover      → --bg-primary-pressed
+--bg-secondary       → --bg-secondary-hover    → --bg-secondary-pressed
+--bg-brand-primary   → --bg-brand-primary-hover
+--border-primary     → --border-primary-hover
+--fg-link            → --fg-link-hover
 ```
 
 ---
 
 ## Mood Gradients
 
-Page backgrounds use mood-specific gradients defined as CSS variables:
+Page backgrounds use mood-specific gradients:
 
 | Mood | Hue | Light L | Dark L |
 |------|-----|---------|--------|
@@ -235,151 +215,94 @@ Page backgrounds use mood-specific gradients defined as CSS variables:
 | `whimsical` | 280-320 (purple/pink) | 75-85% | 22-30% |
 | `playful` | 50-80 (yellow/orange) | 82-88% | 28-35% |
 | `mysterious` | 260-280 (deep purple) | 40-50% | 12-18% |
-| `adventurous` | 30-45 (orange) | 60-70% | 22-28% |
-| `cozy` | 40-60 (warm orange) | 75-80% | 25-30% |
-| `dreamy` | 300-320 (magenta) | 80-85% | 22-28% |
-| `spooky` | 260-280 (dark purple) | 35-45% | 8-12% |
-| `tense` | 25-30 (red) | 75-85% | 22-30% |
 | `joyful` | 85-95 (yellow) | 88-92% | 26-32% |
 
-```css
-/* Light theme example */
---gradient-calm: linear-gradient(135deg, oklch(90% 0.08 220), oklch(85% 0.06 200));
---gradient-whimsical: linear-gradient(135deg, oklch(85% 0.15 320), oklch(75% 0.12 280));
-
-/* Dark theme - reduced L values */
---gradient-calm: linear-gradient(135deg, oklch(30% 0.06 220), oklch(25% 0.04 200));
---gradient-whimsical: linear-gradient(135deg, oklch(30% 0.12 320), oklch(22% 0.10 280));
-```
-
-**Usage in components** (via CSS variables):
 ```tsx
-const getGradient = (mood: string) => `var(--gradient-${mood})` || 'var(--gradient-calm)';
+const getGradient = (mood: string) => `var(--gradient-${mood})`;
 ```
 
 ---
 
-### 9. Animation Tokens
+## Expressive Text Tokens
 
-Animation durations and easings are defined as CSS custom properties:
+For styled story text:
+
+| Style | Font | Color Variable |
+|-------|------|----------------|
+| `handwritten` | `--font-handwritten` | `--color-expressive-handwritten` |
+| `shout` | `--font-display` | (inherit) |
+| `bully` | `--font-display` | `--color-expressive-bully` |
+
+---
+
+## Animation Tokens
 
 ```css
-:root {
-  /* Durations */
-  --duration-fast: 150ms;
-  --duration-normal: 300ms;
-  --duration-slow: 500ms;
-  
-  /* Easings */
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-}
+/* Durations */
+--duration-fast:    150ms;
+--duration-normal:  300ms;
+--duration-slow:    500ms;
+
+/* Easings */
+--ease-out:      cubic-bezier(0, 0, 0.2, 1);
+--ease-in-out:   cubic-bezier(0.4, 0, 0.2, 1);
+--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 ```
 
 For JavaScript/Framer Motion, import from `@gia/utils`:
-
 ```typescript
 import { EASING, DURATION } from '@gia/utils';
-
-// Use in motion components
-transition={{ duration: DURATION.normal, ease: EASING.outExpo }}
 ```
 
 ---
 
-### 10. Accessibility Utilities
+## CSS Modules
 
-The design system includes a `.sr-only` class for screen-reader-only content:
+Every component has a co-located module:
 
-```css
-/* In reset.css */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
+```
+Button/
+├── Button.tsx
+└── Button.module.css
+```
+
+Use `cn()` utility for conditional classes:
+```tsx
+import { cn } from '@gia/utils';
+import styles from './Button.module.css';
+
+<button className={cn(
+  styles.button,
+  isActive && styles.active
+)} />
 ```
 
 ---
 
-## Inline Code Styling
+## Backward Compatibility
 
-For `[code]text[/code]` DSL tags, use the `.inlineCode` pattern:
+Legacy token names map to new semantic tokens:
 
-```css
-.inlineCode {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.9em;
-  background: var(--color-surface);
-  padding: 0.1em 0.3em;
-  border-radius: 3px;
-}
-```
+| Old Token | New Token |
+|-----------|-----------|
+| `--color-background` | `--bg-primary` |
+| `--color-surface` | `--bg-secondary` |
+| `--color-text` | `--fg-primary` |
+| `--color-text-subtle` | `--fg-secondary` |
+| `--color-interactive` | `--fg-brand` |
+| `--color-border` | `--border-primary` |
+| `--color-danger` | `--fg-alert` |
+| `--color-success` | `--fg-success` |
 
-This styling is used in both `ExpressiveTextPreview.tsx` (Studio) and `InteractiveText.tsx` (Viewer).
-
-## Common Patterns
-
-### Focus Ring Safe Zone
-
-Containers with `overflow: hidden` need padding for focus rings:
-
-```css
-.container {
-  overflow: hidden;
-  padding: 2px;  /* Safe zone for focus outlines */
-}
-```
-
-### Theme-Specific Overrides in Modules
-
-Use `:global()` selector for theme-specific styling within CSS Modules:
-
-```css
-.card {
-  background: var(--color-surface);
-}
-
-:global([data-theme='dark']) .card {
-  /* Dark-mode specific adjustments beyond variable changes */
-  border: 1px solid var(--color-neutral-700);
-}
-```
+> [!NOTE]
+> Use new semantic tokens for new code. Legacy aliases exist for migration only.
 
 ---
 
-## Adding New Styles
-
-### Component Styles
-
-1. Create `ComponentName.module.css` next to component
-2. Use only semantic variables from design-system
-3. Import and use with `styles.className`
-4. Add dark mode overrides only if needed (most "just work")
-
-### New Design Tokens
+## Adding New Tokens
 
 1. Add primitive to `packages/design-system/variables.css`
 2. Add semantic mapping for both light and dark themes
-3. Document the token's purpose
-4. Use in components via `var(--token-name)`
-
----
-
-## Why This Architecture?
-
-| Choice | Rationale |
-|--------|-----------|
-| **oklch** | Perceptual uniformity, wide gamut, easy L-shifting for themes |
-| **CSS Variables** | Zero runtime, SSR-safe, browser devtools support |
-| **CSS Modules** | Scoping without runtime, familiar CSS syntax |
-| **Shared package** | Single source of truth, npm versioning |
-| **data-theme attribute** | SSR-compatible, no FOUC, explicit control |
-| **Semantic tokens** | Future-proof, dark mode "just works" |
+3. Add vibrancy overrides if needed (minimal/high-contrast)
+4. Document in this file
+5. Use in components via `var(--token-name)`

@@ -1,166 +1,591 @@
-/* src/styles/variables.css */
-
-/* 
-  Theming System
-  - Uses oklch for perceptual uniformity.
-  - Supports 'light', 'dark', and 'system' (via JS toggling of data-theme attribute).
-*/
+/* ═══════════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM TOKENS
+   packages/design-system/variables.css
+   
+   Architecture:
+   1. PRIMITIVES - Raw OKLCH values (never use directly in components)
+   2. SEMANTIC TOKENS - Role-based, theme-aware (use these in components)
+   3. BACKWARD-COMPAT ALIASES - Maps old token names to new
+   
+   Theming:
+   - data-theme: 'light' | 'dark'
+   - data-vibrancy: 'minimal' | 'standard' | 'high-contrast'
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* --- Primitives (OKLCH) --- */
-  /* Neutrals */
-  --color-neutral-000: oklch(100% 0 0);
-  --color-neutral-050: oklch(97% 0 0);
-  --color-neutral-100: oklch(92% 0 0);
-  --color-neutral-200: oklch(87% 0 0);
-  --color-neutral-300: oklch(80% 0 0);
-  --color-neutral-700: oklch(35% 0 0);
-  --color-neutral-800: oklch(25% 0 0);
-  --color-neutral-900: oklch(15% 0 0);
-  --color-neutral-950: oklch(10% 0 0);
+   /* ═══════════════════════════════════════════════════════════════════════════
+     PART 1: PRIMITIVES
+     Raw OKLCH values - DO NOT use directly in components
+     ═══════════════════════════════════════════════════════════════════════════ */
 
-  /* Brand / Interactive (Blue-ish) */
-  /* #0070f3 approx */
-  --color-brand-500: oklch(55% 0.23 260);
-  /* #58a6ff approx */
-  --color-brand-400: oklch(65% 0.2 255);
+   /* ─── Neutrals (Gray Scale) ─── */
+   /* Light end - extra fidelity for subtle surface variations */
+   --primitive-neutral-000: oklch(100% 0 0);
+   /* pure white */
+   --primitive-neutral-025: oklch(98.5% 0 0);
+   /* barely off-white */
+   --primitive-neutral-050: oklch(97% 0 0);
+   /* subtle off-white */
+   --primitive-neutral-075: oklch(95% 0 0);
+   /* light surface */
+   --primitive-neutral-100: oklch(92% 0 0);
+   /* surface hover */
+   --primitive-neutral-150: oklch(88% 0 0);
+   /* pressed/active */
 
-  /* Expressive */
-  --color-expressive-red: oklch(55% 0.2 20);
+   /* Mid-range */
+   --primitive-neutral-200: oklch(84% 0 0);
+   --primitive-neutral-300: oklch(76% 0 0);
+   --primitive-neutral-400: oklch(64% 0 0);
+   /* subtle text */
+   --primitive-neutral-500: oklch(52% 0 0);
+   /* secondary text */
+   --primitive-neutral-600: oklch(42% 0 0);
+   /* primary text (dark mode) */
+   --primitive-neutral-700: oklch(35% 0 0);
+   /* borders (dark mode) */
 
-  /* Fonts */
-  --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-display: 'Balsamiq Sans', cursive;
-  --font-handwritten: 'Gochi Hand', cursive;
+   /* Dark end - extra fidelity for dark mode surfaces */
+   --primitive-neutral-750: oklch(30% 0 0);
+   /* dark border hover */
+   --primitive-neutral-800: oklch(25% 0 0);
+   /* dark surface */
+   --primitive-neutral-850: oklch(20% 0 0);
+   /* dark surface hover */
+   --primitive-neutral-900: oklch(15% 0 0);
+   /* dark background */
+   --primitive-neutral-925: oklch(12% 0 0);
+   /* darker bg */
+   --primitive-neutral-950: oklch(8% 0 0);
+   /* near-black */
+   --primitive-neutral-975: oklch(5% 0 0);
+   /* deepest dark */
 
-  /* --- Semantic Variables (Light Theme Default) --- */
-  --color-background: var(--color-neutral-000);
-  --color-text: var(--color-neutral-900);
+   /* ─── Brand (Blue) ─── */
+   --primitive-brand-100: oklch(92% 0.05 255);
+   /* faint brand bg */
+   --primitive-brand-200: oklch(85% 0.10 255);
+   /* light brand */
+   --primitive-brand-300: oklch(75% 0.15 255);
+   /* brand tint */
+   --primitive-brand-400: oklch(65% 0.20 255);
+   /* brand light */
+   --primitive-brand-500: oklch(55% 0.23 260);
+   /* brand primary */
+   --primitive-brand-600: oklch(48% 0.22 265);
+   /* brand dark */
+   --primitive-brand-700: oklch(40% 0.20 270);
+   /* brand darker */
 
-  --color-interactive: var(--color-brand-500);
-  --color-interactive-underline: oklch(55% 0.23 260 / 0.4);
+   /* ─── Status: Success (Green) ─── */
+   --primitive-success-100: oklch(92% 0.05 145);
+   --primitive-success-500: oklch(55% 0.18 145);
+   --primitive-success-600: oklch(48% 0.16 145);
+   --primitive-success-700: oklch(40% 0.15 145);
 
-  --color-tooltip-background: var(--color-neutral-950);
-  --color-tooltip-text: var(--color-neutral-000);
+   /* ─── Status: Warning (Amber) ─── */
+   --primitive-warning-100: oklch(92% 0.08 85);
+   --primitive-warning-500: oklch(75% 0.18 70);
+   --primitive-warning-600: oklch(65% 0.16 65);
+   --primitive-warning-700: oklch(55% 0.15 60);
 
-  --color-button-background: oklch(100% 0 0 / 0.8);
-  --color-button-border: var(--color-neutral-200);
-  --color-button-text: var(--color-neutral-800);
-  --color-button-background-hover: var(--color-neutral-050);
+   /* ─── Status: Alert/Error (Red) ─── */
+   --primitive-alert-100: oklch(92% 0.05 25);
+   --primitive-alert-500: oklch(55% 0.20 25);
+   --primitive-alert-600: oklch(48% 0.18 25);
+   --primitive-alert-700: oklch(40% 0.18 25);
 
-  /* Shadows */
-  --shadow-card: 0 8px 24px oklch(0% 0 0 / 0.1);
-  --shadow-card-hover: 0 12px 32px oklch(0% 0 0 / 0.15);
-  --shadow-text-strong: 0 2px 4px oklch(0% 0 0 / 0.5);
-  --shadow-text-subtle: 0 1px 2px oklch(0% 0 0 / 0.5);
+   /* ─── Status: Info (Cyan) ─── */
+   --primitive-info-100: oklch(92% 0.05 220);
+   --primitive-info-500: oklch(60% 0.15 220);
+   --primitive-info-600: oklch(52% 0.14 220);
+   --primitive-info-700: oklch(45% 0.12 220);
 
-  /* Overlays */
-  --color-overlay-gradient-start: oklch(0% 0 0 / 0.7);
-  --color-overlay-gradient-end: oklch(0% 0 0 / 0);
-  --color-overlay-text: var(--color-neutral-000);
+   /* ─── Expressive (for styled text) ─── */
+   --primitive-expressive-red: oklch(55% 0.2 20);
+   --primitive-expressive-red-light: oklch(65% 0.18 20);
 
-  /* View Transitions */
-  --duration-morph: 400ms;
-  --duration-fade: 200ms;
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+   /* ─── Alpha Values (for shadows and overlays) ─── */
+   --primitive-alpha-5: 0.05;
+   --primitive-alpha-10: 0.10;
+   --primitive-alpha-15: 0.15;
+   --primitive-alpha-20: 0.20;
+   --primitive-alpha-30: 0.30;
+   --primitive-alpha-40: 0.40;
+   --primitive-alpha-50: 0.50;
+   --primitive-alpha-60: 0.60;
+   --primitive-alpha-70: 0.70;
+   --primitive-alpha-80: 0.80;
 
-  /* Animation Durations */
-  --duration-fast: 150ms;
-  --duration-normal: 300ms;
-  --duration-slow: 500ms;
 
-  /* Animation Easings */
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+   /* ═══════════════════════════════════════════════════════════════════════════
+     PART 2: SEMANTIC TOKENS - Light Theme Default
+     Role-based tokens - USE THESE in components
+     ═══════════════════════════════════════════════════════════════════════════ */
 
-  /* Z-Index Layers */
-  --z-library: 1;
-  --z-lobby-backdrop: 100;
-  --z-lobby-modal: 110;
-  --z-lobby-menu: 120;
+   /* ─── Backgrounds ─── */
+   --bg-primary: var(--primitive-neutral-000);
+   --bg-primary-hover: var(--primitive-neutral-025);
+   --bg-primary-pressed: var(--primitive-neutral-075);
 
-  /* Mood Gradients - Light Theme (bright, vibrant) */
-  --gradient-calm: linear-gradient(135deg, oklch(90% 0.08 220) 0%, oklch(85% 0.06 200) 100%);
-  --gradient-whimsical: linear-gradient(135deg, oklch(85% 0.15 320) 0%, oklch(75% 0.12 280) 100%);
-  --gradient-playful: linear-gradient(135deg, oklch(88% 0.18 80) 0%, oklch(82% 0.15 50) 100%);
-  --gradient-mysterious: linear-gradient(135deg, oklch(50% 0.12 280) 0%, oklch(40% 0.10 260) 100%);
-  --gradient-adventurous: linear-gradient(135deg, oklch(70% 0.15 30) 0%, oklch(60% 0.18 45) 100%);
-  --gradient-cozy: linear-gradient(135deg, oklch(80% 0.10 60) 0%, oklch(75% 0.08 40) 100%);
-  --gradient-dreamy: linear-gradient(135deg, oklch(85% 0.12 300) 0%, oklch(80% 0.10 320) 100%);
-  --gradient-spooky: linear-gradient(135deg, oklch(45% 0.08 280) 0%, oklch(35% 0.06 260) 100%);
-  --gradient-tense: linear-gradient(180deg, oklch(85% 0.1 30) 0%, oklch(75% 0.15 25) 100%);
-  --gradient-joyful: linear-gradient(180deg, oklch(92% 0.1 95) 0%, oklch(88% 0.12 85) 100%);
+   --bg-secondary: var(--primitive-neutral-050);
+   --bg-secondary-hover: var(--primitive-neutral-075);
+   --bg-secondary-pressed: var(--primitive-neutral-100);
 
-  /* Surface Colors (for panels, cards, sidebars) */
-  --color-surface: var(--color-neutral-050);
-  --color-surface-hover: var(--color-neutral-100);
-  --color-border: var(--color-neutral-200);
-  --color-text-subtle: var(--color-neutral-700);
+   --bg-tertiary: var(--primitive-neutral-100);
+   --bg-tertiary-hover: var(--primitive-neutral-150);
 
-  /* Status Colors */
-  --color-danger: oklch(50% 0.2 25);
-  --color-success: oklch(55% 0.2 145);
+   --bg-inverse: var(--primitive-neutral-900);
+   --bg-inverse-hover: var(--primitive-neutral-850);
 
-  /* Focus Ring (for accessibility) */
-  --color-focus-ring: oklch(55% 0.23 260 / 0.25);
+   --bg-brand-primary: var(--primitive-brand-500);
+   --bg-brand-primary-hover: var(--primitive-brand-600);
+   --bg-brand-faint: var(--primitive-brand-100);
+   --bg-brand-muted: var(--primitive-brand-200);
 
-  /* Expressive Text (for rich text preview) */
-  --color-expressive-handwritten: var(--color-interactive);
-  --color-expressive-bully: var(--color-expressive-red);
+   --bg-success: var(--primitive-success-500);
+   --bg-success-faint: var(--primitive-success-100);
+   --bg-warning: var(--primitive-warning-500);
+   --bg-warning-faint: var(--primitive-warning-100);
+   --bg-alert: var(--primitive-alert-500);
+   --bg-alert-faint: var(--primitive-alert-100);
+   --bg-info: var(--primitive-info-500);
+   --bg-info-faint: var(--primitive-info-100);
 
-  /* Text Overlay (for fullbleed layouts) */
-  --color-text-overlay-bg: oklch(100% 0 0 / 0.85);
+   --bg-disabled: var(--primitive-neutral-100);
+   --bg-overlay: oklch(0% 0 0 / var(--primitive-alpha-50));
+
+   /* ─── Borders ─── */
+   --border-primary: var(--primitive-neutral-200);
+   --border-primary-hover: var(--primitive-neutral-300);
+   --border-secondary: var(--primitive-neutral-150);
+   --border-tertiary: var(--primitive-neutral-100);
+   --border-inverse: var(--primitive-neutral-700);
+
+   --border-focus: var(--primitive-brand-400);
+   --border-brand: var(--primitive-brand-500);
+   --border-brand-hover: var(--primitive-brand-600);
+
+   --border-success: var(--primitive-success-500);
+   --border-warning: var(--primitive-warning-500);
+   --border-alert: var(--primitive-alert-500);
+   --border-info: var(--primitive-info-500);
+
+   --border-disabled: var(--primitive-neutral-150);
+
+   /* ─── Foreground (Text & Icons) ─── */
+   --fg-primary: var(--primitive-neutral-900);
+   --fg-primary-hover: var(--primitive-neutral-950);
+   --fg-secondary: var(--primitive-neutral-600);
+   --fg-tertiary: var(--primitive-neutral-500);
+   --fg-muted: var(--primitive-neutral-400);
+   --fg-inverse: var(--primitive-neutral-000);
+
+   --fg-link: var(--primitive-brand-500);
+   --fg-link-hover: var(--primitive-brand-600);
+   --fg-brand: var(--primitive-brand-500);
+   --fg-on-brand: var(--primitive-neutral-000);
+
+   --fg-success: var(--primitive-success-700);
+   --fg-warning: var(--primitive-warning-700);
+   --fg-alert: var(--primitive-alert-700);
+   --fg-info: var(--primitive-info-700);
+
+   --fg-disabled: var(--primitive-neutral-400);
+
+   /* ─── Shadows ─── */
+   --shadow-xs: 0 1px 2px oklch(0% 0 0 / var(--primitive-alpha-5));
+   --shadow-sm: 0 2px 4px oklch(0% 0 0 / var(--primitive-alpha-10));
+   --shadow-md: 0 4px 8px oklch(0% 0 0 / var(--primitive-alpha-10));
+   --shadow-lg: 0 8px 24px oklch(0% 0 0 / var(--primitive-alpha-15));
+   --shadow-xl: 0 16px 48px oklch(0% 0 0 / var(--primitive-alpha-20));
+
+   --shadow-card: var(--shadow-md);
+   --shadow-card-hover: var(--shadow-lg);
+   --shadow-modal: var(--shadow-xl);
+   --shadow-dropdown: var(--shadow-lg);
+   --shadow-text-strong: 0 2px 4px oklch(0% 0 0 / 0.5);
+   --shadow-text-subtle: 0 1px 2px oklch(0% 0 0 / 0.5);
+
+   /* ─── Focus Ring ─── */
+   --focus-ring: 0 0 0 3px oklch(55% 0.23 260 / 0.25);
+
+
+   /* ═══════════════════════════════════════════════════════════════════════════
+     PART 3: COMPONENT-SPECIFIC TOKENS
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+   /* ─── Buttons ─── */
+   --color-button-background: oklch(100% 0 0 / 0.8);
+   --color-button-background-hover: var(--bg-secondary);
+   --color-button-border: var(--border-primary);
+   --color-button-text: var(--fg-primary);
+
+   /* ─── Tooltips ─── */
+   --color-tooltip-background: var(--bg-inverse);
+   --color-tooltip-text: var(--fg-inverse);
+
+   /* ─── Overlays ─── */
+   --color-overlay-gradient-start: oklch(0% 0 0 / 0.7);
+   --color-overlay-gradient-end: oklch(0% 0 0 / 0);
+   --color-overlay-text: var(--fg-inverse);
+   --color-text-overlay-bg: oklch(100% 0 0 / 0.85);
+
+   /* ─── Expressive Text (Emotion Colors) ─── */
+   /* From research: happy, sad, shout, angry, nervous, spooky */
+   --fg-expressive-happy: oklch(55% 0.20 75);
+   /* sunny yellow-orange */
+   --fg-expressive-sad: oklch(50% 0.08 240);
+   /* desaturated cool blue */
+   --fg-expressive-shout: oklch(55% 0.24 350);
+   /* vibrant magenta-pink */
+   --fg-expressive-angry: oklch(48% 0.22 25);
+   /* deep aggressive red */
+   --fg-expressive-nervous: oklch(52% 0.10 290);
+   /* muted purple-gray */
+   --fg-expressive-spooky: oklch(42% 0.12 175);
+   /* dark eerie teal */
+
+   /* New emotions: silly, brave, whisper, magical, grumpy, dreamy */
+   --fg-expressive-silly: oklch(60% 0.22 330);
+   /* bubble-gum pink */
+   --fg-expressive-brave: oklch(50% 0.22 255);
+   /* royal heroic blue */
+   --fg-expressive-whisper: oklch(65% 0.02 240);
+   /* barely visible gray */
+   --fg-expressive-magical: oklch(48% 0.24 310);
+   /* deep purple-magenta */
+   --fg-expressive-grumpy: oklch(45% 0.10 95);
+   /* muddy olive-brown */
+   --fg-expressive-dreamy: oklch(60% 0.15 280);
+   /* soft lavender */
+
+   /* Legacy aliases */
+   --color-expressive-handwritten: var(--fg-brand);
+   --color-expressive-bully: var(--fg-expressive-angry);
+
+
+   /* ═══════════════════════════════════════════════════════════════════════════
+     PART 4: MOOD GRADIENTS (Light Theme)
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+   --gradient-calm: linear-gradient(135deg, oklch(90% 0.08 220) 0%, oklch(85% 0.06 200) 100%);
+   --gradient-whimsical: linear-gradient(135deg, oklch(85% 0.15 320) 0%, oklch(75% 0.12 280) 100%);
+   --gradient-playful: linear-gradient(135deg, oklch(88% 0.18 80) 0%, oklch(82% 0.15 50) 100%);
+   --gradient-mysterious: linear-gradient(135deg, oklch(50% 0.12 280) 0%, oklch(40% 0.10 260) 100%);
+   --gradient-adventurous: linear-gradient(135deg, oklch(70% 0.15 30) 0%, oklch(60% 0.18 45) 100%);
+   --gradient-cozy: linear-gradient(135deg, oklch(80% 0.10 60) 0%, oklch(75% 0.08 40) 100%);
+   --gradient-dreamy: linear-gradient(135deg, oklch(85% 0.12 300) 0%, oklch(80% 0.10 320) 100%);
+   --gradient-spooky: linear-gradient(135deg, oklch(45% 0.08 280) 0%, oklch(35% 0.06 260) 100%);
+   --gradient-tense: linear-gradient(180deg, oklch(85% 0.1 30) 0%, oklch(75% 0.15 25) 100%);
+   --gradient-joyful: linear-gradient(180deg, oklch(92% 0.1 95) 0%, oklch(88% 0.12 85) 100%);
+
+
+   /* ═══════════════════════════════════════════════════════════════════════════
+     PART 5: TYPOGRAPHY & ANIMATION
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+   /* ─── Fonts ─── */
+   --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+   --font-display: 'Balsamiq Sans', cursive;
+   --font-handwritten: 'Gochi Hand', cursive;
+
+   /* ─── Animation Durations ─── */
+   --duration-fast: 150ms;
+   --duration-normal: 300ms;
+   --duration-slow: 500ms;
+   --duration-morph: 400ms;
+   --duration-fade: 200ms;
+
+   /* ─── Animation Easings ─── */
+   --ease-out: cubic-bezier(0, 0, 0.2, 1);
+   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+   /* ─── Z-Index Layers ─── */
+   --z-library: 1;
+   --z-lobby-backdrop: 100;
+   --z-lobby-modal: 110;
+   --z-lobby-menu: 120;
+
+
+   /* ═══════════════════════════════════════════════════════════════════════════
+     PART 6: BACKWARD-COMPAT ALIASES
+     Maps old token names → new semantic tokens
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+   /* Old naming → New semantic */
+   --color-background: var(--bg-primary);
+   --color-surface: var(--bg-secondary);
+   --color-surface-hover: var(--bg-secondary-hover);
+   --color-text: var(--fg-primary);
+   --color-text-subtle: var(--fg-secondary);
+   --color-interactive: var(--fg-brand);
+   --color-interactive-underline: oklch(55% 0.23 260 / 0.4);
+   --color-border: var(--border-primary);
+   --color-danger: var(--fg-alert);
+   --color-success: var(--fg-success);
+   --color-focus-ring: oklch(55% 0.23 260 / 0.25);
+
+   /* Old primitive refs (keeping for any direct usage) */
+   --color-neutral-000: var(--primitive-neutral-000);
+   --color-neutral-050: var(--primitive-neutral-050);
+   --color-neutral-100: var(--primitive-neutral-100);
+   --color-neutral-200: var(--primitive-neutral-200);
+   --color-neutral-300: var(--primitive-neutral-300);
+   --color-neutral-700: var(--primitive-neutral-700);
+   --color-neutral-800: var(--primitive-neutral-800);
+   --color-neutral-900: var(--primitive-neutral-900);
+   --color-neutral-950: var(--primitive-neutral-950);
+   --color-brand-400: var(--primitive-brand-400);
+   --color-brand-500: var(--primitive-brand-500);
+   --color-expressive-red: var(--primitive-expressive-red);
 }
 
-/* Dark Theme Override */
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   DARK THEME
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
 :root[data-theme='dark'] {
-  --color-background: var(--color-neutral-900);
-  --color-text: var(--color-neutral-100);
+   /* ─── Backgrounds ─── */
+   --bg-primary: var(--primitive-neutral-900);
+   --bg-primary-hover: var(--primitive-neutral-850);
+   --bg-primary-pressed: var(--primitive-neutral-800);
 
-  --color-interactive: var(--color-brand-400);
-  --color-interactive-underline: oklch(65% 0.2 255 / 0.4);
+   --bg-secondary: var(--primitive-neutral-850);
+   --bg-secondary-hover: var(--primitive-neutral-800);
+   --bg-secondary-pressed: var(--primitive-neutral-750);
 
-  --color-tooltip-background: var(--color-neutral-800);
-  --color-tooltip-text: var(--color-neutral-100);
+   --bg-tertiary: var(--primitive-neutral-800);
+   --bg-tertiary-hover: var(--primitive-neutral-750);
 
-  --color-button-background: oklch(15% 0 0 / 0.8);
-  --color-button-border: var(--color-neutral-700);
-  --color-button-text: var(--color-neutral-100);
-  --color-button-background-hover: var(--color-neutral-800);
+   --bg-inverse: var(--primitive-neutral-100);
+   --bg-inverse-hover: var(--primitive-neutral-150);
 
-  /* Shadows: softer on dark backgrounds */
-  --shadow-card: 0 8px 24px oklch(0% 0 0 / 0.4);
-  --shadow-card-hover: 0 12px 32px oklch(0% 0 0 / 0.5);
+   --bg-brand-primary: var(--primitive-brand-400);
+   --bg-brand-primary-hover: var(--primitive-brand-300);
+   --bg-brand-faint: oklch(25% 0.05 255);
+   --bg-brand-muted: oklch(30% 0.08 255);
 
-  /* Mood Gradients - Dark Theme (darker, muted) */
-  --gradient-calm: linear-gradient(135deg, oklch(30% 0.06 220) 0%, oklch(25% 0.04 200) 100%);
-  --gradient-whimsical: linear-gradient(135deg, oklch(30% 0.12 320) 0%, oklch(22% 0.10 280) 100%);
-  --gradient-playful: linear-gradient(135deg, oklch(35% 0.14 80) 0%, oklch(28% 0.12 50) 100%);
-  --gradient-mysterious: linear-gradient(135deg, oklch(18% 0.10 280) 0%, oklch(12% 0.08 260) 100%);
-  --gradient-adventurous: linear-gradient(135deg, oklch(28% 0.12 30) 0%, oklch(22% 0.14 45) 100%);
-  --gradient-cozy: linear-gradient(135deg, oklch(30% 0.08 60) 0%, oklch(25% 0.06 40) 100%);
-  --gradient-dreamy: linear-gradient(135deg, oklch(28% 0.10 300) 0%, oklch(22% 0.08 320) 100%);
-  --gradient-spooky: linear-gradient(135deg, oklch(12% 0.06 280) 0%, oklch(8% 0.04 260) 100%);
-  --gradient-tense: linear-gradient(180deg, oklch(30% 0.08 30) 0%, oklch(22% 0.12 25) 100%);
-  --gradient-joyful: linear-gradient(180deg, oklch(32% 0.08 95) 0%, oklch(26% 0.10 85) 100%);
+   --bg-success-faint: oklch(25% 0.04 145);
+   --bg-warning-faint: oklch(28% 0.06 85);
+   --bg-alert-faint: oklch(25% 0.04 25);
+   --bg-info-faint: oklch(25% 0.04 220);
 
-  /* Surface Colors (dark mode) */
-  --color-surface: var(--color-neutral-800);
-  --color-surface-hover: var(--color-neutral-700);
-  --color-border: var(--color-neutral-700);
-  --color-text-subtle: var(--color-neutral-300);
+   --bg-disabled: var(--primitive-neutral-800);
+   --bg-overlay: oklch(0% 0 0 / var(--primitive-alpha-70));
 
-  /* Status Colors (dark mode) */
-  --color-danger: oklch(60% 0.18 25);
-  --color-success: oklch(60% 0.18 145);
+   /* ─── Borders ─── */
+   --border-primary: var(--primitive-neutral-700);
+   --border-primary-hover: var(--primitive-neutral-600);
+   --border-secondary: var(--primitive-neutral-750);
+   --border-tertiary: var(--primitive-neutral-800);
+   --border-inverse: var(--primitive-neutral-200);
+   --border-disabled: var(--primitive-neutral-800);
 
-  /* Focus Ring (dark mode) */
-  --color-focus-ring: oklch(65% 0.2 255 / 0.35);
+   /* ─── Foreground ─── */
+   --fg-primary: var(--primitive-neutral-100);
+   --fg-primary-hover: var(--primitive-neutral-000);
+   --fg-secondary: var(--primitive-neutral-300);
+   --fg-tertiary: var(--primitive-neutral-400);
+   --fg-muted: var(--primitive-neutral-500);
+   --fg-inverse: var(--primitive-neutral-900);
 
-  /* Expressive Text (dark mode) */
-  --color-expressive-handwritten: var(--color-interactive);
-  --color-expressive-bully: oklch(65% 0.18 20);
+   --fg-link: var(--primitive-brand-400);
+   --fg-link-hover: var(--primitive-brand-300);
+   --fg-brand: var(--primitive-brand-400);
 
-  /* Text Overlay (dark mode) */
-  --color-text-overlay-bg: oklch(15% 0 0 / 0.9);
+   --fg-success: var(--primitive-success-500);
+   --fg-warning: var(--primitive-warning-500);
+   --fg-alert: var(--primitive-alert-500);
+   --fg-info: var(--primitive-info-500);
+
+   /* ─── Shadows (more opacity on dark) ─── */
+   --shadow-xs: 0 1px 2px oklch(0% 0 0 / var(--primitive-alpha-20));
+   --shadow-sm: 0 2px 4px oklch(0% 0 0 / var(--primitive-alpha-30));
+   --shadow-md: 0 4px 8px oklch(0% 0 0 / var(--primitive-alpha-30));
+   --shadow-lg: 0 8px 24px oklch(0% 0 0 / var(--primitive-alpha-40));
+   --shadow-xl: 0 16px 48px oklch(0% 0 0 / var(--primitive-alpha-50));
+
+   /* ─── Focus Ring ─── */
+   --focus-ring: 0 0 0 3px oklch(65% 0.2 255 / 0.35);
+
+   /* ─── Component Overrides ─── */
+   --color-button-background: oklch(15% 0 0 / 0.8);
+   --color-button-background-hover: var(--bg-secondary);
+   --color-button-border: var(--border-primary);
+
+   --color-interactive: var(--primitive-brand-400);
+   --color-interactive-underline: oklch(65% 0.2 255 / 0.4);
+   --color-focus-ring: oklch(65% 0.2 255 / 0.35);
+
+   --color-expressive-bully: var(--fg-expressive-angry);
+   --color-text-overlay-bg: oklch(15% 0 0 / 0.9);
+
+   /* ─── Expressive Text (Dark Mode) ─── */
+   --fg-expressive-happy: oklch(72% 0.18 75);
+   --fg-expressive-sad: oklch(62% 0.06 240);
+   --fg-expressive-shout: oklch(70% 0.22 350);
+   --fg-expressive-angry: oklch(65% 0.20 25);
+   --fg-expressive-nervous: oklch(65% 0.08 290);
+   --fg-expressive-spooky: oklch(58% 0.10 175);
+   --fg-expressive-silly: oklch(75% 0.20 330);
+   --fg-expressive-brave: oklch(68% 0.20 255);
+   --fg-expressive-whisper: oklch(55% 0.02 240);
+   /* darker = more subtle */
+   --fg-expressive-magical: oklch(68% 0.22 310);
+   --fg-expressive-grumpy: oklch(60% 0.08 95);
+   --fg-expressive-dreamy: oklch(72% 0.12 280);
+
+   /* ─── Mood Gradients (Dark) ─── */
+   --gradient-calm: linear-gradient(135deg, oklch(30% 0.06 220) 0%, oklch(25% 0.04 200) 100%);
+   --gradient-whimsical: linear-gradient(135deg, oklch(30% 0.12 320) 0%, oklch(22% 0.10 280) 100%);
+   --gradient-playful: linear-gradient(135deg, oklch(35% 0.14 80) 0%, oklch(28% 0.12 50) 100%);
+   --gradient-mysterious: linear-gradient(135deg, oklch(18% 0.10 280) 0%, oklch(12% 0.08 260) 100%);
+   --gradient-adventurous: linear-gradient(135deg, oklch(28% 0.12 30) 0%, oklch(22% 0.14 45) 100%);
+   --gradient-cozy: linear-gradient(135deg, oklch(30% 0.08 60) 0%, oklch(25% 0.06 40) 100%);
+   --gradient-dreamy: linear-gradient(135deg, oklch(28% 0.10 300) 0%, oklch(22% 0.08 320) 100%);
+   --gradient-spooky: linear-gradient(135deg, oklch(12% 0.06 280) 0%, oklch(8% 0.04 260) 100%);
+   --gradient-tense: linear-gradient(180deg, oklch(30% 0.08 30) 0%, oklch(22% 0.12 25) 100%);
+   --gradient-joyful: linear-gradient(180deg, oklch(32% 0.08 95) 0%, oklch(26% 0.10 85) 100%);
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   VIBRANCY AXIS: MINIMAL
+   Reduced chroma, calmer feel
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+:root[data-vibrancy='minimal'] {
+   /* Override brand with reduced chroma */
+   --primitive-brand-100: oklch(92% 0.025 255);
+   --primitive-brand-200: oklch(85% 0.05 255);
+   --primitive-brand-300: oklch(75% 0.075 255);
+   --primitive-brand-400: oklch(65% 0.10 255);
+   --primitive-brand-500: oklch(55% 0.115 260);
+   --primitive-brand-600: oklch(48% 0.11 265);
+   --primitive-brand-700: oklch(40% 0.10 270);
+
+   /* Subtler status colors */
+   --primitive-success-500: oklch(55% 0.09 145);
+   --primitive-warning-500: oklch(75% 0.09 70);
+   --primitive-alert-500: oklch(55% 0.10 25);
+   --primitive-info-500: oklch(60% 0.075 220);
+
+   /* Softer shadows */
+   --shadow-lg: 0 8px 24px oklch(0% 0 0 / 0.08);
+   --shadow-xl: 0 16px 48px oklch(0% 0 0 / 0.12);
+
+   /* Calmer mood gradients */
+   --gradient-calm: linear-gradient(135deg, oklch(92% 0.03 220) 0%, oklch(88% 0.02 200) 100%);
+   --gradient-whimsical: linear-gradient(135deg, oklch(88% 0.06 320) 0%, oklch(80% 0.05 280) 100%);
+   --gradient-playful: linear-gradient(135deg, oklch(90% 0.08 80) 0%, oklch(85% 0.06 50) 100%);
+   --gradient-joyful: linear-gradient(180deg, oklch(94% 0.05 95) 0%, oklch(90% 0.06 85) 100%);
+
+   /* Expressive (minimal vibrancy - 50% chroma) */
+   --fg-expressive-happy: oklch(55% 0.10 75);
+   --fg-expressive-sad: oklch(50% 0.04 240);
+   --fg-expressive-shout: oklch(55% 0.12 350);
+   --fg-expressive-angry: oklch(48% 0.11 25);
+   --fg-expressive-nervous: oklch(52% 0.05 290);
+   --fg-expressive-spooky: oklch(42% 0.06 175);
+   --fg-expressive-silly: oklch(60% 0.11 330);
+   --fg-expressive-brave: oklch(50% 0.11 255);
+   --fg-expressive-whisper: oklch(65% 0.01 240);
+   --fg-expressive-magical: oklch(48% 0.12 310);
+   --fg-expressive-grumpy: oklch(45% 0.05 95);
+   --fg-expressive-dreamy: oklch(60% 0.08 280);
+}
+
+/* Minimal + Dark */
+:root[data-theme='dark'][data-vibrancy='minimal'] {
+   --shadow-lg: 0 8px 24px oklch(0% 0 0 / 0.25);
+   --shadow-xl: 0 16px 48px oklch(0% 0 0 / 0.35);
+
+   --gradient-calm: linear-gradient(135deg, oklch(28% 0.03 220) 0%, oklch(22% 0.02 200) 100%);
+   --gradient-whimsical: linear-gradient(135deg, oklch(28% 0.06 320) 0%, oklch(20% 0.05 280) 100%);
+   --gradient-playful: linear-gradient(135deg, oklch(32% 0.07 80) 0%, oklch(25% 0.05 50) 100%);
+   --gradient-joyful: linear-gradient(180deg, oklch(30% 0.04 95) 0%, oklch(24% 0.05 85) 100%);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   VIBRANCY AXIS: HIGH-CONTRAST
+   Enhanced for accessibility
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+:root[data-vibrancy='high-contrast'] {
+   /* Higher contrast text */
+   --fg-primary: var(--primitive-neutral-975);
+   --fg-secondary: var(--primitive-neutral-700);
+
+   /* Stronger borders */
+   --border-primary: var(--primitive-neutral-300);
+   --border-primary-hover: var(--primitive-neutral-400);
+
+   /* More saturated brand */
+   --primitive-brand-500: oklch(50% 0.28 260);
+   --primitive-brand-600: oklch(42% 0.26 265);
+
+   /* Bolder status colors */
+   --primitive-success-500: oklch(50% 0.22 145);
+   --primitive-warning-500: oklch(70% 0.22 70);
+   --primitive-alert-500: oklch(50% 0.24 25);
+   --primitive-info-500: oklch(55% 0.18 220);
+
+   /* Stronger shadows */
+   --shadow-lg: 0 8px 24px oklch(0% 0 0 / 0.25);
+   --shadow-xl: 0 16px 48px oklch(0% 0 0 / 0.35);
+
+   /* More vivid gradients */
+   --gradient-calm: linear-gradient(135deg, oklch(88% 0.12 220) 0%, oklch(82% 0.10 200) 100%);
+   --gradient-whimsical: linear-gradient(135deg, oklch(82% 0.20 320) 0%, oklch(70% 0.18 280) 100%);
+   --gradient-playful: linear-gradient(135deg, oklch(85% 0.24 80) 0%, oklch(78% 0.20 50) 100%);
+   --gradient-joyful: linear-gradient(180deg, oklch(90% 0.15 95) 0%, oklch(85% 0.18 85) 100%);
+
+   /* Expressive (high-contrast vibrancy - 120% chroma) */
+   --fg-expressive-happy: oklch(52% 0.26 75);
+   --fg-expressive-sad: oklch(48% 0.10 240);
+   --fg-expressive-shout: oklch(52% 0.30 350);
+   --fg-expressive-angry: oklch(45% 0.28 25);
+   --fg-expressive-nervous: oklch(50% 0.14 290);
+   --fg-expressive-spooky: oklch(40% 0.16 175);
+   --fg-expressive-silly: oklch(58% 0.28 330);
+   --fg-expressive-brave: oklch(48% 0.28 255);
+   --fg-expressive-whisper: oklch(60% 0.04 240);
+   --fg-expressive-magical: oklch(45% 0.30 310);
+   --fg-expressive-grumpy: oklch(42% 0.14 95);
+   --fg-expressive-dreamy: oklch(58% 0.20 280);
+}
+
+/* High-contrast + Dark */
+:root[data-theme='dark'][data-vibrancy='high-contrast'] {
+   /* Higher contrast text in dark mode */
+   --fg-primary: var(--primitive-neutral-000);
+   --fg-secondary: var(--primitive-neutral-200);
+
+   /* Stronger borders */
+   --border-primary: var(--primitive-neutral-600);
+   --border-primary-hover: var(--primitive-neutral-500);
+
+   /* Brighter brand for dark */
+   --primitive-brand-400: oklch(72% 0.24 255);
+   --primitive-brand-300: oklch(80% 0.20 255);
+
+   --shadow-lg: 0 8px 24px oklch(0% 0 0 / 0.60);
+   --shadow-xl: 0 16px 48px oklch(0% 0 0 / 0.75);
+
+   --gradient-calm: linear-gradient(135deg, oklch(32% 0.10 220) 0%, oklch(26% 0.08 200) 100%);
+   --gradient-whimsical: linear-gradient(135deg, oklch(32% 0.16 320) 0%, oklch(24% 0.14 280) 100%);
+   --gradient-playful: linear-gradient(135deg, oklch(38% 0.18 80) 0%, oklch(30% 0.16 50) 100%);
+   --gradient-joyful: linear-gradient(180deg, oklch(35% 0.12 95) 0%, oklch(28% 0.14 85) 100%);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   VIBRANCY AXIS: STANDARD (default - no overrides needed)
+   This is the base :root, included here for documentation completeness
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* :root[data-vibrancy='standard'] inherits all base :root values */
