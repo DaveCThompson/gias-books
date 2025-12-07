@@ -102,6 +102,12 @@ function parseText(
         if (emotionStyle.color) {
           inlineStyle.color = emotionStyle.color;
         }
+        if (emotionStyle.textShadow) {
+          inlineStyle.textShadow = emotionStyle.textShadow;
+        }
+        if (emotionStyle.transform) {
+          inlineStyle.transform = emotionStyle.transform;
+        }
 
         // Only apply animation class if animateText is true and emotion has an animation
         const animationClass = (animateText && emotionStyle.animation)

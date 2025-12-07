@@ -62,6 +62,7 @@ function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
                 break;
             case 'expressive': {
                 // Parse value as "emotion" or "emotion:size"
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const parts = (value || '').split(':');
                 const emotionId = parts[0] || 'normal';
                 const size = parts[1] || 'regular';
@@ -73,14 +74,11 @@ function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
                     display: 'inline-block',
                     fontFamily: emotionStyle.fontFamily,
                     fontSize: getSizeScale(size),
+                    ...(emotionStyle.color && { color: emotionStyle.color }),
+                    ...(emotionStyle.fontVariationSettings && { fontVariationSettings: emotionStyle.fontVariationSettings }),
+                    ...(emotionStyle.textShadow && { textShadow: emotionStyle.textShadow }),
+                    ...(emotionStyle.transform && { transform: emotionStyle.transform }),
                 };
-
-                if (emotionStyle.fontVariationSettings) {
-                    inlineStyle.fontVariationSettings = emotionStyle.fontVariationSettings;
-                }
-                if (emotionStyle.color) {
-                    inlineStyle.color = emotionStyle.color;
-                }
 
                 elements.push(
                     <span key={key} className={styles.expressive} style={inlineStyle}>
@@ -108,4 +106,3 @@ function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
 export function ExpressiveTextPreview({ text }: ExpressiveTextPreviewProps) {
     return <>{parseText(text)}</>;
 }
-

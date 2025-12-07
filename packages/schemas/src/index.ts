@@ -82,6 +82,8 @@ export interface EmotionStyle {
     fontVariationSettings?: string;
     color?: string;
     animation?: string;
+    textShadow?: string;
+    transform?: string;
 }
 
 /**
@@ -93,19 +95,55 @@ export const EMOTION_STYLES: EmotionStyle[] = [
     { id: 'normal', label: 'Normal', fontFamily: 'var(--font-body)' },
     { id: 'happy', label: 'Happy', fontFamily: 'var(--font-fredoka)', fontVariationSettings: '"wght" 600', animation: 'bounce' },
     { id: 'sad', label: 'Sad', fontFamily: 'var(--font-body)', fontVariationSettings: '"wght" 300' },
-    { id: 'shout', label: 'SHOUT', fontFamily: 'var(--font-fredoka)', fontVariationSettings: '"wght" 700', animation: 'shout' },
+    {
+        id: 'shout',
+        label: 'SHOUT',
+        fontFamily: 'var(--font-fredoka)',
+        fontVariationSettings: '"wght" 700',
+        animation: 'shout',
+        textShadow: '2px 2px 0px rgba(0,0,0,0.2)'
+    },
     { id: 'angry', label: 'Angry', fontFamily: 'var(--font-roboto-flex)', fontVariationSettings: '"wght" 800, "wdth" 90', color: 'var(--fg-expressive-angry)', animation: 'clench' },
     { id: 'nervous', label: 'Nervous', fontFamily: 'var(--font-playpen)', animation: 'wiggle' },
     { id: 'whisper', label: 'whisper', fontFamily: 'var(--font-body)', fontVariationSettings: '"wght" 300' },
     { id: 'silly', label: 'Silly', fontFamily: 'var(--font-playpen)', fontVariationSettings: '"wght" 600', animation: 'bounce' },
-    { id: 'spooky', label: 'Spooky', fontFamily: 'var(--font-fredoka)', color: 'var(--fg-expressive-spooky)', animation: 'flicker' },
-    { id: 'magical', label: '✨Magic✨', fontFamily: 'var(--font-body)', color: 'var(--fg-expressive-magical)', animation: 'shimmer' },
+    {
+        id: 'spooky',
+        label: 'Spooky',
+        fontFamily: 'var(--font-fredoka)',
+        color: 'var(--fg-expressive-spooky)',
+        animation: 'flicker',
+        textShadow: '0 0 8px rgba(100, 255, 100, 0.6)'
+    },
+    {
+        id: 'magical',
+        label: '✨Magic✨',
+        fontFamily: 'var(--font-body)',
+        color: 'var(--fg-expressive-magical)',
+        animation: 'shimmer',
+        textShadow: '0 0 10px gold, 0 0 20px purple'
+    },
     { id: 'brave', label: 'Brave', fontFamily: 'var(--font-roboto-flex)', fontVariationSettings: '"wght" 700' },
     { id: 'grumpy', label: 'Grumpy', fontFamily: 'var(--font-roboto-flex)', fontVariationSettings: '"wght" 600, "wdth" 90' },
-    { id: 'dreamy', label: 'Dreamy', fontFamily: 'var(--font-body)', color: 'var(--fg-expressive-dreamy)', animation: 'sway' },
+    {
+        id: 'dreamy',
+        label: 'Dreamy',
+        fontFamily: 'var(--font-body)',
+        color: 'var(--fg-expressive-dreamy)',
+        animation: 'sway',
+        textShadow: '0 0 4px rgba(255, 255, 255, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.1)'
+    },
     // Legacy styles (maintained for backward compatibility)
     { id: 'handwritten', label: 'Handwritten', fontFamily: 'var(--font-handwritten)', color: 'var(--color-interactive)' },
-    { id: 'bully', label: 'Bully', fontFamily: 'var(--font-display)', fontVariationSettings: '"wght" 700', color: 'var(--fg-expressive-angry)' },
+    {
+        id: 'bully',
+        label: 'Bully',
+        fontFamily: 'var(--font-display)',
+        fontVariationSettings: '"wght" 700',
+        color: 'var(--fg-expressive-angry)',
+        transform: 'skew(-5deg) scale(1.05)',
+        textShadow: '1px 1px 0px black'
+    },
 ];
 
 /** Scale factors for each text size */
