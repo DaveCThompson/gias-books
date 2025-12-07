@@ -62,7 +62,6 @@ function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
                 break;
             case 'expressive': {
                 // Parse value as "emotion" or "emotion:size"
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const parts = (value || '').split(':');
                 const emotionId = parts[0] || 'normal';
                 const size = parts[1] || 'regular';

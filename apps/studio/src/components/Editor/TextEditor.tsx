@@ -5,11 +5,12 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import { ExpressiveMark } from '@/editor/marks/ExpressiveMark';
 import { InteractiveMark } from '@/editor/marks/InteractiveMark';
+import { SizeMark } from '@/editor/marks/SizeMark';
 import { dslToHtml, htmlToDsl } from '@/utils/dslConverter';
 import { useBookStore } from '@/data/stores/bookStore';
 import { useEffect, useState } from 'react';
 import { InteractiveModal } from './InteractiveModal';
-import { ExpressiveToolbar } from './ExpressiveToolbar';
+import { EditorBubbleMenu } from './EditorBubbleMenu';
 import { cn } from '@gia/utils';
 import styles from './TextEditor.module.css';
 
@@ -28,6 +29,7 @@ export function TextEditor() {
             Underline,
             ExpressiveMark,
             InteractiveMark,
+            SizeMark,
         ],
         content: page ? dslToHtml(page.text) : '',
         onUpdate: ({ editor }) => {
@@ -107,11 +109,6 @@ export function TextEditor() {
 
                     <span className={styles.divider} />
 
-                    <ExpressiveToolbar
-                        editor={editor}
-                        disabled={editor.state.selection.empty}
-                    />
-
                     <button
                         onClick={handleInteractiveClick}
                         disabled={editor.state.selection.empty}
@@ -126,6 +123,11 @@ export function TextEditor() {
                 </div>
 
                 <EditorContent editor={editor} className={styles.editor} />
+
+                <EditorBubbleMenu
+                    editor={editor}
+                    onInteractiveClick={handleInteractiveClick}
+                />
 
                 {page.mood && (
                     <div className={styles.moodBadge}>
