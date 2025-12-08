@@ -50,23 +50,6 @@
   line-height: 1.8;
 }
 
-.editor :global([data-expressive][data-style="handwritten"]) {
-  font-family: 'Caveat', cursive;
-  font-size: 1.4em;
-  color: var(--color-expressive-handwritten);
-}
-
-.editor :global([data-expressive][data-style="shout"]) {
-  font-weight: bold;
-  font-size: 1.2em;
-}
-
-.editor :global([data-expressive][data-style="bully"]) {
-  font-weight: bold;
-  color: var(--color-expressive-bully);
-  font-style: italic;
-}
-
 .editor :global([data-interactive]) {
   color: var(--color-interactive-link);
   border-bottom: 2px dotted var(--color-interactive-link);

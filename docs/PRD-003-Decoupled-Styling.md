@@ -1,6 +1,6 @@
 # PRD 003: Decoupled Styling Architecture
 
-**Status**: 📋 **PLANNING** (2025-12-07)
+**Status**: ✅ **COMPLETED** (2025-12-07)
 
 ## 1. Overview
 A strategic refactor of the "Expressive Text" system to move from rigid, pre-bundled "Emotions" (e.g., `happy` = font A + color B + anim C) to a **composable atomic system**. This empowers authors with consistent, granular control over Font, Color, and Motion independently, while leveraging the robust "Named Color" system established in PRD-001.

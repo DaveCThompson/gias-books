@@ -67,14 +67,86 @@ export const BookSchema = z.object({
 });
 
 // ============================================================================
-// EXPRESSIVE TEXT CONFIGURATION
+// ATOMIC REGISTRIES - Decoupled Styling (PRD-003)
 // ============================================================================
 
-/** Available text sizes for expressive text */
+/** Font Configuration */
+export interface FontConfig {
+    family: string;
+    settings?: string; // font-variation-settings
+}
+
+/** Color Configuration */
+export type ColorConfig = string; // CSS variable reference
+
+/** Motion/Animation Configuration */
+export interface MotionConfig {
+    animation: string;     // animation-name
+    duration?: string;     // duration (defaults to --duration-normal)
+}
+
+/** Size Configuration */
 export const EXPRESSIVE_SIZES = ['small', 'regular', 'large', 'giant', 'massive'] as const;
 export type ExpressiveSize = typeof EXPRESSIVE_SIZES[number];
 
-/** Style configuration for an emotion */
+/** ─── FONT REGISTRY ─── */
+export const FONT_REGISTRY: Record<string, FontConfig> = {
+    body: { family: 'var(--font-body)' },
+    display: { family: 'var(--font-display)', settings: '"wght" 600' },
+    handwritten: { family: 'var(--font-handwritten)' },
+    fredoka: { family: 'var(--font-fredoka)', settings: '"wght" 600' },
+    playpen: { family: 'var(--font-playpen)', settings: '"wght" 600' },
+    roboto: { family: 'var(--font-roboto-flex)', settings: '"wght" 700' },
+};
+
+/** ─── COLOR REGISTRY ─── */
+export const COLOR_REGISTRY: Record<string, ColorConfig> = {
+    // Named Colors (from PRD-001)
+    red: 'var(--color-red)',
+    orange: 'var(--color-orange)',
+    amber: 'var(--color-amber)',
+    green: 'var(--color-green)',
+    cyan: 'var(--color-cyan)',
+    blue: 'var(--color-blue)',
+    purple: 'var(--color-purple)',
+    pink: 'var(--color-pink)',
+
+    // Semantic aliases
+    primary: 'var(--fg-primary)',
+    brand: 'var(--fg-brand)',
+
+    // Expressive emotion colors (for legacy support)
+    'emotion-happy': 'var(--fg-expressive-happy)',
+    'emotion-sad': 'var(--fg-expressive-sad)',
+    'emotion-shout': 'var(--fg-expressive-shout)',
+    'emotion-angry': 'var(--fg-expressive-angry)',
+    'emotion-nervous': 'var(--fg-expressive-nervous)',
+    'emotion-spooky': 'var(--fg-expressive-spooky)',
+    'emotion-silly': 'var(--fg-expressive-silly)',
+    'emotion-brave': 'var(--fg-expressive-brave)',
+    'emotion-whisper': 'var(--fg-expressive-whisper)',
+    'emotion-magical': 'var(--fg-expressive-magical)',
+    'emotion-grumpy': 'var(--fg-expressive-grumpy)',
+    'emotion-dreamy': 'var(--fg-expressive-dreamy)',
+};
+
+/** ─── MOTION REGISTRY ─── */
+export const MOTION_REGISTRY: Record<string, MotionConfig> = {
+    bounce: { animation: 'bounce', duration: 'var(--duration-normal)' },
+    shake: { animation: 'shake', duration: 'var(--duration-fast)' },
+    wiggle: { animation: 'wiggle', duration: 'var(--duration-normal)' },
+    sway: { animation: 'sway', duration: 'var(--duration-slow)' },
+    shimmer: { animation: 'shimmer', duration: 'var(--duration-slow)' },
+    flicker: { animation: 'flicker', duration: 'var(--duration-normal)' },
+    clench: { animation: 'clench', duration: 'var(--duration-fast)' },
+    shout: { animation: 'shout', duration: 'var(--duration-fast)' },
+};
+
+// ============================================================================
+// LEGACY EMOTION PRESETS (Backward Compatibility)
+// ============================================================================
+
+/** Style configuration for an emotion (legacy format) */
 export interface EmotionStyle {
     id: string;
     label: string;
@@ -156,11 +228,82 @@ export const SIZE_SCALES: Record<ExpressiveSize, string> = {
 };
 
 /**
- * Get the style configuration for an emotion.
+ * Get the style configuration for an emotion (legacy).
  * Falls back to 'normal' if emotion not found.
  */
 export function getEmotionStyle(id: string): EmotionStyle {
     return EMOTION_STYLES.find(e => e.id === id) || EMOTION_STYLES[0];
+}
+
+// ============================================================================
+// UNIFIED STYLE RESOLVER
+// ============================================================================
+
+/** Composable style attributes (new format) */
+export interface StyleAttributes {
+    font?: string;
+    color?: string;
+    motion?: string;
+    size?: ExpressiveSize;
+}
+
+/** Resolved CSS properties ready for inline styles */
+export interface ResolvedStyle {
+    fontFamily?: string;
+    fontVariationSettings?: string;
+    color?: string;
+    animation?: string;
+    animationDuration?: string;
+    textShadow?: string;
+    transform?: string;
+    fontSize?: string;
+}
+
+/**
+ * Resolve style attributes to CSS properties.
+ * Supports both legacy emotions and new atomic attributes.
+ * 
+ * @param attrs - Either a legacy emotion ID or atomic style attributes
+ * @returns CSS properties ready for inline styles
+ */
+export function resolveStyle(attrs: string | StyleAttributes): ResolvedStyle {
+    // Legacy: emotion ID string
+    if (typeof attrs === 'string') {
+        const emotion = getEmotionStyle(attrs);
+        return {
+            fontFamily: emotion.fontFamily,
+            fontVariationSettings: emotion.fontVariationSettings,
+            color: emotion.color,
+            animation: emotion.animation,
+            textShadow: emotion.textShadow,
+            transform: emotion.transform,
+        };
+    }
+
+    // New: atomic attributes
+    const resolved: ResolvedStyle = {};
+
+    if (attrs.font && FONT_REGISTRY[attrs.font]) {
+        const font = FONT_REGISTRY[attrs.font];
+        resolved.fontFamily = font.family;
+        resolved.fontVariationSettings = font.settings;
+    }
+
+    if (attrs.color && COLOR_REGISTRY[attrs.color]) {
+        resolved.color = COLOR_REGISTRY[attrs.color];
+    }
+
+    if (attrs.motion && MOTION_REGISTRY[attrs.motion]) {
+        const motion = MOTION_REGISTRY[attrs.motion];
+        resolved.animation = motion.animation;
+        resolved.animationDuration = motion.duration;
+    }
+
+    if (attrs.size) {
+        resolved.fontSize = getSizeScale(attrs.size);
+    }
+
+    return resolved;
 }
 
 /**

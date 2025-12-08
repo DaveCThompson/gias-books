@@ -4,8 +4,9 @@
  * Converts custom DSL markup to TipTap-compatible HTML and vice versa.
  * 
  * Supported DSL formats:
- * - [expressive:STYLE]content[/expressive] → <span data-expressive data-style="STYLE">
- * - [expressive:STYLE:SIZE]content[/expressive] → <span data-expressive data-style="STYLE" data-size="SIZE">
+ * - [style font="X" color="Y" motion="Z"]content[/style] → <span data-font="X" data-color="Y" data-motion="Z">
+ * - [expressive:STYLE]content[/expressive] → <span data-expressive data-style="STYLE"> (legacy)
+ * - [expressive:STYLE:SIZE]content[/expressive] → <span data-expressive data-style="STYLE" data-size="SIZE"> (legacy)
  * - [interactive:TOOLTIP]word[/interactive] → <span data-interactive data-tooltip="TOOLTIP">
  * - [b]text[/b] → <strong>
  * - [i]text[/i] → <em>
@@ -15,7 +16,9 @@
  */
 
 // Regex patterns for DSL → HTML
-// Updated: now captures optional :size
+// New atomic style syntax
+const STYLE_DSL_REGEX = /\[style(?:\s+([^\]]+))?\](.*?)\[\/style\]/gi;
+// Legacy expressive syntax (with optional :size)
 const EXPRESSIVE_DSL_REGEX = /\[expressive:([a-z_]+)(?::([a-z]+))?\](.*?)\[\/expressive\]/gi;
 const SIZE_DSL_REGEX = /\[size:([a-z]+)\](.*?)\[\/size\]/gi;
 const INTERACTIVE_DSL_REGEX = /\[interactive:([^\]]+)\](.*?)\[\/interactive\]/g;
@@ -33,6 +36,23 @@ const STRIKE_HTML_REGEX = /<s>(.*?)<\/s>/g;
 const CODE_HTML_REGEX = /<code>(.*?)<\/code>/g;
 
 /**
+ * Parse attribute string from [style] tag.
+ * Example: 'font="handwritten" color="red"' → { font: 'handwritten', color: 'red' }
+ */
+function parseStyleAttributes(attrString: string): Record<string, string> {
+    const attrs: Record<string, string> = {};
+    if (!attrString) return attrs;
+
+    // Match key="value" pairs
+    const attrRegex = /(\w+)="([^"]+)"/g;
+    let match;
+    while ((match = attrRegex.exec(attrString)) !== null) {
+        attrs[match[1]] = match[2];
+    }
+    return attrs;
+}
+
+/**
  * Converts DSL markup to TipTap-compatible HTML.
  */
 export function dslToHtml(dsl: string): string {
@@ -45,7 +65,16 @@ export function dslToHtml(dsl: string): string {
     html = html.replace(STRIKE_DSL_REGEX, '<s>$1</s>');
     html = html.replace(CODE_DSL_REGEX, '<code>$1</code>');
 
-    // Convert expressive tags (with optional size)
+    // Convert NEW atomic style tags
+    html = html.replace(STYLE_DSL_REGEX, (_, attrString, content) => {
+        const attrs = parseStyleAttributes(attrString || '');
+        const dataAttrs = Object.entries(attrs)
+            .map(([key, value]) => `data-${key}="${value}"`)
+            .join(' ');
+        return dataAttrs ? `<span ${dataAttrs}>${content}</span>` : content;
+    });
+
+    // Convert LEGACY expressive tags (with optional size)
     html = html.replace(EXPRESSIVE_DSL_REGEX, (_, style, size, content) => {
         const sizeAttr = size && size !== 'regular' ? ` data-size="${size}"` : '';
         return `<span data-expressive data-style="${style}"${sizeAttr}>${content}</span>`;
@@ -89,7 +118,35 @@ export function htmlToDsl(html: string): string {
     dsl = dsl.replace(STRIKE_HTML_REGEX, '[s]$1[/s]');
     dsl = dsl.replace(CODE_HTML_REGEX, '[code]$1[/code]');
 
-    // Convert expressive spans back to DSL (with optional size)
+    // Convert NEW atomic style spans back to DSL
+    // Match: <span data-font="..." data-color="..." data-motion="...">content</span>
+    dsl = dsl.replace(
+        /<span([^>]*data-(?:font|color|motion|size)="[^"]+"[^>]*)>(.*?)<\/span>/gi,
+        (fullMatch, attrString, content) => {
+            // Check if this is legacy (has data-expressive)
+            if (attrString.includes('data-expressive')) {
+                return fullMatch; // Let legacy handler deal with it
+            }
+
+            // Parse data attributes
+            const attrs: string[] = [];
+            const fontMatch = /data-font="([^"]+)"/.exec(attrString);
+            const colorMatch = /data-color="([^"]+)"/.exec(attrString);
+            const motionMatch = /data-motion="([^"]+)"/.exec(attrString);
+            const sizeMatch = /data-size="([^"]+)"/.exec(attrString);
+
+            if (fontMatch) attrs.push(`font="${fontMatch[1]}"`);
+            if (colorMatch) attrs.push(`color="${colorMatch[1]}"`);
+            if (motionMatch) attrs.push(`motion="${motionMatch[1]}"`);
+            if (sizeMatch && sizeMatch[1] !== 'regular') attrs.push(`size="${sizeMatch[1]}"`);
+
+            return attrs.length > 0
+                ? `[style ${attrs.join(' ')}]${content}[/style]`
+                : content;
+        }
+    );
+
+    // Convert LEGACY expressive spans back to DSL (with optional size)
     // Pattern: data-expressive and data-style, optionally data-size
     dsl = dsl.replace(
         /<span[^>]*data-expressive[^>]*data-style="([^"]+)"(?:[^>]*data-size="([^"]+)")?[^>]*>(.*?)<\/span>/gi,
@@ -118,7 +175,7 @@ export function htmlToDsl(html: string): string {
     dsl = dsl.replace(/<span[^>]*data-tooltip="([^"]+)"[^>]*data-interactive[^>]*>(.*?)<\/span>/g,
         (_, tooltip, word) => `[interactive:${tooltip}]${word}[/interactive]`);
 
-    // Convert standalone size spans to DSL (without expressive)
+    // Convert standalone size spans to DSL (without expressive or style)
     dsl = dsl.replace(/<span[^>]*data-size="([^"]+)"[^>]*>(.*?)<\/span>/gi,
         (_, size, content) => size && size !== 'regular' ? `[size:${size}]${content}[/size]` : content);
 

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { getEmotionStyle, getSizeScale } from '@gia/schemas';
+import { resolveStyle, getSizeScale, type StyleAttributes } from '@gia/schemas';
 import { cn } from '@gia/utils';
 import styles from './Page.module.css';
 
@@ -82,36 +82,70 @@ function parseText(
           </Tooltip.Root>
         );
         break;
+      case 'style': {
+        // NEW: Atomic style attributes
+        // Parse: font="handwritten" color="red" motion="bounce"
+        const attrs: StyleAttributes = {};
+        const attrRegex = /(\w+)="([^"]+)"/g;
+        let attrMatch;
+        while ((attrMatch = attrRegex.exec(value || '')) !== null) {
+          const [, attrKey, attrValue] = attrMatch;
+          if (attrKey === 'font' || attrKey === 'color' || attrKey === 'motion' || attrKey === 'size') {
+            attrs[attrKey as keyof StyleAttributes] = attrValue as any;
+          }
+        }
+
+        const resolved = resolveStyle(attrs);
+
+        // Build inline styles
+        const inlineStyle: React.CSSProperties = {};
+        if (resolved.fontFamily) inlineStyle.fontFamily = resolved.fontFamily;
+        if (resolved.fontVariationSettings) inlineStyle.fontVariationSettings = resolved.fontVariationSettings;
+        if (resolved.color) inlineStyle.color = resolved.color;
+        if (resolved.textShadow) inlineStyle.textShadow = resolved.textShadow;
+        if (resolved.transform) inlineStyle.transform = resolved.transform;
+        if (resolved.fontSize) inlineStyle.fontSize = resolved.fontSize;
+
+        // Apply animation class if animateText is enabled
+        const animationClass = (animateText && resolved.animation)
+          ? `animate-${resolved.animation}`
+          : '';
+
+        elements.push(
+          <span
+            key={key}
+            className={cn(styles.expressive, animationClass)}
+            style={inlineStyle}
+          >
+            {innerContent}
+          </span>
+        );
+        break;
+      }
       case 'expressive': {
-        // Parse value as "emotion" or "emotion:size"
+        // LEGACY: emotion ID or emotion:size
         const parts = (value || '').split(':');
         const emotionId = parts[0] || 'normal';
-        const size = parts[1] || 'regular';
+        const size = parts[1];
 
-        const emotionStyle = getEmotionStyle(emotionId);
+        // Use resolveStyle for legacy emotions
+        const resolved = resolveStyle(emotionId);
+        if (size) {
+          resolved.fontSize = getSizeScale(size);
+        }
 
-        // Build inline styles from config
-        const inlineStyle: React.CSSProperties = {
-          fontFamily: emotionStyle.fontFamily,
-          fontSize: getSizeScale(size),
-        };
-
-        if (emotionStyle.fontVariationSettings) {
-          inlineStyle.fontVariationSettings = emotionStyle.fontVariationSettings;
-        }
-        if (emotionStyle.color) {
-          inlineStyle.color = emotionStyle.color;
-        }
-        if (emotionStyle.textShadow) {
-          inlineStyle.textShadow = emotionStyle.textShadow;
-        }
-        if (emotionStyle.transform) {
-          inlineStyle.transform = emotionStyle.transform;
-        }
+        // Build inline styles from resolved config
+        const inlineStyle: React.CSSProperties = {};
+        if (resolved.fontFamily) inlineStyle.fontFamily = resolved.fontFamily;
+        if (resolved.fontVariationSettings) inlineStyle.fontVariationSettings = resolved.fontVariationSettings;
+        if (resolved.color) inlineStyle.color = resolved.color;
+        if (resolved.textShadow) inlineStyle.textShadow = resolved.textShadow;
+        if (resolved.transform) inlineStyle.transform = resolved.transform;
+        if (resolved.fontSize) inlineStyle.fontSize = resolved.fontSize;
 
         // Only apply animation class if animateText is true and emotion has an animation
-        const animationClass = (animateText && emotionStyle.animation)
-          ? `animate-${emotionStyle.animation}`
+        const animationClass = (animateText && resolved.animation)
+          ? `animate-${resolved.animation}`
           : '';
 
         elements.push(

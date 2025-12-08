@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { getEmotionStyle, getSizeScale } from '@gia/schemas';
+import { resolveStyle, getSizeScale, type StyleAttributes } from '@gia/schemas';
 import styles from './ExpressiveTextPreview.module.css';
 
 interface ExpressiveTextPreviewProps {
@@ -70,23 +70,58 @@ function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
                 );
                 break;
             }
+            case 'style': {
+                // NEW: Atomic style attributes
+                const attrs: StyleAttributes = {};
+                const attrRegex = /(\w+)="([^"]+)"/g;
+                let attrMatch;
+                while ((attrMatch = attrRegex.exec(value || '')) !== null) {
+                    const [, attrKey, attrValue] = attrMatch;
+                    if (attrKey === 'font' || attrKey === 'color' || attrKey === 'motion' || attrKey === 'size') {
+                        attrs[attrKey as keyof StyleAttributes] = attrValue as any;
+                    }
+                }
+
+                const resolved = resolveStyle(attrs);
+
+                // Build inline styles (no animations in preview)
+                const inlineStyle: React.CSSProperties = {
+                    display: 'inline-block',
+                    ...(resolved.fontFamily && { fontFamily: resolved.fontFamily }),
+                    ...(resolved.fontVariationSettings && { fontVariationSettings: resolved.fontVariationSettings }),
+                    ...(resolved.color && { color: resolved.color }),
+                    ...(resolved.textShadow && { textShadow: resolved.textShadow }),
+                    ...(resolved.transform && { transform: resolved.transform }),
+                    ...(resolved.fontSize && { fontSize: resolved.fontSize }),
+                };
+
+                elements.push(
+                    <span key={key} className={styles.expressive} style={inlineStyle}>
+                        {innerContent}
+                    </span>
+                );
+                break;
+            }
             case 'expressive': {
-                // Parse value as "emotion" or "emotion:size"
+                // LEGACY: Parse value as "emotion" or "emotion:size"
                 const parts = (value || '').split(':');
                 const emotionId = parts[0] || 'normal';
-                const size = parts[1] || 'regular';
+                const size = parts[1];
 
-                const emotionStyle = getEmotionStyle(emotionId);
+                const resolved = resolveStyle(emotionId);
+                if (size) {
+                    resolved.fontSize = getSizeScale(size);
+                }
 
                 // Build inline styles from config (no animations in preview)
                 const inlineStyle: React.CSSProperties = {
                     display: 'inline-block',
-                    fontFamily: emotionStyle.fontFamily,
-                    fontSize: getSizeScale(size),
-                    ...(emotionStyle.color && { color: emotionStyle.color }),
-                    ...(emotionStyle.fontVariationSettings && { fontVariationSettings: emotionStyle.fontVariationSettings }),
-                    ...(emotionStyle.textShadow && { textShadow: emotionStyle.textShadow }),
-                    ...(emotionStyle.transform && { transform: emotionStyle.transform }),
+                    ...(resolved.fontFamily && { fontFamily: resolved.fontFamily }),
+                    ...(resolved.fontSize && { fontSize: resolved.fontSize }),
+                    ...(resolved.color && { color: resolved.color }),
+                    ...(resolved.fontVariationSettings && { fontVariationSettings: resolved.fontVariationSettings }),
+                    ...(resolved.textShadow && { textShadow: resolved.textShadow }),
+                    ...(resolved.transform && { transform: resolved.transform }),
                 };
 
                 elements.push(
