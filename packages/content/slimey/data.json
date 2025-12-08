@@ -5,7 +5,7 @@
   "pages": [
     {
       "pageNumber": 1,
-      "text": "One day, in a peaceful little town of ghosts, was a ghost that was a little bit [expressive:handwritten]different[/expressive].",
+      "text": "One day, in a peaceful little town of [style motion=\"shake\"]ghosts[/style], was a [style effect=\"glow\"]ghost[/style] that [style effect=\"glow-blue\"]was[/style] a little bit [style font=\"handwritten\"][style size=\"giant\"][style color=\"green\"][style bgcolor=\"green\"]different[/style][/style][/style][/style].\n\nDave",
       "illustration": "/books/slimey/assets/page-1-illustration.png",
       "mask": "/books/slimey/assets/watercolor-mask.svg",
       "narrationUrl": "/books/slimey/assets/narration-1.m4a",

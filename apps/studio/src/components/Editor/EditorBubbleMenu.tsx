@@ -7,7 +7,9 @@ import { BookOpen, Eraser } from '@phosphor-icons/react';
 import { useToolbarState, MarkState } from '@/hooks/useToolbarState';
 import { useSelectionCoords } from '@/hooks/useSelectionCoords';
 import { SizeDropdown } from './SizeDropdown';
-import { EmotionDropdown } from './EmotionDropdown';
+import { FontDropdown } from './FontDropdown';
+import { EffectDropdown } from './EffectDropdown';
+import { AnimationDropdown } from './AnimationDropdown';
 import { ColorDropdown } from './ColorDropdown';
 import { cn } from '@gia/utils';
 import styles from './EditorBubbleMenu.module.css';
@@ -18,7 +20,7 @@ interface EditorBubbleMenuProps {
 }
 
 interface FormatButtonProps {
-    mark: 'bold' | 'italic' | 'underline';
+    mark: 'bold' | 'italic';
     icon: string;
     state: MarkState;
     onClick: () => void;
@@ -87,7 +89,7 @@ export function EditorBubbleMenu({ editor, onInteractiveClick }: EditorBubbleMen
                                 className={styles.bubbleMenu}
                                 {...menuAnimation}
                             >
-                                {/* Group 1: Formatting toggles */}
+                                {/* Group 1: Formatting toggles (Bold, Italic) */}
                                 <div className={styles.group}>
                                     <FormatButton
                                         mark="bold"
@@ -101,12 +103,6 @@ export function EditorBubbleMenu({ editor, onInteractiveClick }: EditorBubbleMen
                                         state={toolbarState.italic}
                                         onClick={() => editor.chain().focus().toggleItalic().run()}
                                     />
-                                    <FormatButton
-                                        mark="underline"
-                                        icon="U"
-                                        state={toolbarState.underline}
-                                        onClick={() => editor.chain().focus().toggleUnderline().run()}
-                                    />
                                 </div>
 
                                 <div className={styles.divider} />
@@ -116,12 +112,23 @@ export function EditorBubbleMenu({ editor, onInteractiveClick }: EditorBubbleMen
 
                                 <div className={styles.divider} />
 
-                                {/* Group 3: Emotion dropdown */}
-                                <EmotionDropdown editor={editor} currentEmotion={toolbarState.currentEmotion} />
+                                {/* Group 3: Font dropdown */}
+                                <FontDropdown editor={editor} currentFont={toolbarState.currentFont} />
 
                                 <div className={styles.divider} />
 
-                                {/* Group 4: Color dropdowns */}
+                                {/* Group 4: Effect dropdown */}
+                                <EffectDropdown editor={editor} currentEffect={toolbarState.currentEffect} />
+
+                                <div className={styles.divider} />
+
+                                {/* Group 5: Animation dropdown */}
+                                <AnimationDropdown editor={editor} currentAnimation={toolbarState.currentMotion} />
+
+
+                                <div className={styles.divider} />
+
+                                {/* Group 6: Color dropdowns */}
                                 <div className={styles.group}>
                                     <ColorDropdown editor={editor} mode="fg" currentColor={toolbarState.currentColor} />
                                     <ColorDropdown editor={editor} mode="bg" currentColor={toolbarState.currentBgColor} />
@@ -129,7 +136,7 @@ export function EditorBubbleMenu({ editor, onInteractiveClick }: EditorBubbleMen
 
                                 <div className={styles.divider} />
 
-                                {/* Group 5: Actions */}
+                                {/* Group 7: Interactive */}
                                 <button
                                     className={styles.button}
                                     onClick={onInteractiveClick}
@@ -140,6 +147,7 @@ export function EditorBubbleMenu({ editor, onInteractiveClick }: EditorBubbleMen
 
                                 <div className={styles.divider} />
 
+                                {/* Group 8: Clear */}
                                 <button
                                     className={styles.button}
                                     onClick={() => editor.chain().focus().unsetAllMarks().run()}
@@ -155,3 +163,4 @@ export function EditorBubbleMenu({ editor, onInteractiveClick }: EditorBubbleMen
         </Popover.Root>
     );
 }
+

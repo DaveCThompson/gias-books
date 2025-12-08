@@ -130,13 +130,15 @@ export function htmlToDsl(html: string): string {
         const processSpans = () => {
             let foundAny = false;
             // Find all spans with our data attributes
-            const spans = container.querySelectorAll('span[data-color], span[data-bgcolor], span[data-font], span[data-motion], span[data-size]');
+            const spans = container.querySelectorAll('span[data-color], span[data-bgcolor], span[data-font], span[data-effect], span[data-motion], span[data-size]');
+
 
             for (const span of Array.from(spans)) {
                 // Skip if has nested data-spans (process innermost first)
-                if (span.querySelector('span[data-color], span[data-bgcolor], span[data-font], span[data-motion], span[data-size]')) {
+                if (span.querySelector('span[data-color], span[data-bgcolor], span[data-font], span[data-effect], span[data-motion], span[data-size]')) {
                     continue;
                 }
+
                 // Skip legacy expressive spans
                 if (span.hasAttribute('data-expressive')) {
                     continue;
@@ -147,9 +149,11 @@ export function htmlToDsl(html: string): string {
                 if (span.getAttribute('data-font')) attrs.push(`font="${span.getAttribute('data-font')}"`);
                 if (span.getAttribute('data-color')) attrs.push(`color="${span.getAttribute('data-color')}"`);
                 if (span.getAttribute('data-bgcolor')) attrs.push(`bgcolor="${span.getAttribute('data-bgcolor')}"`);
+                if (span.getAttribute('data-effect')) attrs.push(`effect="${span.getAttribute('data-effect')}"`);
                 if (span.getAttribute('data-motion')) attrs.push(`motion="${span.getAttribute('data-motion')}"`);
                 const size = span.getAttribute('data-size');
                 if (size && size !== 'regular') attrs.push(`size="${size}"`);
+
 
                 if (attrs.length > 0) {
                     // Replace span with DSL text
@@ -168,24 +172,26 @@ export function htmlToDsl(html: string): string {
     } else {
         // Fallback: simple regex for SSR (won't handle nested spans perfectly)
         dsl = dsl.replace(
-            /<span\s+([^>]*\bdata-(?:font|color|bgcolor|motion|size)="[^"]*"[^>]*)>([^<]*)<\/span>/gi,
+            /<span\s+([^>]*\bdata-(?:font|color|bgcolor|effect|motion|size)="[^"]*"[^>]*)>([^<]*)<\/span>/gi,
             (fullMatch, attrString, content) => {
-                if (attrString.includes('data-expressive')) return fullMatch;
                 const attrs: string[] = [];
                 const fontMatch = /data-font="([^"]+)"/.exec(attrString);
                 const colorMatch = /data-color="([^"]+)"/.exec(attrString);
                 const bgcolorMatch = /data-bgcolor="([^"]+)"/.exec(attrString);
+                const effectMatch = /data-effect="([^"]+)"/.exec(attrString);
                 const motionMatch = /data-motion="([^"]+)"/.exec(attrString);
                 const sizeMatch = /data-size="([^"]+)"/.exec(attrString);
                 if (fontMatch) attrs.push(`font="${fontMatch[1]}"`);
                 if (colorMatch) attrs.push(`color="${colorMatch[1]}"`);
                 if (bgcolorMatch) attrs.push(`bgcolor="${bgcolorMatch[1]}"`);
+                if (effectMatch) attrs.push(`effect="${effectMatch[1]}"`);
                 if (motionMatch) attrs.push(`motion="${motionMatch[1]}"`);
                 if (sizeMatch && sizeMatch[1] !== 'regular') attrs.push(`size="${sizeMatch[1]}"`);
                 return attrs.length > 0 ? `[style ${attrs.join(' ')}]${content}[/style]` : content;
             }
         );
     }
+
 
     // Convert LEGACY expressive spans back to DSL (with optional size)
     // Pattern: data-expressive and data-style, optionally data-size

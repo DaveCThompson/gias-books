@@ -131,10 +131,11 @@ function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
                 let attrMatch;
                 while ((attrMatch = attrRegex.exec(value || '')) !== null) {
                     const [, attrKey, attrValue] = attrMatch;
-                    if (attrKey === 'font' || attrKey === 'color' || attrKey === 'bgcolor' || attrKey === 'motion' || attrKey === 'size') {
-                        attrs[attrKey as keyof StyleAttributes] = attrValue as any;
+                    if (attrKey === 'font' || attrKey === 'color' || attrKey === 'bgcolor' || attrKey === 'effect' || attrKey === 'motion' || attrKey === 'size') {
+                        attrs[attrKey as keyof StyleAttributes] = attrValue as never;
                     }
                 }
+
 
                 const resolved = resolveStyle(attrs);
 

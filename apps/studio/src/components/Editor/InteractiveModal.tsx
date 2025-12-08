@@ -5,15 +5,18 @@ import styles from './InteractiveModal.module.css';
 
 interface InteractiveModalProps {
     initialText: string;
+    selectedText?: string;
     onConfirm: (tooltip: string) => void;
     onCancel: () => void;
 }
 
 export function InteractiveModal({
     initialText,
+    selectedText = 'word',
     onConfirm,
     onCancel,
 }: InteractiveModalProps) {
+
     const [tooltip, setTooltip] = useState(initialText);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -73,10 +76,11 @@ export function InteractiveModal({
                 <div className={styles.preview}>
                     <span className={styles.previewLabel}>Preview:</span>
                     <span className={styles.previewWord} title={tooltip || 'Tooltip text'}>
-                        bespectacled
+                        {selectedText}
                     </span>
                     <span className={styles.previewHint}>← hover to preview</span>
                 </div>
+
 
                 <div className={styles.actions}>
                     <button

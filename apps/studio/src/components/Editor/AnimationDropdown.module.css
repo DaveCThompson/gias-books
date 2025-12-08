@@ -1,0 +1,203 @@
+/* Concentric Radii: 6px button + 6px padding = 12px container */
+.trigger {
+    min-width: 36px;
+    height: 28px;
+    padding: 0 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 14px;
+    border: none;
+    background: transparent;
+    color: var(--fg-secondary);
+    cursor: pointer;
+    transition: background 100ms ease, color 100ms ease;
+}
+
+.trigger:hover {
+    background: var(--bg-secondary-hover);
+}
+
+.trigger.active {
+    background: var(--bg-brand-faint);
+    color: var(--fg-brand);
+}
+
+.content {
+    padding: 6px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 140px;
+    max-height: 280px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+/* Stealth scrollbar */
+.content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: var(--border-primary);
+    border-radius: 2px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-primary);
+    margin-bottom: 4px;
+}
+
+.headerTitle {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fg-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.clearButton {
+    font-size: 12px;
+    color: var(--fg-brand);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 2px;
+    transition: background 100ms ease;
+}
+
+.clearButton:hover {
+    background: var(--bg-brand-faint);
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--fg-primary);
+    transition: background 100ms ease;
+}
+
+.option:hover {
+    background: var(--bg-secondary-hover);
+}
+
+/* Animation preview on hover */
+.option:hover[data-animation="bounce"] .label {
+    animation: bounce 0.5s ease infinite;
+}
+
+.option:hover[data-animation="shake"] .label {
+    animation: shake 0.3s ease infinite;
+}
+
+.option:hover[data-animation="wiggle"] .label {
+    animation: wiggle 0.4s ease infinite;
+}
+
+.option:hover[data-animation="sway"] .label {
+    animation: sway 0.6s ease infinite;
+}
+
+.option.active {
+    background: var(--bg-brand-faint);
+    color: var(--fg-brand);
+}
+
+.label {
+    flex: 1;
+    display: inline-block;
+}
+
+.checkmark {
+    font-size: 16px;
+    color: var(--fg-brand);
+}
+
+/* Chevron with hover animation */
+.chevron {
+    color: var(--fg-tertiary);
+    transition: transform 100ms ease, stroke-width 100ms ease;
+}
+
+.trigger:hover .chevron {
+    transform: translateY(1px);
+    stroke-width: 2;
+}
+
+/* Simple animation keyframes for preview */
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-2px);
+    }
+
+    75% {
+        transform: translateX(2px);
+    }
+}
+
+@keyframes wiggle {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-3deg);
+    }
+
+    75% {
+        transform: rotate(3deg);
+    }
+}
+
+@keyframes sway {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(3px);
+    }
+}

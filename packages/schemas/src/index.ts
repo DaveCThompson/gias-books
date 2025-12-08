@@ -163,6 +163,26 @@ export const MOTION_REGISTRY: Record<string, MotionConfig> = {
     shout: { animation: 'shout', duration: 'var(--duration-fast)' },
 };
 
+/** Effect Configuration (static visual effects) */
+export interface EffectConfig {
+    textShadow?: string;
+    WebkitTextStroke?: string;
+    filter?: string;
+}
+
+/** ─── EFFECT REGISTRY (Static Visual Effects) ─── */
+export const EFFECT_REGISTRY: Record<string, EffectConfig> = {
+    none: {},
+    shadow: { textShadow: '2px 2px 4px rgba(0,0,0,0.3)' },
+    'shadow-hard': { textShadow: '3px 3px 0px rgba(0,0,0,0.5)' },
+    glow: { textShadow: '0 0 8px var(--color-gold, gold), 0 0 16px var(--color-gold, gold)' },
+    'glow-blue': { textShadow: '0 0 8px var(--color-blue), 0 0 16px var(--color-blue)' },
+    'glow-green': { textShadow: '0 0 8px var(--color-green), 0 0 16px var(--color-green)' },
+    outline: { WebkitTextStroke: '1px currentColor' },
+    'outline-thick': { WebkitTextStroke: '2px currentColor' },
+};
+
+
 // ============================================================================
 // LEGACY EMOTION PRESETS (Backward Compatibility)
 // ============================================================================
@@ -196,7 +216,8 @@ export const EMOTION_STYLES: EmotionStyle[] = [
         animation: 'shout',
         textShadow: '2px 2px 0px rgba(0,0,0,0.2)'
     },
-    { id: 'angry', label: 'Angry', fontFamily: 'var(--font-roboto-flex)', fontVariationSettings: '"wght" 800, "wdth" 90', color: 'var(--fg-expressive-angry)', animation: 'clench' },
+    { id: 'angry', label: 'Angry', fontFamily: 'var(--font-roboto-flex)', fontVariationSettings: '"wght" 800, "wdth" 90', animation: 'clench' },
+
     { id: 'nervous', label: 'Nervous', fontFamily: 'var(--font-playpen)', animation: 'wiggle' },
     { id: 'whisper', label: 'whisper', fontFamily: 'var(--font-body)', fontVariationSettings: '"wght" 300' },
     { id: 'silly', label: 'Silly', fontFamily: 'var(--font-playpen)', fontVariationSettings: '"wght" 600', animation: 'bounce' },
@@ -204,40 +225,41 @@ export const EMOTION_STYLES: EmotionStyle[] = [
         id: 'spooky',
         label: 'Spooky',
         fontFamily: 'var(--font-fredoka)',
-        color: 'var(--fg-expressive-spooky)',
         animation: 'flicker',
         textShadow: '0 0 8px rgba(100, 255, 100, 0.6)'
     },
+
     {
         id: 'magical',
         label: '✨Magic✨',
         fontFamily: 'var(--font-body)',
-        color: 'var(--fg-expressive-magical)',
         animation: 'shimmer',
         textShadow: '0 0 10px gold, 0 0 20px purple'
     },
+
     { id: 'brave', label: 'Brave', fontFamily: 'var(--font-roboto-flex)', fontVariationSettings: '"wght" 700' },
     { id: 'grumpy', label: 'Grumpy', fontFamily: 'var(--font-roboto-flex)', fontVariationSettings: '"wght" 600, "wdth" 90' },
     {
         id: 'dreamy',
         label: 'Dreamy',
         fontFamily: 'var(--font-body)',
-        color: 'var(--fg-expressive-dreamy)',
         animation: 'sway',
         textShadow: '0 0 4px rgba(255, 255, 255, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.1)'
     },
+
     // Legacy styles (maintained for backward compatibility)
-    { id: 'handwritten', label: 'Handwritten', fontFamily: 'var(--font-handwritten)', color: 'var(--color-interactive)' },
+    { id: 'handwritten', label: 'Handwritten', fontFamily: 'var(--font-handwritten)' },
+
     {
         id: 'bully',
         label: 'Bully',
         fontFamily: 'var(--font-display)',
         fontVariationSettings: '"wght" 700',
-        color: 'var(--fg-expressive-angry)',
         transform: 'skew(-5deg) scale(1.05)',
         textShadow: '1px 1px 0px black'
     },
 ];
+
 
 /** Scale factors for each text size */
 export const SIZE_SCALES: Record<ExpressiveSize, string> = {
@@ -266,8 +288,10 @@ export interface StyleAttributes {
     color?: string;
     bgcolor?: string;
     motion?: string;
+    effect?: string;
     size?: ExpressiveSize;
 }
+
 
 /** Resolved CSS properties ready for inline styles */
 export interface ResolvedStyle {
@@ -282,7 +306,10 @@ export interface ResolvedStyle {
     textShadow?: string;
     transform?: string;
     fontSize?: string;
+    WebkitTextStroke?: string;
+    filter?: string;
 }
+
 
 /**
  * Resolve style attributes to CSS properties.
@@ -337,8 +364,25 @@ export function resolveStyle(attrs: string | StyleAttributes): ResolvedStyle {
         }
     }
 
+    if (attrs.effect && EFFECT_REGISTRY[attrs.effect]) {
+        const effect = EFFECT_REGISTRY[attrs.effect];
+        if (effect.textShadow) {
+            // Merge with existing textShadow if present
+            resolved.textShadow = resolved.textShadow
+                ? `${resolved.textShadow}, ${effect.textShadow}`
+                : effect.textShadow;
+        }
+        if (effect.WebkitTextStroke) {
+            resolved.WebkitTextStroke = effect.WebkitTextStroke;
+        }
+        if (effect.filter) {
+            resolved.filter = effect.filter;
+        }
+    }
+
     return resolved;
 }
+
 
 /**
  * Get the CSS font-size value for a size name.

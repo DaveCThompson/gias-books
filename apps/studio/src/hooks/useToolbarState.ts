@@ -8,7 +8,9 @@ interface ToolbarState {
     italic: MarkState;
     underline: MarkState;
     currentSize: string | null;
-    currentEmotion: string | null;
+    currentFont: string | null;
+    currentEffect: string | null;
+    currentMotion: string | null;
     currentColor: string | null;
     currentBgColor: string | null;
 }
@@ -18,7 +20,9 @@ const defaultState: ToolbarState = {
     italic: 'off',
     underline: 'off',
     currentSize: null,
-    currentEmotion: null,
+    currentFont: null,
+    currentEffect: null,
+    currentMotion: null,
     currentColor: null,
     currentBgColor: null,
 };
@@ -57,13 +61,35 @@ function computeToolbarState(editor: Editor): ToolbarState {
         }
     });
 
-    // Get current emotion
-    let currentEmotion: string | null = null;
+    // Get current font
+    let currentFont: string | null = null;
     editor.state.doc.nodesBetween(from, to, (node) => {
-        if (node.isText && !currentEmotion) {
-            const expressiveMark = node.marks.find((m) => m.type.name === 'expressive');
-            if (expressiveMark) {
-                currentEmotion = expressiveMark.attrs.style;
+        if (node.isText && !currentFont) {
+            const fontMark = node.marks.find((m) => m.type.name === 'fontMark');
+            if (fontMark) {
+                currentFont = fontMark.attrs.font;
+            }
+        }
+    });
+
+    // Get current effect
+    let currentEffect: string | null = null;
+    editor.state.doc.nodesBetween(from, to, (node) => {
+        if (node.isText && !currentEffect) {
+            const effectMark = node.marks.find((m) => m.type.name === 'effectMark');
+            if (effectMark) {
+                currentEffect = effectMark.attrs.effect;
+            }
+        }
+    });
+
+    // Get current motion
+    let currentMotion: string | null = null;
+    editor.state.doc.nodesBetween(from, to, (node) => {
+        if (node.isText && !currentMotion) {
+            const motionMark = node.marks.find((m) => m.type.name === 'motionMark');
+            if (motionMark) {
+                currentMotion = motionMark.attrs.motion;
             }
         }
     });
@@ -93,7 +119,9 @@ function computeToolbarState(editor: Editor): ToolbarState {
     return {
         ...markStates,
         currentSize: currentSize || 'regular',
-        currentEmotion,
+        currentFont,
+        currentEffect,
+        currentMotion,
         currentColor,
         currentBgColor,
     };
@@ -131,6 +159,3 @@ export function useToolbarState(editor: Editor | null): ToolbarState {
 
     return state;
 }
-
-
-
