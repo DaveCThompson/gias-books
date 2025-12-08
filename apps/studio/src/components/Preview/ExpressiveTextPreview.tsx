@@ -9,7 +9,7 @@ interface ExpressiveTextPreviewProps {
 }
 
 // Regex to match outermost DSL tag
-const tagRegex = /\[(\w+)(?::([^\]]+))?\](.*?)\[\/\1\]/;
+const tagRegex = /\[(\w+)(?:[:\s]([^\]]+))?\](.*?)\[\/\1\]/;
 
 /**
  * Recursively parses DSL text and renders all formatting.
