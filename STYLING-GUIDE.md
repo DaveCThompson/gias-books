@@ -239,7 +239,52 @@ import { BookOpen, Eraser, Sparkle, Check } from '@phosphor-icons/react';
 
 ---
 
+## Text Styling Registries
+
+Text styling uses three independent registries in `@gia/schemas`:
+
+### Font Registry
+
+```typescript
+FONT_REGISTRY: {
+  body:        { family: 'var(--font-body)' },
+  display:     { family: 'var(--font-display)', settings: '"wght" 600' },
+  handwritten: { family: 'var(--font-handwritten)' },
+  fredoka:     { family: 'var(--font-fredoka)', settings: '"wght" 600' },
+  playpen:     { family: 'var(--font-playpen)', settings: '"wght" 600' },
+  roboto:      { family: 'var(--font-roboto-flex)', settings: '"wght" 700' },
+}
+```
+
+### Effect Registry
+
+| Effect ID | CSS Properties Applied |
+|-----------|------------------------|
+| `shadow` | `text-shadow: 2px 2px 4px rgba(0,0,0,0.3)` |
+| `shadow-hard` | `text-shadow: 3px 3px 0 rgba(0,0,0,0.4)` |
+| `glow` | `text-shadow: 0 0 8px gold, 0 0 16px orange` |
+| `glow-blue` | `text-shadow: 0 0 8px cyan, 0 0 16px blue` |
+| `glow-green` | `text-shadow: 0 0 8px lime, 0 0 16px green` |
+| `outline` | `-webkit-text-stroke: 1px currentColor` |
+| `outline-thick` | `-webkit-text-stroke: 2px currentColor` |
+
+### Motion Registry
+
+| Motion ID | Animation |
+|-----------|-----------||
+| `bounce` | Vertical bounce |
+| `wiggle` | Side-to-side wiggle |
+| `shake` | Rapid shake |
+| `pulse` | Scale in/out |
+| `shimmer` | Color shimmer |
+
+> [!IMPORTANT]
+> Registries are **independent** - fonts don't include colors, effects don't include fonts. Use the `[style]` DSL tag to combine them.
+
+---
+
 ## Animation Tokens
+
 
 ### CSS Tokens
 

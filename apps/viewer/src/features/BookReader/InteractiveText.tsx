@@ -11,12 +11,52 @@ interface InteractiveTextProps {
   animateText?: boolean;
 }
 
-// Regex to match outermost DSL tag
-const tagRegex = /\[(\w+)(?:[:\s]([^\]]+))?\](.*?)\[\/\1\]/;
+// Regex to detect opening tag: [tagName] or [tagName:value] or [tagName attr="val"]
+const openTagRegex = /^\[(\w+)(?:([:\s])([^\]]+))?\]/;
+
+/**
+ * Find the matching closing tag for a tag at the start of the string.
+ * Handles nested same-name tags by counting open/close brackets.
+ */
+function findMatchingClose(text: string, tagName: string): { content: string; afterClose: string } | null {
+  const openPattern = `[${tagName}`;
+  const closePattern = `[/${tagName}]`;
+
+  let depth = 1;
+  let i = 0;
+
+  while (i < text.length && depth > 0) {
+    // Check for closing tag
+    if (text.slice(i).startsWith(closePattern)) {
+      depth--;
+      if (depth === 0) {
+        return {
+          content: text.slice(0, i),
+          afterClose: text.slice(i + closePattern.length)
+        };
+      }
+      i += closePattern.length;
+    }
+    // Check for opening tag (same name)
+    else if (text.slice(i).startsWith(openPattern)) {
+      // Make sure it's actually an opening tag (followed by : or space or ])
+      const afterOpen = text.slice(i + openPattern.length);
+      if (afterOpen.match(/^[:\s\]]/)) {
+        depth++;
+      }
+      i++;
+    }
+    else {
+      i++;
+    }
+  }
+
+  return null; // No matching close found
+}
 
 /**
  * Recursively parses DSL text and renders all formatting.
- * Handles nested tags like [b][u]text[/u][/b].
+ * Handles nested same-name tags like [style][style]text[/style][/style].
  */
 function parseText(
   text: string,
@@ -28,30 +68,64 @@ function parseText(
   let matchIndex = 0;
 
   while (remaining.length > 0) {
-    const match = remaining.match(tagRegex);
+    // Look for opening tag
+    const tagMatch = remaining.match(openTagRegex);
 
-    if (!match) {
-      // No more tags, add remaining text
-      if (remaining) {
-        elements.push(<React.Fragment key={`${keyPrefix}text-${matchIndex}`}>{remaining}</React.Fragment>);
+    if (!tagMatch) {
+      // No more tags, could be plain text or text with [ that isn't a tag
+      // Find next [ to check
+      const nextBracket = remaining.indexOf('[');
+      if (nextBracket === -1) {
+        // No more brackets, add all remaining text
+        if (remaining) {
+          elements.push(<React.Fragment key={`${keyPrefix}text-${matchIndex}`}>{remaining}</React.Fragment>);
+        }
+        break;
+      } else if (nextBracket > 0) {
+        // Add text before the bracket
+        elements.push(<React.Fragment key={`${keyPrefix}text-${matchIndex}`}>{remaining.slice(0, nextBracket)}</React.Fragment>);
+        remaining = remaining.slice(nextBracket);
+        matchIndex++;
+        continue;
+      } else {
+        // [ at start but no tag match, treat as literal text
+        elements.push(<React.Fragment key={`${keyPrefix}literal-${matchIndex}`}>[</React.Fragment>);
+        remaining = remaining.slice(1);
+        matchIndex++;
+        continue;
       }
-      break;
     }
 
-    const [fullMatch, tag, value, content] = match;
-    const beforeTag = remaining.slice(0, match.index);
+    const [fullOpenTag, tagName, separator, value] = tagMatch;
+    const tagStartIndex = tagMatch.index || 0;
 
     // Add text before the tag
-    if (beforeTag) {
-      elements.push(<React.Fragment key={`${keyPrefix}pre-${matchIndex}`}>{beforeTag}</React.Fragment>);
+    if (tagStartIndex > 0) {
+      elements.push(<React.Fragment key={`${keyPrefix}pre-${matchIndex}`}>{remaining.slice(0, tagStartIndex)}</React.Fragment>);
     }
 
+    // Get content after opening tag
+    const afterOpenTag = remaining.slice(tagStartIndex + fullOpenTag.length);
+
+    // Find matching close tag (handles nesting)
+    const closeResult = findMatchingClose(afterOpenTag, tagName);
+
+    if (!closeResult) {
+      // No matching close, treat opening tag as literal text
+      elements.push(<React.Fragment key={`${keyPrefix}unmatched-${matchIndex}`}>{fullOpenTag}</React.Fragment>);
+      remaining = afterOpenTag;
+      matchIndex++;
+      continue;
+    }
+
+    const { content, afterClose } = closeResult;
+
     // Recursively parse content inside the tag
-    const innerContent = parseText(content, `${keyPrefix}${tag}-${matchIndex}-`, animateText);
-    const key = `${keyPrefix}${tag}-${matchIndex}`;
+    const innerContent = parseText(content, `${keyPrefix}${tagName}-${matchIndex}-`, animateText);
+    const key = `${keyPrefix}${tagName}-${matchIndex}`;
 
     // Render the tag with parsed inner content
-    switch (tag) {
+    switch (tagName) {
       case 'b':
         elements.push(<strong key={key}>{innerContent}</strong>);
         break;
@@ -82,9 +156,19 @@ function parseText(
           </Tooltip.Root>
         );
         break;
+      case 'size': {
+        // Standalone size tag
+        const sizeScale = getSizeScale(value || 'regular');
+        elements.push(
+          <span key={key} style={{ fontSize: sizeScale, display: 'inline-block' }}>
+            {innerContent}
+          </span>
+        );
+        break;
+      }
       case 'style': {
-        // NEW: Atomic style attributes
-        // Parse: font="handwritten" color="red" bgcolor="amber" motion="bounce"
+        // Atomic style attributes
+        // Parse: font="handwritten" color="red" bgcolor="amber" effect="glow" motion="bounce"
         const attrs: StyleAttributes = {};
         const attrRegex = /(\w+)="([^"]+)"/g;
         let attrMatch;
@@ -94,7 +178,6 @@ function parseText(
             attrs[attrKey as keyof StyleAttributes] = attrValue as never;
           }
         }
-
 
         const resolved = resolveStyle(attrs);
 
@@ -165,11 +248,11 @@ function parseText(
       }
       default:
         // Unknown tag, render as-is
-        elements.push(<React.Fragment key={key}>{fullMatch}</React.Fragment>);
+        elements.push(<React.Fragment key={key}>{fullOpenTag}{innerContent}[/{tagName}]</React.Fragment>);
     }
 
-    // Continue with text after the tag
-    remaining = remaining.slice((match.index || 0) + fullMatch.length);
+    // Continue with text after the closing tag
+    remaining = afterClose;
     matchIndex++;
   }
 

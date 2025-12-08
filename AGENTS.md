@@ -94,10 +94,14 @@ gia-workspace/
 | `apps/viewer/src/features/BookReader/InteractiveText.tsx` | DSL text parser for viewer |
 | `apps/studio/src/editor/marks/TextColorMark.ts` | TipTap mark for foreground color |
 | `apps/studio/src/editor/marks/TextBgColorMark.ts` | TipTap mark for background color |
+| `apps/studio/src/editor/marks/FontMark.ts` | TipTap mark for font family |
+| `apps/studio/src/editor/marks/EffectMark.ts` | TipTap mark for visual effects |
+| `apps/studio/src/editor/marks/MotionMark.ts` | TipTap mark for animations |
 | `apps/studio/src/hooks/useToolbarState.ts` | Reactive toolbar state from editor selection |
 | `apps/studio/src/components/Editor/ColorDropdown.tsx` | Notion-style color picker dropdown |
 | `apps/viewer/src/features/BookReader/components/PageCarousel.tsx` | 3-page carousel with spring physics |
 | `apps/viewer/src/features/BookReader/BookReader.tsx` | Main reader component |
+
 
 ---
 
@@ -133,21 +137,20 @@ Text content uses a custom DSL for formatting:
 [b]bold[/b]  [i]italic[/i]  [u]underline[/u]  [s]strike[/s]  [code]code[/code]
 
 # NEW: Atomic style syntax (composable attributes)
-[style font="handwritten" color="red" bgcolor="yellow" size="large"]styled text[/style]
+[style font="handwritten" color="red" bgcolor="yellow" effect="glow" motion="bounce" size="large"]styled text[/style]
 
 # Available attributes:
-#   font: normal, handwritten, cute, bully, shout, spooky, angry
+#   font: body, display, handwritten, fredoka, playpen, roboto
 #   color: default, red, orange, green, blue, purple, pink, grey, brown
 #   bgcolor: default, red, orange, green, blue, purple, pink, grey, brown, yellow
+#   effect: shadow, shadow-hard, glow, glow-blue, glow-green, outline, outline-thick
+#   motion: bounce, wiggle, shake, pulse, shimmer
 #   size: small, regular, large, giant, massive
-
-# LEGACY: Expressive styles (still supported)
-[expressive:handwritten]styled text[/expressive]
-[expressive:shout]LOUD TEXT[/expressive]
 
 # Interactive words (with tooltip)
 [interactive:tooltip text]word[/interactive]
 ```
+
 
 > **Important**: Interactive words display tooltips on click/hover. They do NOT trigger navigation.
 
@@ -216,15 +219,18 @@ const editor = useEditor({
 
 ### 3. DSL Converter Patterns
 
-The DSL format must match between content files and the converter:
+The DSL converter handles atomic style attributes via data-attributes:
 
 ```typescript
-// Content uses: [expressive:STYLE]text[/expressive]
-// NOT: [STYLE]text[/STYLE]
+// HTML output from TipTap marks:
+`<span data-font="handwritten">text</span>`
+`<span data-effect="glow">text</span>`
+`<span data-motion="bounce">text</span>`
 
-// dslToHtml must output BOTH attributes for CSS targeting:
-`<span data-expressive data-style="${style}">${content}</span>`
+// Converter combines into DSL:
+`[style font="handwritten" effect="glow" motion="bounce"]text[/style]`
 ```
+
 
 ### 4. Color Contrast
 
@@ -277,6 +283,41 @@ useEffect(() => {
 // ❌ WRONG - useMemo with [editor] dependency doesn't update on selection changes
 const state = useMemo(() => computeState(editor), [editor]);
 ```
+
+### 7. TipTap Mark Architecture
+
+Each styling dimension has its own mark with inline styles applied in `renderHTML()`:
+
+```typescript
+// ✅ CORRECT - Mark applies inline styles from registry
+export const FontMark = Mark.create({
+    name: 'fontMark',
+    
+    renderHTML({ HTMLAttributes, mark }) {
+        const fontConfig = FONT_REGISTRY[mark.attrs.font];
+        const style = fontConfig
+            ? `font-family: ${fontConfig.family}`
+            : '';
+        
+        return ['span', mergeAttributes(HTMLAttributes, { style }), 0];
+    },
+});
+
+// ❌ WRONG - Mark only stores data-attribute, no inline styles
+export const FontMark = Mark.create({
+    renderHTML({ HTMLAttributes }) {
+        return ['span', mergeAttributes({ 'data-font': attrs.font }, HTMLAttributes), 0];
+    },
+});
+```
+
+**Why inline styles?** TipTap's editor view uses the mark's `renderHTML()` output. Without inline styles, the styled text won't be visible in the editor.
+
+**Registry Pattern:**
+- `FontMark` → `FONT_REGISTRY` (font-family, font-variation-settings)
+- `EffectMark` → `EFFECT_REGISTRY` (text-shadow, -webkit-text-stroke)
+- `MotionMark` → `MOTION_REGISTRY` (animation-name, animation-duration)
+
 
 ---
 
