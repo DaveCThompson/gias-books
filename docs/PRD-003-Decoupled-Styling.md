@@ -1,98 +1,173 @@
 # PRD 003: Decoupled Styling Architecture
 
+**Status**: 📋 **PLANNING** (2025-12-07)
+
 ## 1. Overview
-Refactoring the "Expressive Text" system from rigid, bundled "Emotions" (e.g., `happy` = font A + color B + anim C) to a composable system of independent attributes (Font, Color, Effect). This gives authors consistent granular control while maintaining the implementation of high-craft rendering.
+A strategic refactor of the "Expressive Text" system to move from rigid, pre-bundled "Emotions" (e.g., `happy` = font A + color B + anim C) to a **composable atomic system**. This empowers authors with consistent, granular control over Font, Color, and Motion independently, while leveraging the robust "Named Color" system established in PRD-001.
 
 ## 2. Problem & Goals
 ### Problem
-*   **Rigidity**: To change the color of "Shout" text, a new Emotion must be defined in the schema.
-*   **Combinatorial Explosion**: "Happy Red", "Happy Blue", "Happy Big" would require separate definitions.
-*   **Legacy Debt**: Current implementation relies on hardcoded CSS classes (`.mood-calm`) in Studio, limiting flexibility.
+*   **Combinatorial Rigidity**: Creating a "Happy" style in Blue requires defining a new `happy-blue` emotion in the schema.
+*   **Leakage of CSS**: Studio relies on hardcoded CSS classes (`.mood-calm`), making the renderer fragile and hard to sync with Viewer.
+*   **Inconsistent Tooling**: Authors cannot simply "make this text bigger" or "make this text wiggle" without specific pre-defined combinations.
 
 ### Goals
-*   **Composability**: Authors can mix and match Fonts, Colors, and Effects.
-*   **Schema Clarity**: Explicit lists of supported Fonts, Colors (semantic), and Animation Effects.
-*   **Backward Compatibility**: Support legacy `[expressive:emotion]` tags by mapping them to the new primitives internally.
+*   **Atomic Composability**: Enable `Font` + `Color` + `Motion` + `Size` to be mixed freely.
+*   **Type Safety**: Ensure all composed styles are validated against centralized Registries (schema-backed).
+*   **Visual Excellence**: Maintain the high-fidelity rendering (text shadows, variable font settings) while increasing flexibility.
+*   **Backward Compatibility**: Zero regression for existing content using legacy `[expressive:emotion]` tags.
 
-## 3. Scope & Key Initiatives
-### In Scope
-*   Refactoring `@gia/schemas` to export `FONTS`, `COLORS`, `EFFECTS` dictionaries.
-*   Updating `PageData` schema to validate against these lists.
-*   Updating DSL Converter (`studio`) to handle `[style ...]` tags.
-*   Updating Renderer (`viewer`) to compose styles dynamically.
+## 3. Options Analysis (Vetting)
 
-### Out of Scope
-*   Adding new font files (using existing loaded fonts).
-*   Complex text layout engines (maintaining basic flow).
+We evaluated three architectural approaches to solving the Decoupled Styling problem.
 
-## 4. UX/UI Specification & Wireframes
+### Option A: Open CSS Properties (The "Chaos" Option)
+*   **Concept**: Allow authors to write raw CSS. e.g., `[style css="color: red; font-family: 'Gochi Hand'"]`.
+*   **Pros**: Infinite flexibility. Zero schema maintenance.
+*   **Cons**: Breaks design system. Non-portable (web vs native). Security risk. No validation.
+*   **Verdict**: ❌ **REJECTED** - Too fragile and violates "High-Craft" constraint.
 
-### DSL Format
-**New Format**:
-`[style font="handwritten" color="red" effect="bounce"]content[/style]`
+### Option B: Utility-Class Composition (The "Tailwind" Option)
+*   **Concept**: Use a string of utility classes. e.g., `[style class="text-red-500 font-handwritten animate-bounce"]`.
+*   **Pros**: Familiar to devs. Easy to parse.
+*   **Cons**: Tight coupling to CSS implementation details. Hard to enforce semantic constraints (e.g., ensuring only *semantic* colors are used).
+*   **Verdict**: ❌ **REJECTED** - Leaks implementation details into content storage.
 
-**Legacy Format (Supported)**:
-`[expressive:happy]content[/expressive]` → Internally resolves to: `font="fredoka" color="orange" effect="bounce"`
+### Option C: Registry-Backed Atoms (The "Semantic" Option)
+*   **Concept**: Define strict Registries (`FONTS`, `COLORS`, `EFFECTS`) in strict code/schema. Content references *IDs* from these registries. e.g., `[style font="handwritten" color="red" effect="bounce"]`.
+*   **Pros**:
+    *   **Source of Truth**: Registries are the single point of definition.
+    *   **Type Safety**: `z.enum(FONTS.keys)` ensures only valid fonts exist in DB.
+    *   **Design Integrity**: Authors can only use "approved" combinations.
+    *   **Portable**: IDs are abstract; implementation can change (CSS vs Canvas).
+*   **Verdict**: ✅ **SELECTED** - Best balance of flexibility and structure.
 
-### Rendering Logic
-Components will lookup attributes in the Central Registry (`@gia/schemas`).
+## 4. UX/UI Specification
 
-```typescript
-// @gia/schemas/src/registries.ts
-export const FONTS = {
-  handwritten: { family: 'Gochi Hand', varSettings: '...' },
-  display:     { family: 'Fredoka',    varSettings: '...' },
-  // ...
-}
+### Studio Toolbar Experience
+The Studio will implement a "Smart Toolbar" that appears when text is selected.
 
-export const EFFECTS = {
-  bounce:  { animationName: 'bounce', duration: 'var(--duration-normal)' },
-  shimmer: { animationName: 'shimmer', duration: 'var(--duration-slow)' },
-  // ...
-}
+```mermaid
+graph TD
+    A[Select Text] --> B{Bubble Menu Appears}
+    B --> C[Font Picker]
+    B --> D[Color Picker]
+    B --> E[Motion Picker]
+    B --> F[Size Slider]
+    
+    C --> C1[Handwritten]
+    C --> C2[Display]
+    C --> C3[Serif]
+    
+    D --> D1[Semantic Palette (Red, Blue...)]
+    D --> D2[Theme Preview]
+    
+    E --> E1[Animations (Bounce, Shake...)]
+```
+
+### ASCII Mockups
+
+**1. Floating Bubble Menu** (Contextual)
+```text
++--------------------------------------------------+
+|  [ Font v ]  [ Color v ]  [ Motion v ]  [ B I U ] |
++--------------------------------------------------+
+```
+
+**2. Color Picker (Popover)**
+Leverages PRD-001 Named Colors.
+```text
++------------------------+
+|  Text Color            |
+|                        |
+|  [R] [O] [Y] [G] [C]   |  <-- Swatches (Red, Orange, Yellow...)
+|  [B] [P] [Pi] [Gr]     |
+|                        |
+|  Current: Blue-500     |
++------------------------+
+```
+
+**3. Preview in Editor**
+```text
+This is [ Handwritting | Red | Bounce ] text inside normal paragraph.
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         Rendered with live CSS vars
 ```
 
 ## 5. Architecture & Implementation Plan
-### Data Flow
-1.  **Schema**: Defined in `@gia/schemas`.
-2.  **Authoring**: Studio creates DSL strings.
-3.  **Storage**: Saved as raw text in `data.json`.
-4.  **Presentation**: Viewer parses DSL → React Nodes → Applies inline styles/classes.
 
-### Implementation
-1.  **Schema Refactor**: Break `EMOTION_STYLES` into atomic dictionaries.
-2.  **Studio Converter**: Update regex to parse generic `[style]` tags with attributes.
-3.  **Viewer Component**: `InteractiveText.tsx` refactored to:
-    *   Parse attributes.
-    *   Look up Font config.
-    *   Look up Color config (mapped to CSS var).
-    *   Look up Effect config (mapped to CSS class/animation).
+### Data Schema (`@gia/schemas`)
 
-## 6. File Manifest
+We will introduce **Registries** to replace the monolithic `EMOTION_STYLES`.
 
-### `packages/schemas/`
-*   `[MODIFIED]` `src/index.ts`: Export `FONTS`, `COLORS` (list), `EFFECTS`.
-*   `[NEW]` `src/legacy-mapper.ts`: Logic to map old emotions to new atoms.
+```typescript
+// 1. Registry Definitions
+export const FONT_REGISTRY = {
+  handwritten: { family: 'var(--font-handwritten)', settings: '...' },
+  display:     { family: 'var(--font-display)',     settings: '"wght" 700' },
+  // ...
+};
 
-### `apps/studio/`
-*   `[MODIFIED]` `src/utils/dslConverter.ts`: New regex support.
-*   `[MODIFIED]` `src/components/Editor/TextEditor.module.css`: Remove hardcoded emotion classes.
+export const COLOR_REGISTRY = {
+  // Reference PRD-001 Named Colors
+  red:    'var(--color-red)',
+  blue:   'var(--color-blue)',
+  primary:'var(--fg-primary)',
+  // ...
+};
 
-### `apps/viewer/`
-*   `[MODIFIED]` `src/features/BookReader/InteractiveText.tsx`: Update render logic.
+export const MOTION_REGISTRY = {
+  bounce: { animation: 'bounce', duration: 'var(--duration-normal)' },
+  shout:  { animation: 'shake',  duration: 'var(--duration-fast)' },
+  // ...
+};
 
-## 7. Unintended Consequences Check
-*   **Check**: Existing books with `[expressive:...]` tags must still render perfectly.
-    *   *Validation*: Create a regression test page with all legacy emotions.
+// 2. DSL Format
+// New: [style font="display" color="red" motion="bounce"]Text[/style]
+// Legacy: [expressive:happy] -> Maps to -> font="display" color="orange" motion="bounce"
+```
 
-## 8. Risks & Mitigations
-*   **Risk**: DSL parsing performance on long text blocks.
-    *   **Mitigation**: Regex is fast, but ensure we don't nest too deeply. Limit nesting depth if needed.
-*   **Risk**: CSS specificity wars with inline styles.
-    *   **Mitigation**: Inline styles for Font/Color should override class-based defaults.
+### Rendering Pipeline
 
-## 9. Definition of Done
-*   [ ] `npm run validate` passes with new schemas.
-*   [ ] Legacy content renders identical to before.
-*   [ ] New `[style]` tags render correctly in Studio and Viewer.
-*   [ ] No TypeScript errors in schema usage.
+1.  **Studio Converter**:
+    *   Parses `[style ...]` attributes.
+    *   Validation: Checks attributes against Registries.
+2.  **InteractiveText (Viewer)** & **ExpressiveTextPreview (Studio)**:
+    *   Accepts `StyleProps` (font, color, motion).
+    *   Resolves props to CSS Variables via Registries.
+    *   Applies inline styles:
+        ```jsx
+        <span style={{
+           fontFamily: fonts[id].family,
+           color: colors[id],
+           animation: motions[id].animation
+        }}>
+        ```
+
+### Styling Strategy
+*   **CSS Variables**: All values (`--color-red`, `--font-display`) originate from `@gia/design-system`.
+*   **Scoped Animations**: Animations defined in `global.css` or `animations.module.css`.
+
+## 6. Migration Strategy (Hardware)
+We will maintain the `[expressive:emotion]` syntax forever as a "Preset".
+
+1.  **Legacy Mapper**:
+    *   `getStyle(emotionId)` function returns `{ font, color, motion }`.
+    *   `happy` -> `{ font: 'display', color: 'orange', motion: 'bounce' }`.
+2.  **Unified Renderer**:
+    *   The renderer only understands atoms. Legacy tags are converted at parse time (runtime).
+
+## 7. Risks & Mitigations
+*   **Risk**: Performance overhead of looking up styles for every span.
+    *   *Mitigation*: Registries are static const objects. Lookup is O(1).
+*   **Risk**: "Frankenstein" styles (users creating ugly combinations).
+    *   *Mitigation*: We act as "Curators". Authors can only pick from *good* named colors and *tuned* fonts. No raw hex codes allowed.
+
+## 8. Development Checklist
+- [ ] **Schemas**: Create `src/registries/` (Fonts, Colors, Motions).
+- [ ] **Schemas**: Implement `resolveStyle` logic.
+- [ ] **Studio**: Update `dslConverter.ts` regex for `[style]`.
+- [ ] **Studio**: Update `ExpressiveTextPreview.tsx` to use Registries.
+- [ ] **Studio**: Delete hardcoded `TextEditor.module.css` emotion classes.
+- [ ] **Viewer**: Update `InteractiveText.tsx` to consume Registries.
+- [ ] **Verification**: Test Legacy "Happy" tag + New "Custom" tag side-by-side.
