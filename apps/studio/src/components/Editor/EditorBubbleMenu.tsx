@@ -2,7 +2,7 @@
 
 import { Editor } from '@tiptap/react';
 import * as Popover from '@radix-ui/react-popover';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import { BookOpen, Eraser } from '@phosphor-icons/react';
 import { useToolbarState, MarkState } from '@/hooks/useToolbarState';
 import { useSelectionCoords } from '@/hooks/useSelectionCoords';
