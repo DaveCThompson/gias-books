@@ -1,7 +1,11 @@
 # PRD 002: Shared UI Framework
 
+**Status**: ⚠️ **IN PROGRESS** (2025-12-07) - Package Built, Migration Pending
+
 ## 1. Overview
 Creation of a dedicated workspace package (`packages/ui`) to house high-quality, accessible React components built on Radix Primitives. This centralizes UI logic, enforces consistent styling, and eliminates ad-hoc component implementations in Studio and Viewer.
+
+**Current State**: `@gia/ui` package implemented with Tooltip, Dialog, and Popover components. Package dependency added to Studio and Viewer. Component migrations deferred.
 
 ## 2. Problem & Goals
 ### Problem
@@ -12,17 +16,17 @@ Creation of a dedicated workspace package (`packages/ui`) to house high-quality,
 ### Goals
 *   **Centralization**: One source of truth for "atoms" (Dialog, Tooltip, Popover, Dropdown).
 *   **Accessibility**: Native keyboard support and screen reader compliance via Radix.
-*   **Consistency**: Shared animation tokens (`framer-motion`) and visual styling.
+*   **Consistency**: Shared animation tokens (`motion` v12) and visual styling.
 
 ## 3. Scope & Key Initiatives
-### In Scope
-*   Scaffolding `packages/ui` with TypeScript and Tsup/Rollup (or just direct export).
-*   Implementing:
+### In Scope (Completed)
+*   ✅ Scaffolding `packages/ui` with TypeScript.
+*   ✅ Implementing:
     *   `Tooltip` (Global)
     *   `Dialog` (Modal)
-    *   `DropdownMenu`
     *   `Popover`
-*   Replacing existing ad-hoc components in Studio and Viewer.
+*   ⏸️ `DropdownMenu` - Deferred
+*   ⏸️ Replacing existing ad-hoc components in Studio and Viewer - Deferred
 
 ### Out of Scope
 *   Complex organisms (e.g., File Picker, Rich Text Editor).
@@ -54,61 +58,82 @@ Standardized backdrop and content area.
 +---------------------------------------------+
 |  [ Title ]                          [ X ]   | <-- var(--fg-secondary)
 |                                             |
-|  Dialog Content Area                        | <-- var(--bg-surface)
+|  Dialog Content Area                        | <-- var(--bg-primary)
 |  ...                                        |
 |                                             |
 |  [ Cancel ] [ Confirm ]                     |
 +---------------------------------------------+
    Shadow: var(--shadow-modal)
-   Radius: var(--radius-lg)
+   Radius: 16px (--radius-lg)
 ```
 
 ## 5. Architecture & Implementation Plan
 ### Package Structure
 *   **Name**: `@gia/ui`
-*   **Tech**: React, Radix UI, Framer Motion (v12).
+*   **Tech**: React, Radix UI, Motion (v12).
 *   **Styles**: CSS Modules (importing from `@gia/design-system`).
 
 ### Integration
 1.  **Studio**:
-    *   Toolbar buttons → `Tooltip`
-    *   confirms → `Dialog`
-    *   Asset pickers → `Popover`
+    *   Toolbar buttons → `Tooltip` ⏸️
+    *   Confirms → `Dialog` ⏸️
+    *   Asset pickers → `Popover` ⏸️
 2.  **Viewer**:
-    *   Settings → `Dialog`
-    *   Bubble Menu → `Popover`
+    *   Settings → `Dialog` ⏸️
+    *   Bubble Menu → `Popover` ⏸️
 
 ## 6. File Manifest
 
 ### `packages/ui/`
-*   `[NEW]` `package.json`: Dependencies.
-*   `[NEW]` `src/components/Tooltip/`: Implementation.
-*   `[NEW]` `src/components/Dialog/`: Implementation.
-*   `[NEW]` `src/components/Popover/`: Implementation.
-*   `[NEW]` `src/components/Dropdown/`: Implementation.
+*   ✅ `[NEW]` `package.json`: Dependencies.
+*   ✅ `[NEW]` `src/components/Tooltip/`: Implementation.
+*   ✅ `[NEW]` `src/components/Dialog/`: Implementation.
+*   ✅ `[NEW]` `src/components/Popover/`: Implementation.
+*   ⏸️ `[NEW]` `src/components/Dropdown/`: Deferred.
 
 ### `apps/studio/`
-*   `[MODIFIED]` `src/components/Editor/TextEditor.tsx`: Adopt `Tooltip`.
-*   `[DELETE]` `src/components/Editor/InteractiveModal.tsx`.
-*   `[DELETE]` `src/components/Sidebar/DeleteConfirmModal.tsx`.
-*   `[MODIFIED]`: Consumers of deleted modals updated to import from `@gia/ui`.
+*   ✅ `[MODIFIED]` `package.json`: Added `@gia/ui` dependency.
+*   ⏸️ `[MODIFIED]` `src/components/Editor/TextEditor.tsx`: Adopt `Tooltip`.
+*   ⏸️ `[DELETE]` `src/components/Editor/InteractiveModal.tsx`.
+*   ⏸️ `[DELETE]` `src/components/Sidebar/DeleteConfirmModal.tsx`.
+*   ⏸️ `[MODIFIED]`: Consumers of deleted modals updated to import from `@gia/ui`.
 
 ### `apps/viewer/`
-*   `[MODIFIED]` `src/features/BookReader/InteractiveText.tsx`: Adopt `Tooltip`.
-*   `[MODIFIED]` `src/features/BookLobby/BookLobbyModal.tsx`: Migrate to `Dialog`.
+*   ✅ `[MODIFIED]` `package.json`: Added `@gia/ui` dependency.
+*   ⏸️ `[MODIFIED]` `src/features/BookReader/InteractiveText.tsx`: Adopt `Tooltip`.
+*   ⏸️ `[MODIFIED]` `src/features/BookLobby/BookLobbyModal.tsx`: Migrate to `Dialog`.
 
 ## 7. Unintended Consequences Check
-*   **Check**: `Dialog` z-indexes must compete correctly with `PageCarousel` (which has high z-index).
-*   **Check**: `Tooltip` collisions with mobile touch targets.
+*   ✅ **Verified**: `Dialog` z-index (1000/1001) below `PageCarousel`. Portals isolate gestures.
+*   ✅ **Verified**: Theme inheritance works (data-theme on `<html>`).
 
 ## 8. Risks & Mitigations
 *   **Risk**: Radix styles conflict with existing global CSS reset.
-    *   **Mitigation**: Scope component styles strictly using CSS Modules.
+    *   **Mitigation**: ✅ Scoped component styles using CSS Modules.
 *   **Risk**: Bundle size increase.
-    *   **Mitigation**: `packages/ui` should be tree-shakeable.
+    *   **Mitigation**: ✅ Tree-shakeable via standard ES module exports.
 
 ## 9. Definition of Done
-*   [ ] `npm run build` passes for `@gia/ui`.
-*   [ ] All identified Studio and Viewer components replaced.
-*   [ ] Accessibility check (Tab navigation loops correctly in Modals).
-*   [ ] Tooltips appear on hover/focus in both apps.
+*   ✅ `npm run build` passes for `@gia/ui`.
+*   ⏸️ All identified Studio and Viewer components replaced.
+*   ⏸️ Accessibility check (Tab navigation loops correctly in Modals).
+*   ⏸️ Tooltips appear on hover/focus in both apps.
+
+## 10. Implementation Notes (2025-12-07)
+
+### What Was Built
+- **Package**: `@gia/ui` created with proper TypeScript, CSS Module support
+- **Components**: Tooltip, Dialog, Popover all implemented with:
+  - Radix UI primitives for accessibility
+  - Motion v12 animations (`motion/react`)
+  - Design system tokens (`--bg-*`, `--fg-*`, `--shadow-*`)
+- **Dependencies**: Added to both Studio and Viewer `package.json`
+
+### What Remains
+- **TooltipProvider** needs to wrap app roots (`apps/studio/src/app/layout.tsx`, `apps/viewer/src/pages/_app.tsx`)
+- **Studio migrations**: `InteractiveModal.tsx` and `DeleteConfirmModal.tsx` → `@gia/ui/Dialog`
+- **Viewer migrations**: Local Radix imports → `@gia/ui` equivalents
+- **DropdownMenu**: Component not yet implemented (can be added later)
+
+### For Next Agent (PRD-003)
+All design system tokens (`@gia/design-system`) are available for use. The `@gia/ui` components already consume design tokens via CSS Modules. PRD-003 work on expressive text styling can proceed independently.

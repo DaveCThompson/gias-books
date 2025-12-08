@@ -1,0 +1,16 @@
+/* packages/ui/src/components/Popover/Popover.module.css */
+
+.content {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    box-shadow: var(--shadow-lg);
+    z-index: 9998;
+    min-width: 12rem;
+    max-width: 20rem;
+}
+
+.content:focus {
+    outline: none;
+}

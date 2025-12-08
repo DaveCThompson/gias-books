@@ -110,3 +110,36 @@ Chose **Option B (Hybrid Named Colors)** for flexibility:
 
 ### Backward Compatibility
 All legacy `--color-*` aliases remain functional and map to new semantic tokens. No breaking changes.
+
+## 11. Context for PRD-003 (Decoupled Styling)
+
+### Available Design System Assets
+The following design system tokens are ready for PRD-003 implementation:
+
+**Named Color Tokens** (for expressive text):
+- `--color-red`, `--color-orange`, `--color-amber`, `--color-green`, `--color-cyan`, `--color-blue`, `--color-purple`, `--color-pink`
+- Background variants: `--color-bg-red`, `--color-bg-orange`, etc.
+- All automatically adapt to `data-theme="dark"`
+
+**Semantic Foreground Tokens** (for text hierarchy):
+- `--fg-primary`, `--fg-secondary`, `--fg-tertiary`, `--fg-quaternary`, `--fg-muted`
+
+**Expressive Tokens** (current emotion colors):
+- `--fg-expressive-happy`, `--fg-expressive-sad`, `--fg-expressive-shout`, `--fg-expressive-angry`, etc.
+- Currently tied to emotions, can be refactored to Named Colors in PRD-003
+
+**Animation Tokens** (for text effects):
+- `--duration-fast`, `--duration-normal`, `--duration-slow`
+- `--ease-out`, `--ease-in-out`, `--ease-out-expo`
+
+### Shared UI Components Available
+PRD-003 can leverage `@gia/ui` components if needed for Studio toolbars:
+- `Tooltip` - For explaining style controls
+- `Popover` - For color/font picker menus
+- `Dialog` - For advanced styling options
+
+### Integration Points
+Files that PRD-003 will modify align with design system:
+- `packages/design-system/variables.css` - All color tokens already defined
+- `apps/viewer/src/features/BookReader/InteractiveText.tsx` - Uses semantic tokens
+- `apps/studio/src/components/Editor/TextEditor.module.css` - Uses mood gradients

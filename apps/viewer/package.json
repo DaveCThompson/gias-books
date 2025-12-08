@@ -16,6 +16,7 @@
     "@gia/content": "*",
     "@gia/design-system": "*",
     "@gia/schemas": "*",
+    "@gia/ui": "*",
     "@gia/utils": "*",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-dialog": "^1.1.15",
