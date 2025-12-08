@@ -163,11 +163,65 @@ We will maintain the `[expressive:emotion]` syntax forever as a "Preset".
 *   **Risk**: "Frankenstein" styles (users creating ugly combinations).
     *   *Mitigation*: We act as "Curators". Authors can only pick from *good* named colors and *tuned* fonts. No raw hex codes allowed.
 
-## 8. Development Checklist
-- [ ] **Schemas**: Create `src/registries/` (Fonts, Colors, Motions).
-- [ ] **Schemas**: Implement `resolveStyle` logic.
-- [ ] **Studio**: Update `dslConverter.ts` regex for `[style]`.
-- [ ] **Studio**: Update `ExpressiveTextPreview.tsx` to use Registries.
-- [ ] **Studio**: Delete hardcoded `TextEditor.module.css` emotion classes.
-- [ ] **Viewer**: Update `InteractiveText.tsx` to consume Registries.
-- [ ] **Verification**: Test Legacy "Happy" tag + New "Custom" tag side-by-side.
+## 8. Implementation Summary (2025-12-07)
+
+### What Was Built
+
+#### Atomic Registries ([packages/schemas/src/index.ts](file:///c:/Users/dthompson/Documents/GIA_CODE/gia-workspace/packages/schemas/src/index.ts))
+- **`FONT_REGISTRY`**: 6 fonts (body, display, handwritten, fredoka, playpen, roboto)
+- **`COLOR_REGISTRY`**: 8 Named Colors + semantic aliases + emotion colors
+- **`MOTION_REGISTRY`**: 8 animations (bounce, shake, wiggle, sway, shimmer, flicker, clench, shout)
+- **`resolveStyle()`**: Unified helper supporting both legacy emotions and new atomic attributes
+
+#### DSL Updates ([apps/studio/src/utils/dslConverter.ts](file:///c:/Users/dthompson/Documents/GIA_CODE/gia-workspace/apps/studio/src/utils/dslConverter.ts))
+- **New Syntax**: `[style font="X" color="Y" motion="Z"]content[/style]`
+- **Legacy Support**: `[expressive:emotion]` still works (backward compatible)
+- **Bidirectional**: Both `dslToHtml()` and `htmlToDsl()` handle new and legacy syntax
+
+#### Renderers Updated
+- **Viewer** ([InteractiveText.tsx](file:///c:/Users/dthompson/Documents/GIA_CODE/gia-workspace/apps/viewer/src/features/BookReader/InteractiveText.tsx)): Added `case 'style'`, refactored `case 'expressive'` to use `resolveStyle()`
+- **Studio** ([ExpressiveTextPreview.tsx](file:///c:/Users/dthompson/Documents/GIA_CODE/gia-workspace/apps/studio/src/components/Preview/ExpressiveTextPreview.tsx)): Mirrored Viewer changes for preview
+
+#### CSS Cleanup ([apps/studio/src/components/Editor/TextEditor.module.css](file:///c:/Users/dthompson/Documents/GIA_CODE/gia-workspace/apps/studio/src/components/Editor/TextEditor.module.css))
+- Removed hardcoded emotion selectors (`.editor :global([data-expressive][data-style="handwritten"])`, etc.)
+- All styling now dynamic via inline styles from `resolveStyle()`
+
+### Verification Status
+- ✅ **Lint**: Passed (0 errors)
+- ✅ **Build**: Successful
+- ⏸️ **Manual Testing**: Pending user verification in browser
+
+### Definition of Done
+- ✅ Atomic registries implemented
+- ✅ DSL converter supports new syntax
+- ✅ Both renderers use `resolveStyle()`
+- ✅ Hardcoded CSS removed
+- ✅ Backward compatibility maintained
+- ⏸️ Legacy content validation (requires manual testing)
+- ⏸️ New syntax validation (requires manual testing)
+
+## 9. Context for PRD-004 (Infrastructure Unification)
+
+### Available Resources
+PRD-004 can now leverage the following from PRD-003:
+
+**Atomic Registries** (Type-safe, centralized):
+- `FONT_REGISTRY` - All font configurations
+- `COLOR_REGISTRY` - Named Colors mapped to design system tokens
+- `MOTION_REGISTRY` - Animation configurations
+
+**Design System Integration**:
+- All colors reference PRD-001 Named Colors (`var(--color-red)`, etc.)
+- All fonts reference design system font tokens (`var(--font-handwritten)`, etc.)
+- All animations use design system timing (`var(--duration-fast)`, etc.)
+
+**Unified Rendering**:
+- `resolveStyle()` function abstracts styling resolution
+- Both legacy and new content paths converge to same rendering logic
+- Inline styles ensure consistency across apps
+
+### Integration Points for PRD-004
+When unifying Studio and Viewer infrastructure, consider:
+1. **Shared Schemas**: `@gia/schemas` now exports registries usable by both apps
+2. **Consistent Styling**: Both apps use identical `resolveStyle()` logic
+3. **Motion Library**: If PRD-004 standardizes on `motion` (v12), animation names in `MOTION_REGISTRY` are already abstracted from implementation
