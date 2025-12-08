@@ -46,6 +46,51 @@ apps/studio/
 
 ---
 
+## Named Color System
+
+The design system includes **8 hues × 9 steps = 72 color primitives** using OKLCH for perceptual uniformity.
+
+### Available Hues
+
+| Hue | Foreground Token | Background Token |
+|-----|------------------|------------------|
+| Red | `--color-red` | `--color-bg-red` |
+| Orange | `--color-orange` | `--color-bg-orange` |
+| Green | `--color-green` | `--color-bg-green` |
+| Blue | `--color-blue` | `--color-bg-blue` |
+| Purple | `--color-purple` | `--color-bg-purple` |
+| Pink | `--color-pink` | `--color-bg-pink` |
+| Grey | `--color-grey` | `--color-bg-grey` |
+| Brown | `--color-brown` | `--color-bg-brown` |
+
+### Usage Pattern
+
+```css
+/* Foreground (text) colors - high chroma, medium lightness */
+.textRed {
+  color: var(--color-red);
+}
+
+/* Background colors - low chroma, high lightness (faint tint) */
+.bgRed {
+  background-color: var(--color-bg-red);
+  padding: 0.1em 0.3em;
+  border-radius: 0.25em;
+}
+```
+
+### Theme Awareness
+
+Named colors automatically adapt to light/dark mode:
+
+| Token | Light Mode | Dark Mode |
+|-------|------------|-----------|
+| `--color-red` | Red-600 (darker) | Red-400 (lighter) |
+| `--color-bg-red` | Red-100 (faint) | Red-900 (deep) |
+
+> [!NOTE]
+> Always use `--color-*` for text and `--color-bg-*` for backgrounds. The primitives (`--primitive-red-500`) are for internal use only.
+
 ## Semantic Token Naming
 
 ### Convention

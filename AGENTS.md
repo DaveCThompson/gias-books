@@ -32,6 +32,7 @@ gia-workspace/
 - **@use-gesture/react** - Touch/drag gesture handling
 - **Howler.js** - Unified audio playback
 - **Radix UI** - Accessible component primitives
+    └── ui/            @gia/ui – Shared UI components (Radix + motion)
 ```
 
 ### State Management
@@ -91,6 +92,10 @@ gia-workspace/
 | `apps/studio/src/components/Preview/PagePreview.tsx` | WYSIWYG page preview (mood, mask, text) |
 | `apps/studio/src/components/Preview/ExpressiveTextPreview.tsx` | DSL text parser for preview |
 | `apps/viewer/src/features/BookReader/InteractiveText.tsx` | DSL text parser for viewer |
+| `apps/studio/src/editor/marks/TextColorMark.ts` | TipTap mark for foreground color |
+| `apps/studio/src/editor/marks/TextBgColorMark.ts` | TipTap mark for background color |
+| `apps/studio/src/hooks/useToolbarState.ts` | Reactive toolbar state from editor selection |
+| `apps/studio/src/components/Editor/ColorDropdown.tsx` | Notion-style color picker dropdown |
 | `apps/viewer/src/features/BookReader/components/PageCarousel.tsx` | 3-page carousel with spring physics |
 | `apps/viewer/src/features/BookReader/BookReader.tsx` | Main reader component |
 
@@ -127,10 +132,18 @@ Text content uses a custom DSL for formatting:
 # Standard formatting
 [b]bold[/b]  [i]italic[/i]  [u]underline[/u]  [s]strike[/s]  [code]code[/code]
 
-# Expressive styles
+# NEW: Atomic style syntax (composable attributes)
+[style font="handwritten" color="red" bgcolor="yellow" size="large"]styled text[/style]
+
+# Available attributes:
+#   font: normal, handwritten, cute, bully, shout, spooky, angry
+#   color: default, red, orange, green, blue, purple, pink, grey, brown
+#   bgcolor: default, red, orange, green, blue, purple, pink, grey, brown, yellow
+#   size: small, regular, large, giant, massive
+
+# LEGACY: Expressive styles (still supported)
 [expressive:handwritten]styled text[/expressive]
 [expressive:shout]LOUD TEXT[/expressive]
-[expressive:bully]mean text[/expressive]
 
 # Interactive words (with tooltip)
 [interactive:tooltip text]word[/interactive]
@@ -237,6 +250,32 @@ Types are now available in TypeScript 5.4+ – remove outdated @ts-expect-error:
 ```typescript
 // ✅ Current (types available)
 document.startViewTransition(() => router.push(url));
+```
+
+### 6. TipTap Editor State Reactivity
+
+When reading editor state (selection, marks, etc.), subscribe to editor events:
+
+```typescript
+// ✅ CORRECT - useEffect with event subscriptions
+useEffect(() => {
+    if (!editor) return;
+    
+    const updateState = () => {
+        // Read from editor.state here
+    };
+    
+    editor.on('transaction', updateState);
+    editor.on('selectionUpdate', updateState);
+    
+    return () => {
+        editor.off('transaction', updateState);
+        editor.off('selectionUpdate', updateState);
+    };
+}, [editor]);
+
+// ❌ WRONG - useMemo with [editor] dependency doesn't update on selection changes
+const state = useMemo(() => computeState(editor), [editor]);
 ```
 
 ---

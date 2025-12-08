@@ -72,10 +72,11 @@ npm run dev --workspace=gia-studio
 
 | Package | Purpose | Consumers |
 |---------|---------|-----------|
-| `@gia/schemas` | Zod schemas, TypeScript types | Both apps |
+| `@gia/schemas` | Zod schemas, TypeScript types, style registries | Both apps |
 | `@gia/design-system` | Shared CSS tokens, fonts, reset | Both apps |
 | `@gia/content` | Book data.json + validation | Both apps |
 | `@gia/utils` | Shared utilities (`cn()`, `EASING`, `DURATION`) | Both apps |
+| `@gia/ui` | Shared UI components (Tooltip, Dialog, Popover) | Both apps |
 
 ---
 
