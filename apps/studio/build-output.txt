@@ -1,0 +1,68 @@
+   Γû▓ Next.js 16.0.7 (Turbopack)
+
+   Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 2 errors:
+./apps/studio/src/components/Editor/EditorBubbleMenu.tsx:3:1
+Export BubbleMenu doesn't exist in target module
+  1 | 'use client';
+  2 |
+> 3 | import { Editor, BubbleMenu } from '@tiptap/react';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 | import { useToolbarState, MarkState } from '@/hooks/useToolbarState';
+  5 | import { SizeDropdown } from './SizeDropdown';
+  6 | import { EmotionDropdown } from './EmotionDropdown';
+
+The export BubbleMenu was not found in module [project]/node_modules/@tiptap/react/dist/index.js [app-client] (ecmascript).
+Did you mean to import updateMarkViewAttributes?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./apps/studio/src/components/Editor/EditorBubbleMenu.tsx [Client Component Browser]
+    ./apps/studio/src/components/Editor/TextEditor.tsx [Client Component Browser]
+    ./apps/studio/src/components/Editor/EditorShell.tsx [Client Component Browser]
+    ./apps/studio/src/app/edit/[slug]/page.tsx [Client Component Browser]
+    ./apps/studio/src/app/edit/[slug]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/studio/src/components/Editor/EditorBubbleMenu.tsx [Client Component SSR]
+    ./apps/studio/src/components/Editor/TextEditor.tsx [Client Component SSR]
+    ./apps/studio/src/components/Editor/EditorShell.tsx [Client Component SSR]
+    ./apps/studio/src/app/edit/[slug]/page.tsx [Client Component SSR]
+    ./apps/studio/src/app/edit/[slug]/page.tsx [Server Component]
+
+
+./apps/studio/src/components/Editor/EditorBubbleMenu.tsx:3:1
+Export BubbleMenu doesn't exist in target module
+  1 | 'use client';
+  2 |
+> 3 | import { Editor, BubbleMenu } from '@tiptap/react';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 | import { useToolbarState, MarkState } from '@/hooks/useToolbarState';
+  5 | import { SizeDropdown } from './SizeDropdown';
+  6 | import { EmotionDropdown } from './EmotionDropdown';
+
+The export BubbleMenu was not found in module [project]/node_modules/@tiptap/react/dist/index.js [app-ssr] (ecmascript).
+Did you mean to import updateMarkViewAttributes?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./apps/studio/src/components/Editor/EditorBubbleMenu.tsx [Client Component Browser]
+    ./apps/studio/src/components/Editor/TextEditor.tsx [Client Component Browser]
+    ./apps/studio/src/components/Editor/EditorShell.tsx [Client Component Browser]
+    ./apps/studio/src/app/edit/[slug]/page.tsx [Client Component Browser]
+    ./apps/studio/src/app/edit/[slug]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/studio/src/components/Editor/EditorBubbleMenu.tsx [Client Component SSR]
+    ./apps/studio/src/components/Editor/TextEditor.tsx [Client Component SSR]
+    ./apps/studio/src/components/Editor/EditorShell.tsx [Client Component SSR]
+    ./apps/studio/src/app/edit/[slug]/page.tsx [Client Component SSR]
+    ./apps/studio/src/app/edit/[slug]/page.tsx [Server Component]
+
+
+    at <unknown> (./apps/studio/src/components/Editor/EditorBubbleMenu.tsx:3:1)
+    at <unknown> (./apps/studio/src/components/Editor/EditorBubbleMenu.tsx:3:1)

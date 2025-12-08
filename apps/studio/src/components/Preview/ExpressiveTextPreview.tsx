@@ -60,6 +60,16 @@ function parseText(text: string, keyPrefix: string = ''): React.ReactNode[] {
             case 'code':
                 elements.push(<code key={key} className={styles.inlineCode}>{innerContent}</code>);
                 break;
+            case 'size': {
+                // Standalone size without emotion
+                const sizeScale = getSizeScale(value || 'regular');
+                elements.push(
+                    <span key={key} style={{ fontSize: sizeScale, display: 'inline-block' }}>
+                        {innerContent}
+                    </span>
+                );
+                break;
+            }
             case 'expressive': {
                 // Parse value as "emotion" or "emotion:size"
                 const parts = (value || '').split(':');

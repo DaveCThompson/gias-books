@@ -35,7 +35,7 @@
     font-weight: 600;
     border: none;
     background: transparent;
-    color: var(--fg-primary);
+    color: var(--fg-secondary);
     cursor: pointer;
     transition: background 100ms ease, color 100ms ease;
 }
@@ -59,4 +59,8 @@
 .button:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+}
+
+.anchor {
+    pointer-events: none;
 }

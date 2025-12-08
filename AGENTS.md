@@ -41,10 +41,12 @@ gia-workspace/
 - Use proper selectors: `useStore((s) => s.field)` for reactivity
 
 ### Styling
-- See **[CSS-PRINCIPLES.md](./CSS-PRINCIPLES.md)** for the complete styling guide
+- See **[STYLING-GUIDE.md](./STYLING-GUIDE.md)** for the complete styling guide
 - **CSS Modules** – co-located `*.module.css` per component
 - **oklch color space** – all colors via semantic variables
 - **`cn()` utility** – import from `@gia/utils` for conditional classes
+- **Phosphor Icons** – use `@phosphor-icons/react`, never emojis
+- **Semantic tokens** – `--fg-secondary` for buttons, `--fg-tertiary` for chevrons
 
 ---
 
@@ -141,6 +143,17 @@ Text content uses a custom DSL for formatting:
 **Viewer** parses via `InteractiveText.tsx` (recursive parser).
 **Studio** preview uses `ExpressiveTextPreview.tsx` (recursive parser).
 **Converter** `dslConverter.ts` handles TipTap HTML ↔ DSL.
+
+### Size Tags
+
+Standalone size styling (without expressive emotion):
+
+```
+[size:large]big text[/size]
+[size:small]tiny text[/size]
+```
+
+Available sizes: `small`, `regular`, `large`, `giant`, `massive`
 
 ### IllustrationData Handling
 

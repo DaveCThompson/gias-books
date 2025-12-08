@@ -72,53 +72,18 @@ export function TextEditor() {
             <div className={cn(styles.container, moodClass)}>
                 <div className={styles.toolbar}>
                     <button
-                        onClick={() => editor.chain().focus().toggleBold().run()}
-                        className={editor.isActive('bold') ? styles.active : ''}
-                    >
-                        B
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleItalic().run()}
-                        className={editor.isActive('italic') ? styles.active : ''}
-                    >
-                        I
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleUnderline().run()}
-                        className={editor.isActive('underline') ? styles.active : ''}
-                    >
-                        U
-                    </button>
-
-                    <span className={styles.divider} />
-
-                    <button
                         onClick={() => editor.chain().focus().undo().run()}
                         disabled={!editor.can().undo()}
                         title="Undo (Ctrl+Z)"
                     >
-                        ↶
+                        ↶ Undo
                     </button>
                     <button
                         onClick={() => editor.chain().focus().redo().run()}
                         disabled={!editor.can().redo()}
                         title="Redo (Ctrl+Y)"
                     >
-                        ↷
-                    </button>
-
-                    <span className={styles.divider} />
-
-                    <button
-                        onClick={handleInteractiveClick}
-                        disabled={editor.state.selection.empty}
-                        title="Select text first"
-                    >
-                        📖 Interactive
-                    </button>
-
-                    <button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
-                        Clear
+                        ↷ Redo
                     </button>
                 </div>
 

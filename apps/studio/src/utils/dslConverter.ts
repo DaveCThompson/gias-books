@@ -17,6 +17,7 @@
 // Regex patterns for DSL → HTML
 // Updated: now captures optional :size
 const EXPRESSIVE_DSL_REGEX = /\[expressive:([a-z_]+)(?::([a-z]+))?\](.*?)\[\/expressive\]/gi;
+const SIZE_DSL_REGEX = /\[size:([a-z]+)\](.*?)\[\/size\]/gi;
 const INTERACTIVE_DSL_REGEX = /\[interactive:([^\]]+)\](.*?)\[\/interactive\]/g;
 const BOLD_DSL_REGEX = /\[b\](.*?)\[\/b\]/g;
 const ITALIC_DSL_REGEX = /\[i\](.*?)\[\/i\]/g;
@@ -48,6 +49,13 @@ export function dslToHtml(dsl: string): string {
     html = html.replace(EXPRESSIVE_DSL_REGEX, (_, style, size, content) => {
         const sizeAttr = size && size !== 'regular' ? ` data-size="${size}"` : '';
         return `<span data-expressive data-style="${style}"${sizeAttr}>${content}</span>`;
+    });
+
+    // Convert standalone size tags
+    html = html.replace(SIZE_DSL_REGEX, (_, size, content) => {
+        return size && size !== 'regular'
+            ? `<span data-size="${size}">${content}</span>`
+            : content;
     });
 
     // Convert interactive tags
@@ -109,6 +117,10 @@ export function htmlToDsl(html: string): string {
     // Handle alternate attribute order for interactive
     dsl = dsl.replace(/<span[^>]*data-tooltip="([^"]+)"[^>]*data-interactive[^>]*>(.*?)<\/span>/g,
         (_, tooltip, word) => `[interactive:${tooltip}]${word}[/interactive]`);
+
+    // Convert standalone size spans to DSL (without expressive)
+    dsl = dsl.replace(/<span[^>]*data-size="([^"]+)"[^>]*>(.*?)<\/span>/gi,
+        (_, size, content) => size && size !== 'regular' ? `[size:${size}]${content}[/size]` : content);
 
     // Remove paragraph tags, preserve content
     dsl = dsl

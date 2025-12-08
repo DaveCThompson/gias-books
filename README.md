@@ -103,7 +103,7 @@ npm run dev --workspace=gia-studio
 
 - **Next.js**: Viewer (Pages Router) + Studio (App Router)
 - **State**: Zustand (minimal, performant)
-- **Styling**: CSS Modules + oklch color space (see [CSS-PRINCIPLES.md](./CSS-PRINCIPLES.md))
+- **Styling**: CSS Modules + oklch color space (see [STYLING-GUIDE.md](./STYLING-GUIDE.md))
 - **Validation**: Zod schemas in shared package
 - **Build**: Turborepo for caching + parallel builds
 - **Page Transitions**: 3-page carousel with spring physics + gesture support
@@ -115,7 +115,7 @@ npm run dev --workspace=gia-studio
 | File | Contents |
 |------|----------|
 | [AGENTS.md](./AGENTS.md) | AI agent guidelines, coding standards, common pitfalls |
-| [CSS-PRINCIPLES.md](./CSS-PRINCIPLES.md) | Styling architecture, theming, design tokens |
+| [STYLING-GUIDE.md](./STYLING-GUIDE.md) | Styling architecture, theming, design tokens, UI patterns |
 
 ---
 

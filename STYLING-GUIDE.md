@@ -1,6 +1,6 @@
-# CSS Principles for Gia Workspace
+# Styling Guide
 
-This document defines the **styling architecture** shared between Viewer and Studio applications.
+This document defines the **styling architecture and UI design principles** for the Gia Workspace.
 
 ---
 
@@ -57,29 +57,29 @@ apps/studio/
 | Category | Purpose | Examples |
 |----------|---------|----------|
 | `--bg-` | Backgrounds | `--bg-primary`, `--bg-brand-faint` |
-| `--fg-` | Foreground (text/icons) | `--fg-primary`, `--fg-alert` |
+| `--fg-` | Foreground (text/icons) | `--fg-primary`, `--fg-secondary`, `--fg-tertiary` |
 | `--border-` | Border colors | `--border-primary-hover` |
 | `--shadow-` | Box shadows | `--shadow-lg`, `--shadow-card` |
 
-### Common Tokens
+### Foreground Token Hierarchy
+
+| Token | Purpose | Usage |
+|-------|---------|-------|
+| `--fg-primary` | Primary text | Headings, body text |
+| `--fg-secondary` | Secondary text | Toolbar buttons, dropdown triggers |
+| `--fg-tertiary` | Tertiary text | Chevrons, subtle icons |
+| `--fg-brand` | Brand accent | Active states, links |
 
 ```css
 /* ✅ CORRECT - Use semantic tokens */
-.card {
-  background: var(--bg-secondary);
-  color: var(--fg-primary);
-  border: 1px solid var(--border-primary);
-  box-shadow: var(--shadow-card);
+.button {
+  color: var(--fg-secondary);  /* Default state */
 }
-.card:hover {
-  background: var(--bg-secondary-hover);
-  box-shadow: var(--shadow-card-hover);
+.button.active {
+  color: var(--fg-brand);      /* Active state */
 }
-
-/* ❌ WRONG - Never use primitives directly */
-.card {
-  background: var(--primitive-neutral-050);
-  color: oklch(15% 0 0);
+.chevron {
+  color: var(--fg-tertiary);   /* Subtle icon */
 }
 ```
 
@@ -111,131 +111,92 @@ All colors use `oklch(L C H / alpha)` format:
 | `data-theme` | `light`, `dark` | Appearance (lightness) |
 | `data-vibrancy` | `minimal`, `standard`, `high-contrast` | Color intensity |
 
-```html
-<!-- Default: light + standard -->
-<html data-theme="light" data-vibrancy="standard">
+---
 
-<!-- Dark minimal -->
-<html data-theme="dark" data-vibrancy="minimal">
+## UI Component Patterns
 
-<!-- Light high-contrast (accessibility) -->
-<html data-theme="light" data-vibrancy="high-contrast">
+### Concentric Radii Standard
+
+When creating UI components that wrap child elements (toolbars, button groups, popovers), follow these optical design principles:
+
+**Formula**: `Container Radius = Button Radius + Padding`
+
+```css
+/* ✅ CORRECT - Concentric radii */
+.bubbleMenu {
+    padding: 6px;          /* P = 6px */
+    border-radius: 12px;   /* R(6) + P(6) = 12px */
+}
+
+.button {
+    border-radius: 6px;    /* R = 6px */
+}
 ```
 
-### Vibrancy Effects
+| Button Radius | Padding | Container Radius | Use Case |
+|---------------|---------|------------------|----------|
+| 3px | 4px | 7px | Compact toolbars |
+| 4px | 6px | 10px | Standard buttons |
+| 6px | 6px | 12px | Touch-friendly UI |
+| 8px | 10px | 18px | Prominent CTAs |
 
-| Vibrancy | Effect |
-|----------|--------|
-| `minimal` | 50% chroma, softer shadows, calmer feel |
-| `standard` | Full vibrancy (default) |
-| `high-contrast` | 120% chroma, stronger borders, accessibility |
-
-### Managing Theme in JS
-
-```typescript
-// Set theme
-document.documentElement.dataset.theme = 'dark';
-document.documentElement.dataset.vibrancy = 'minimal';
-
-// Read theme
-const isDark = document.documentElement.dataset.theme === 'dark';
-```
+> [!IMPORTANT]
+> Always add a CSS comment documenting the calculation: `/* 6px button + 6px padding = 12px */`
 
 ---
 
-## Primitive Color Ramps
+### Icons
 
-Extended fidelity at light and dark ends:
+**Rule**: Use Phosphor Icons (`@phosphor-icons/react`) for all UI icons. **Never use emojis.**
 
-```css
-/* Light end (extra fidelity for surfaces) */
---primitive-neutral-000: oklch(100% 0 0);   /* pure white */
---primitive-neutral-025: oklch(98.5% 0 0);  /* barely off-white */
---primitive-neutral-050: oklch(97% 0 0);    /* subtle off-white */
---primitive-neutral-075: oklch(95% 0 0);    /* light surface */
---primitive-neutral-100: oklch(92% 0 0);    /* surface hover */
---primitive-neutral-150: oklch(88% 0 0);    /* pressed/active */
+```tsx
+// ✅ CORRECT - Phosphor icon
+import { BookOpen, Eraser, Sparkle, Check } from '@phosphor-icons/react';
+<BookOpen size={16} />
 
-/* Mid-range */
---primitive-neutral-200 through --primitive-neutral-700
-
-/* Dark end (extra fidelity for dark mode) */
---primitive-neutral-750: oklch(30% 0 0);
---primitive-neutral-800: oklch(25% 0 0);
---primitive-neutral-850: oklch(20% 0 0);
---primitive-neutral-900: oklch(15% 0 0);
---primitive-neutral-925: oklch(12% 0 0);
---primitive-neutral-950: oklch(8% 0 0);
---primitive-neutral-975: oklch(5% 0 0);
+// ❌ INCORRECT - Emoji
+<span>📖</span>
 ```
+
+**Standard icon sizes**:
+| Context | Size |
+|---------|------|
+| Toolbar buttons | 16px |
+| Menu items | 16px |
+| Inline indicators | 14px |
+| Large actions | 20px |
 
 ---
 
-## Status Colors
+### Dropdown Chevrons
 
-| Status | Semantic Token | Usage |
-|--------|----------------|-------|
-| Success | `--fg-success`, `--bg-success-faint` | Positive feedback |
-| Warning | `--fg-warning`, `--bg-warning-faint` | Caution states |
-| Alert | `--fg-alert`, `--bg-alert-faint` | Errors, destructive |
-| Info | `--fg-info`, `--bg-info-faint` | Informational |
+**Rule**: All dropdown triggers must include an SVG chevron that animates on hover.
 
+**Chevron markup**:
+```tsx
+<svg className={styles.chevron} width="10" height="10" viewBox="0 0 10 10" fill="none">
+    <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+</svg>
+```
+
+**Hover animation** (CSS):
 ```css
-.success-message {
-  background: var(--bg-success-faint);
-  color: var(--fg-success);
-  border: 1px solid var(--border-success);
+.chevron {
+    color: var(--fg-tertiary);
+    transition: transform 100ms ease, stroke-width 100ms ease;
+}
+
+.trigger:hover .chevron {
+    transform: translateY(1px);
+    stroke-width: 2;
 }
 ```
 
 ---
 
-## Interactive States
-
-Each semantic token has explicit hover/pressed variants:
-
-```css
-/* Base → Hover → Pressed */
---bg-primary         → --bg-primary-hover      → --bg-primary-pressed
---bg-secondary       → --bg-secondary-hover    → --bg-secondary-pressed
---bg-brand-primary   → --bg-brand-primary-hover
---border-primary     → --border-primary-hover
---fg-link            → --fg-link-hover
-```
-
----
-
-## Mood Gradients
-
-Page backgrounds use mood-specific gradients:
-
-| Mood | Hue | Light L | Dark L |
-|------|-----|---------|--------|
-| `calm` | 200-220 (blue) | 85-90% | 25-30% |
-| `whimsical` | 280-320 (purple/pink) | 75-85% | 22-30% |
-| `playful` | 50-80 (yellow/orange) | 82-88% | 28-35% |
-| `mysterious` | 260-280 (deep purple) | 40-50% | 12-18% |
-| `joyful` | 85-95 (yellow) | 88-92% | 26-32% |
-
-```tsx
-const getGradient = (mood: string) => `var(--gradient-${mood})`;
-```
-
----
-
-## Expressive Text Tokens
-
-For styled story text:
-
-| Style | Font | Color Variable |
-|-------|------|----------------|
-| `handwritten` | `--font-handwritten` | `--color-expressive-handwritten` |
-| `shout` | `--font-display` | (inherit) |
-| `bully` | `--font-display` | `--color-expressive-bully` |
-
----
-
 ## Animation Tokens
+
+### CSS Tokens
 
 ```css
 /* Durations */
@@ -249,9 +210,18 @@ For styled story text:
 --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 ```
 
-For JavaScript/Framer Motion, import from `@gia/utils`:
-```typescript
+### Framer Motion Standard
+
+```tsx
 import { EASING, DURATION } from '@gia/utils';
+
+// Popover/menu entrance
+const menuAnimation = {
+    initial: { opacity: 0, y: 8, scale: 0.95 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: 8, scale: 0.95 },
+    transition: { duration: 0.15, ease: [0.16, 1, 0.3, 1] as const },
+};
 ```
 
 ---
@@ -291,8 +261,6 @@ Legacy token names map to new semantic tokens:
 | `--color-text-subtle` | `--fg-secondary` |
 | `--color-interactive` | `--fg-brand` |
 | `--color-border` | `--border-primary` |
-| `--color-danger` | `--fg-alert` |
-| `--color-success` | `--fg-success` |
 
 > [!NOTE]
 > Use new semantic tokens for new code. Legacy aliases exist for migration only.

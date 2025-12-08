@@ -34,7 +34,10 @@ export function SizeDropdown({ editor, currentSize }: SizeDropdownProps) {
                     className={cn(styles.trigger, currentSize !== 'regular' && styles.active)}
                     title="Text size"
                 >
-                    Aa
+                    <span>Aa</span>
+                    <svg className={styles.chevron} width="10" height="10" viewBox="0 0 10 10" fill="none">
+                        <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                 </button>
             </Popover.Trigger>
             <Popover.Portal>

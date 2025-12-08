@@ -2,6 +2,8 @@
 
 import { Editor } from '@tiptap/react';
 import * as Popover from '@radix-ui/react-popover';
+import { Check } from '@phosphor-icons/react';
+import { EMOTION_STYLES } from '@gia/schemas';
 import { cn } from '@gia/utils';
 import styles from './EmotionDropdown.module.css';
 
@@ -10,16 +12,13 @@ interface EmotionDropdownProps {
     currentEmotion: string | null;
 }
 
-const EMOTION_OPTIONS = [
-    { value: 'handwritten', label: 'Handwritten', icon: '✍️' },
-    { value: 'shout', label: 'Shout', icon: '📢' },
-    { value: 'bully', label: 'Bully', icon: '💢' },
-    { value: 'whisper', label: 'Whisper', icon: '🤫' },
-];
-
 export function EmotionDropdown({ editor, currentEmotion }: EmotionDropdownProps) {
     const handleEmotionSelect = (emotion: string) => {
-        editor.chain().focus().setExpressive(emotion).run();
+        if (emotion === 'normal') {
+            editor.chain().focus().unsetExpressive().run();
+        } else {
+            editor.chain().focus().setExpressive(emotion).run();
+        }
     };
 
     const handleClear = () => {
@@ -33,7 +32,10 @@ export function EmotionDropdown({ editor, currentEmotion }: EmotionDropdownProps
                     className={cn(styles.trigger, currentEmotion && styles.active)}
                     title="Text emotion"
                 >
-                    ✨
+                    <span className={styles.triggerLabel}>Style</span>
+                    <svg className={styles.chevron} width="10" height="10" viewBox="0 0 10 10" fill="none">
+                        <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                 </button>
             </Popover.Trigger>
             <Popover.Portal>
@@ -46,19 +48,18 @@ export function EmotionDropdown({ editor, currentEmotion }: EmotionDropdownProps
                             </button>
                         )}
                     </div>
-                    {EMOTION_OPTIONS.map((option) => (
+                    {EMOTION_STYLES.map((option) => (
                         <div
-                            key={option.value}
+                            key={option.id}
                             className={cn(
                                 styles.option,
-                                currentEmotion === option.value && styles.active
+                                currentEmotion === option.id && styles.active
                             )}
-                            onClick={() => handleEmotionSelect(option.value)}
+                            onClick={() => handleEmotionSelect(option.id)}
                         >
-                            <span className={styles.icon}>{option.icon}</span>
                             <span className={styles.label}>{option.label}</span>
-                            {currentEmotion === option.value && (
-                                <span className={styles.checkmark}>✓</span>
+                            {currentEmotion === option.id && (
+                                <Check size={14} className={styles.checkmark} />
                             )}
                         </div>
                     ))}
