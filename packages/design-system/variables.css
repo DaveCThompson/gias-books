@@ -61,49 +61,123 @@
    --primitive-neutral-975: oklch(5% 0 0);
    /* deepest dark */
 
-   /* ─── Brand (Blue) ─── */
-   --primitive-brand-100: oklch(92% 0.05 255);
-   /* faint brand bg */
-   --primitive-brand-200: oklch(85% 0.10 255);
-   /* light brand */
-   --primitive-brand-300: oklch(75% 0.15 255);
-   /* brand tint */
-   --primitive-brand-400: oklch(65% 0.20 255);
-   /* brand light */
-   --primitive-brand-500: oklch(55% 0.23 260);
-   /* brand primary */
-   --primitive-brand-600: oklch(48% 0.22 265);
-   /* brand dark */
-   --primitive-brand-700: oklch(40% 0.20 270);
-   /* brand darker */
+   /* ─── Named Hues: Red ─── */
+   --primitive-red-100: oklch(95% 0.05 25);
+   --primitive-red-200: oklch(90% 0.08 25);
+   --primitive-red-300: oklch(80% 0.12 25);
+   --primitive-red-400: oklch(68% 0.18 25);
+   --primitive-red-500: oklch(55% 0.20 25);
+   --primitive-red-600: oklch(48% 0.18 25);
+   --primitive-red-700: oklch(40% 0.18 25);
+   --primitive-red-800: oklch(32% 0.12 25);
+   --primitive-red-900: oklch(22% 0.08 25);
 
-   /* ─── Status: Success (Green) ─── */
-   --primitive-success-100: oklch(92% 0.05 145);
-   --primitive-success-500: oklch(55% 0.18 145);
-   --primitive-success-600: oklch(48% 0.16 145);
-   --primitive-success-700: oklch(40% 0.15 145);
+   /* ─── Named Hues: Orange ─── */
+   --primitive-orange-100: oklch(94% 0.06 40);
+   --primitive-orange-200: oklch(88% 0.10 40);
+   --primitive-orange-300: oklch(78% 0.14 40);
+   --primitive-orange-400: oklch(68% 0.18 40);
+   --primitive-orange-500: oklch(60% 0.20 40);
+   --primitive-orange-600: oklch(52% 0.18 40);
+   --primitive-orange-700: oklch(44% 0.16 40);
+   --primitive-orange-800: oklch(35% 0.12 40);
+   --primitive-orange-900: oklch(24% 0.08 40);
 
-   /* ─── Status: Warning (Amber) ─── */
-   --primitive-warning-100: oklch(92% 0.08 85);
-   --primitive-warning-500: oklch(75% 0.18 70);
-   --primitive-warning-600: oklch(65% 0.16 65);
-   --primitive-warning-700: oklch(55% 0.15 60);
+   /* ─── Named Hues: Amber ─── */
+   --primitive-amber-100: oklch(94% 0.08 70);
+   --primitive-amber-200: oklch(88% 0.12 70);
+   --primitive-amber-300: oklch(78% 0.16 70);
+   --primitive-amber-400: oklch(70% 0.18 70);
+   --primitive-amber-500: oklch(62% 0.18 70);
+   --primitive-amber-600: oklch(54% 0.16 65);
+   --primitive-amber-700: oklch(46% 0.15 60);
+   --primitive-amber-800: oklch(36% 0.12 60);
+   --primitive-amber-900: oklch(26% 0.08 60);
 
-   /* ─── Status: Alert/Error (Red) ─── */
-   --primitive-alert-100: oklch(92% 0.05 25);
-   --primitive-alert-500: oklch(55% 0.20 25);
-   --primitive-alert-600: oklch(48% 0.18 25);
-   --primitive-alert-700: oklch(40% 0.18 25);
+   /* ─── Named Hues: Green ─── */
+   --primitive-green-100: oklch(94% 0.05 145);
+   --primitive-green-200: oklch(88% 0.08 145);
+   --primitive-green-300: oklch(78% 0.12 145);
+   --primitive-green-400: oklch(65% 0.16 145);
+   --primitive-green-500: oklch(55% 0.18 145);
+   --primitive-green-600: oklch(48% 0.16 145);
+   --primitive-green-700: oklch(40% 0.15 145);
+   --primitive-green-800: oklch(32% 0.10 145);
+   --primitive-green-900: oklch(22% 0.06 145);
 
-   /* ─── Status: Info (Cyan) ─── */
-   --primitive-info-100: oklch(92% 0.05 220);
-   --primitive-info-500: oklch(60% 0.15 220);
-   --primitive-info-600: oklch(52% 0.14 220);
-   --primitive-info-700: oklch(45% 0.12 220);
+   /* ─── Named Hues: Cyan ─── */
+   --primitive-cyan-100: oklch(94% 0.05 200);
+   --primitive-cyan-200: oklch(88% 0.08 200);
+   --primitive-cyan-300: oklch(78% 0.12 200);
+   --primitive-cyan-400: oklch(68% 0.14 210);
+   --primitive-cyan-500: oklch(60% 0.15 220);
+   --primitive-cyan-600: oklch(52% 0.14 220);
+   --primitive-cyan-700: oklch(45% 0.12 220);
+   --primitive-cyan-800: oklch(36% 0.10 220);
+   --primitive-cyan-900: oklch(24% 0.06 220);
 
-   /* ─── Expressive (for styled text) ─── */
-   --primitive-expressive-red: oklch(55% 0.2 20);
-   --primitive-expressive-red-light: oklch(65% 0.18 20);
+   /* ─── Named Hues: Blue ─── */
+   --primitive-blue-100: oklch(94% 0.05 255);
+   --primitive-blue-200: oklch(88% 0.10 255);
+   --primitive-blue-300: oklch(78% 0.15 255);
+   --primitive-blue-400: oklch(68% 0.20 255);
+   --primitive-blue-500: oklch(58% 0.23 260);
+   --primitive-blue-600: oklch(50% 0.22 265);
+   --primitive-blue-700: oklch(42% 0.20 270);
+   --primitive-blue-800: oklch(32% 0.14 270);
+   --primitive-blue-900: oklch(22% 0.08 270);
+
+   /* ─── Named Hues: Purple ─── */
+   --primitive-purple-100: oklch(94% 0.05 290);
+   --primitive-purple-200: oklch(88% 0.08 290);
+   --primitive-purple-300: oklch(78% 0.12 290);
+   --primitive-purple-400: oklch(68% 0.16 295);
+   --primitive-purple-500: oklch(58% 0.18 300);
+   --primitive-purple-600: oklch(50% 0.18 305);
+   --primitive-purple-700: oklch(42% 0.16 310);
+   --primitive-purple-800: oklch(32% 0.12 310);
+   --primitive-purple-900: oklch(22% 0.08 310);
+
+   /* ─── Named Hues: Pink ─── */
+   --primitive-pink-100: oklch(94% 0.05 340);
+   --primitive-pink-200: oklch(88% 0.08 340);
+   --primitive-pink-300: oklch(78% 0.14 340);
+   --primitive-pink-400: oklch(68% 0.18 340);
+   --primitive-pink-500: oklch(60% 0.20 340);
+   --primitive-pink-600: oklch(52% 0.18 340);
+   --primitive-pink-700: oklch(44% 0.16 340);
+   --primitive-pink-800: oklch(34% 0.12 340);
+   --primitive-pink-900: oklch(24% 0.08 340);
+
+   /* ─── Brand (alias to Blue) ─── */
+   --primitive-brand-100: var(--primitive-blue-100);
+   --primitive-brand-200: var(--primitive-blue-200);
+   --primitive-brand-300: var(--primitive-blue-300);
+   --primitive-brand-400: var(--primitive-blue-400);
+   --primitive-brand-500: var(--primitive-blue-500);
+   --primitive-brand-600: var(--primitive-blue-600);
+   --primitive-brand-700: var(--primitive-blue-700);
+
+   /* ─── Status (aliases to Named Colors) ─── */
+   --primitive-success-100: var(--primitive-green-100);
+   --primitive-success-500: var(--primitive-green-500);
+   --primitive-success-600: var(--primitive-green-600);
+   --primitive-success-700: var(--primitive-green-700);
+
+   --primitive-warning-100: var(--primitive-amber-100);
+   --primitive-warning-500: var(--primitive-amber-500);
+   --primitive-warning-600: var(--primitive-amber-600);
+   --primitive-warning-700: var(--primitive-amber-700);
+
+   --primitive-alert-100: var(--primitive-red-100);
+   --primitive-alert-500: var(--primitive-red-500);
+   --primitive-alert-600: var(--primitive-red-600);
+   --primitive-alert-700: var(--primitive-red-700);
+
+   --primitive-info-100: var(--primitive-cyan-100);
+   --primitive-info-500: var(--primitive-cyan-500);
+   --primitive-info-600: var(--primitive-cyan-600);
+   --primitive-info-700: var(--primitive-cyan-700);
 
    /* ─── Alpha Values (for shadows and overlays) ─── */
    --primitive-alpha-5: 0.05;
@@ -119,7 +193,38 @@
 
 
    /* ═══════════════════════════════════════════════════════════════════════════
-     PART 2: SEMANTIC TOKENS - Light Theme Default
+     PART 2: NAMED COLORS - Theme-Aware Mid-Layer
+     These provide high-level color concepts that adapt to light/dark mode
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+   /* ─── Named Colors (Light Mode Default) ─── */
+   --color-red: var(--primitive-red-600);
+   --color-bg-red: var(--primitive-red-100);
+
+   --color-orange: var(--primitive-orange-600);
+   --color-bg-orange: var(--primitive-orange-100);
+
+   --color-amber: var(--primitive-amber-600);
+   --color-bg-amber: var(--primitive-amber-100);
+
+   --color-green: var(--primitive-green-600);
+   --color-bg-green: var(--primitive-green-100);
+
+   --color-cyan: var(--primitive-cyan-600);
+   --color-bg-cyan: var(--primitive-cyan-100);
+
+   --color-blue: var(--primitive-blue-600);
+   --color-bg-blue: var(--primitive-blue-100);
+
+   --color-purple: var(--primitive-purple-600);
+   --color-bg-purple: var(--primitive-purple-100);
+
+   --color-pink: var(--primitive-pink-600);
+   --color-bg-pink: var(--primitive-pink-100);
+
+
+   /* ═══════════════════════════════════════════════════════════════════════════
+     PART 3: SEMANTIC TOKENS - Light Theme Default
      Role-based tokens - USE THESE in components
      ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -143,14 +248,14 @@
    --bg-brand-faint: var(--primitive-brand-100);
    --bg-brand-muted: var(--primitive-brand-200);
 
-   --bg-success: var(--primitive-success-500);
-   --bg-success-faint: var(--primitive-success-100);
-   --bg-warning: var(--primitive-warning-500);
-   --bg-warning-faint: var(--primitive-warning-100);
-   --bg-alert: var(--primitive-alert-500);
-   --bg-alert-faint: var(--primitive-alert-100);
-   --bg-info: var(--primitive-info-500);
-   --bg-info-faint: var(--primitive-info-100);
+   --bg-success: var(--color-green);
+   --bg-success-faint: var(--color-bg-green);
+   --bg-warning: var(--color-amber);
+   --bg-warning-faint: var(--color-bg-amber);
+   --bg-alert: var(--color-red);
+   --bg-alert-faint: var(--color-bg-red);
+   --bg-info: var(--color-cyan);
+   --bg-info-faint: var(--color-bg-cyan);
 
    --bg-disabled: var(--primitive-neutral-100);
    --bg-overlay: oklch(0% 0 0 / var(--primitive-alpha-50));
@@ -166,10 +271,14 @@
    --border-brand: var(--primitive-brand-500);
    --border-brand-hover: var(--primitive-brand-600);
 
-   --border-success: var(--primitive-success-500);
-   --border-warning: var(--primitive-warning-500);
-   --border-alert: var(--primitive-alert-500);
-   --border-info: var(--primitive-info-500);
+   --border-success: var(--color-green);
+   --border-success-faint: var(--primitive-green-300);
+   --border-warning: var(--color-amber);
+   --border-warning-faint: var(--primitive-amber-300);
+   --border-alert: var(--color-red);
+   --border-alert-faint: var(--primitive-red-300);
+   --border-info: var(--color-cyan);
+   --border-info-faint: var(--primitive-cyan-300);
 
    --border-disabled: var(--primitive-neutral-150);
 
@@ -178,7 +287,8 @@
    --fg-primary-hover: var(--primitive-neutral-950);
    --fg-secondary: var(--primitive-neutral-600);
    --fg-tertiary: var(--primitive-neutral-500);
-   --fg-muted: var(--primitive-neutral-400);
+   --fg-quaternary: var(--primitive-neutral-400);
+   --fg-muted: var(--primitive-neutral-300);
    --fg-inverse: var(--primitive-neutral-000);
 
    --fg-link: var(--primitive-brand-500);
@@ -186,10 +296,10 @@
    --fg-brand: var(--primitive-brand-500);
    --fg-on-brand: var(--primitive-neutral-000);
 
-   --fg-success: var(--primitive-success-700);
-   --fg-warning: var(--primitive-warning-700);
-   --fg-alert: var(--primitive-alert-700);
-   --fg-info: var(--primitive-info-700);
+   --fg-success: var(--color-green);
+   --fg-warning: var(--color-amber);
+   --fg-alert: var(--color-red);
+   --fg-info: var(--color-cyan);
 
    --fg-disabled: var(--primitive-neutral-400);
 
@@ -212,7 +322,7 @@
 
 
    /* ═══════════════════════════════════════════════════════════════════════════
-     PART 3: COMPONENT-SPECIFIC TOKENS
+     PART 4: COMPONENT-SPECIFIC TOKENS
      ═══════════════════════════════════════════════════════════════════════════ */
 
    /* ─── Buttons ─── */
@@ -266,7 +376,7 @@
 
 
    /* ═══════════════════════════════════════════════════════════════════════════
-     PART 4: MOOD GRADIENTS (Light Theme)
+     PART 5: MOOD GRADIENTS (Light Theme)
      ═══════════════════════════════════════════════════════════════════════════ */
 
    --gradient-calm: linear-gradient(135deg, oklch(90% 0.08 220) 0%, oklch(85% 0.06 200) 100%);
@@ -282,7 +392,7 @@
 
 
    /* ═══════════════════════════════════════════════════════════════════════════
-     PART 5: TYPOGRAPHY & ANIMATION
+     PART 6: TYPOGRAPHY & ANIMATION
      ═══════════════════════════════════════════════════════════════════════════ */
 
    /* ─── Fonts ─── */
@@ -315,7 +425,7 @@
 
 
    /* ═══════════════════════════════════════════════════════════════════════════
-     PART 6: BACKWARD-COMPAT ALIASES
+     PART 7: BACKWARD-COMPAT ALIASES
      Maps old token names → new semantic tokens
      ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -344,7 +454,7 @@
    --color-neutral-950: var(--primitive-neutral-950);
    --color-brand-400: var(--primitive-brand-400);
    --color-brand-500: var(--primitive-brand-500);
-   --color-expressive-red: var(--primitive-expressive-red);
+   --color-expressive-red: var(--color-red);
 }
 
 
@@ -353,6 +463,31 @@
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 :root[data-theme='dark'] {
+   /* ─── Named Colors (Dark Mode) ─── */
+   --color-red: var(--primitive-red-400);
+   --color-bg-red: var(--primitive-red-900);
+
+   --color-orange: var(--primitive-orange-400);
+   --color-bg-orange: var(--primitive-orange-900);
+
+   --color-amber: var(--primitive-amber-400);
+   --color-bg-amber: var(--primitive-amber-900);
+
+   --color-green: var(--primitive-green-400);
+   --color-bg-green: var(--primitive-green-900);
+
+   --color-cyan: var(--primitive-cyan-400);
+   --color-bg-cyan: var(--primitive-cyan-900);
+
+   --color-blue: var(--primitive-blue-400);
+   --color-bg-blue: var(--primitive-blue-900);
+
+   --color-purple: var(--primitive-purple-400);
+   --color-bg-purple: var(--primitive-purple-900);
+
+   --color-pink: var(--primitive-pink-400);
+   --color-bg-pink: var(--primitive-pink-900);
+
    /* ─── Backgrounds ─── */
    --bg-primary: var(--primitive-neutral-900);
    --bg-primary-hover: var(--primitive-neutral-850);
@@ -373,10 +508,10 @@
    --bg-brand-faint: oklch(25% 0.05 255);
    --bg-brand-muted: oklch(30% 0.08 255);
 
-   --bg-success-faint: oklch(25% 0.04 145);
-   --bg-warning-faint: oklch(28% 0.06 85);
-   --bg-alert-faint: oklch(25% 0.04 25);
-   --bg-info-faint: oklch(25% 0.04 220);
+   --bg-success-faint: var(--color-bg-green);
+   --bg-warning-faint: var(--color-bg-amber);
+   --bg-alert-faint: var(--color-bg-red);
+   --bg-info-faint: var(--color-bg-cyan);
 
    --bg-disabled: var(--primitive-neutral-800);
    --bg-overlay: oklch(0% 0 0 / var(--primitive-alpha-70));
@@ -394,17 +529,18 @@
    --fg-primary-hover: var(--primitive-neutral-000);
    --fg-secondary: var(--primitive-neutral-300);
    --fg-tertiary: var(--primitive-neutral-400);
-   --fg-muted: var(--primitive-neutral-500);
+   --fg-quaternary: var(--primitive-neutral-500);
+   --fg-muted: var(--primitive-neutral-600);
    --fg-inverse: var(--primitive-neutral-900);
 
    --fg-link: var(--primitive-brand-400);
    --fg-link-hover: var(--primitive-brand-300);
    --fg-brand: var(--primitive-brand-400);
 
-   --fg-success: var(--primitive-success-500);
-   --fg-warning: var(--primitive-warning-500);
-   --fg-alert: var(--primitive-alert-500);
-   --fg-info: var(--primitive-info-500);
+   --fg-success: var(--color-green);
+   --fg-warning: var(--color-amber);
+   --fg-alert: var(--color-red);
+   --fg-info: var(--color-cyan);
 
    /* ─── Shadows (more opacity on dark) ─── */
    --shadow-xs: 0 1px 2px oklch(0% 0 0 / var(--primitive-alpha-20));
