@@ -35,6 +35,23 @@
     max-height: 280px;
     overflow-y: auto;
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+/* Stealth scrollbar */
+.content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: var(--border-primary);
+    border-radius: 2px;
 }
 
 .header {
@@ -103,6 +120,81 @@
 .checkmark {
     font-size: 16px;
     color: var(--fg-brand);
+}
+
+/* Font-specific styles for preview */
+.font-normal {
+    font-family: var(--font-body);
+}
+
+.font-happy {
+    font-family: var(--font-fredoka);
+    font-variation-settings: "wght" 600;
+}
+
+.font-sad {
+    font-family: var(--font-body);
+    font-variation-settings: "wght" 300;
+}
+
+.font-shout {
+    font-family: var(--font-fredoka);
+    font-variation-settings: "wght" 700;
+}
+
+.font-angry {
+    font-family: var(--font-roboto-flex);
+    font-variation-settings: "wght" 800;
+    color: var(--fg-expressive-angry);
+}
+
+.font-nervous {
+    font-family: var(--font-playpen);
+}
+
+.font-whisper {
+    font-family: var(--font-body);
+    font-variation-settings: "wght" 300;
+}
+
+.font-silly {
+    font-family: var(--font-playpen);
+    font-variation-settings: "wght" 600;
+}
+
+.font-spooky {
+    font-family: var(--font-fredoka);
+    color: var(--fg-expressive-spooky);
+}
+
+.font-magical {
+    font-family: var(--font-body);
+    color: var(--fg-expressive-magical);
+}
+
+.font-brave {
+    font-family: var(--font-roboto-flex);
+    font-variation-settings: "wght" 700;
+}
+
+.font-grumpy {
+    font-family: var(--font-roboto-flex);
+    font-variation-settings: "wght" 600, "wdth" 90;
+}
+
+.font-dreamy {
+    font-family: var(--font-body);
+    color: var(--fg-expressive-dreamy);
+}
+
+.font-handwritten {
+    font-family: var(--font-handwritten);
+}
+
+.font-bully {
+    font-family: var(--font-display);
+    font-variation-settings: "wght" 700;
+    color: var(--fg-expressive-angry);
 }
 
 /* Chevron with hover animation */

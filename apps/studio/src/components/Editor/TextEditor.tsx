@@ -6,6 +6,8 @@ import Underline from '@tiptap/extension-underline';
 import { ExpressiveMark } from '@/editor/marks/ExpressiveMark';
 import { InteractiveMark } from '@/editor/marks/InteractiveMark';
 import { SizeMark } from '@/editor/marks/SizeMark';
+import { TextColorMark } from '@/editor/marks/TextColorMark';
+import { TextBgColorMark } from '@/editor/marks/TextBgColorMark';
 import { dslToHtml, htmlToDsl } from '@/utils/dslConverter';
 import { useBookStore } from '@/data/stores/bookStore';
 import { useEffect, useState } from 'react';
@@ -30,6 +32,8 @@ export function TextEditor() {
             ExpressiveMark,
             InteractiveMark,
             SizeMark,
+            TextColorMark,
+            TextBgColorMark,
         ],
         content: page ? dslToHtml(page.text) : '',
         onUpdate: ({ editor }) => {

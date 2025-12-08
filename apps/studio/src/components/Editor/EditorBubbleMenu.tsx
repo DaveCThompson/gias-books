@@ -8,6 +8,7 @@ import { useToolbarState, MarkState } from '@/hooks/useToolbarState';
 import { useSelectionCoords } from '@/hooks/useSelectionCoords';
 import { SizeDropdown } from './SizeDropdown';
 import { EmotionDropdown } from './EmotionDropdown';
+import { ColorDropdown } from './ColorDropdown';
 import { cn } from '@gia/utils';
 import styles from './EditorBubbleMenu.module.css';
 
@@ -120,7 +121,15 @@ export function EditorBubbleMenu({ editor, onInteractiveClick }: EditorBubbleMen
 
                                 <div className={styles.divider} />
 
-                                {/* Group 4: Actions */}
+                                {/* Group 4: Color dropdowns */}
+                                <div className={styles.group}>
+                                    <ColorDropdown editor={editor} mode="fg" currentColor={toolbarState.currentColor} />
+                                    <ColorDropdown editor={editor} mode="bg" currentColor={toolbarState.currentBgColor} />
+                                </div>
+
+                                <div className={styles.divider} />
+
+                                {/* Group 5: Actions */}
                                 <button
                                     className={styles.button}
                                     onClick={onInteractiveClick}
@@ -128,6 +137,9 @@ export function EditorBubbleMenu({ editor, onInteractiveClick }: EditorBubbleMen
                                 >
                                     <BookOpen size={16} />
                                 </button>
+
+                                <div className={styles.divider} />
+
                                 <button
                                     className={styles.button}
                                     onClick={() => editor.chain().focus().unsetAllMarks().run()}

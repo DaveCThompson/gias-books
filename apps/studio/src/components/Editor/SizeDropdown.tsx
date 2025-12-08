@@ -27,6 +27,8 @@ export function SizeDropdown({ editor, currentSize }: SizeDropdownProps) {
         }
     };
 
+    const currentLabel = SIZE_OPTIONS.find(o => o.value === currentSize)?.label || 'Regular';
+
     return (
         <Popover.Root>
             <Popover.Trigger asChild>
@@ -34,7 +36,7 @@ export function SizeDropdown({ editor, currentSize }: SizeDropdownProps) {
                     className={cn(styles.trigger, currentSize !== 'regular' && styles.active)}
                     title="Text size"
                 >
-                    <span>Aa</span>
+                    <span className={styles.triggerLabel}>{currentLabel}</span>
                     <svg className={styles.chevron} width="10" height="10" viewBox="0 0 10 10" fill="none">
                         <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -42,11 +44,15 @@ export function SizeDropdown({ editor, currentSize }: SizeDropdownProps) {
             </Popover.Trigger>
             <Popover.Portal>
                 <Popover.Content className={styles.content} sideOffset={8} align="start">
+                    <div className={styles.header}>
+                        <span className={styles.headerTitle}>Size</span>
+                    </div>
                     {SIZE_OPTIONS.map((option) => (
                         <div
                             key={option.value}
                             className={cn(
                                 styles.option,
+                                styles[`size-${option.value}`],
                                 currentSize === option.value && styles.active
                             )}
                             onClick={() => handleSizeSelect(option.value)}

@@ -1,0 +1,139 @@
+/* Color Dropdown Styles */
+.trigger {
+    min-width: 40px;
+    height: 28px;
+    padding: 0 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: 14px;
+    border: none;
+    background: transparent;
+    color: var(--fg-secondary);
+    cursor: pointer;
+    transition: background 100ms ease, color 100ms ease;
+    position: relative;
+}
+
+.trigger:hover {
+    background: var(--bg-secondary-hover);
+}
+
+.trigger.active {
+    background: var(--bg-brand-faint);
+    color: var(--fg-brand);
+}
+
+.colorIndicator {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 3px;
+    border-radius: 1px;
+}
+
+.content {
+    padding: 8px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 10px;
+    box-shadow: var(--shadow-dropdown);
+    min-width: 180px;
+    z-index: 1000;
+}
+
+/* Stealth scrollbar */
+.content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: var(--border-primary);
+    border-radius: 2px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 4px 8px;
+    margin-bottom: 4px;
+}
+
+.headerTitle {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--fg-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+}
+
+.swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 100ms ease;
+}
+
+.swatch:hover {
+    transform: scale(1.1);
+}
+
+.swatch.active {
+    outline: 2px solid var(--fg-brand);
+    outline-offset: 2px;
+}
+
+.swatchColor {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.swatchLetter {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--bg-primary);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.checkmark {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: var(--fg-brand);
+}
+
+/* Chevron with hover animation */
+.chevron {
+    color: var(--fg-tertiary);
+    transition: transform 100ms ease;
+}
+
+.trigger:hover .chevron {
+    transform: translateY(1px);
+}

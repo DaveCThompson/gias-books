@@ -102,14 +102,19 @@ export const FONT_REGISTRY: Record<string, FontConfig> = {
 /** ─── COLOR REGISTRY ─── */
 export const COLOR_REGISTRY: Record<string, ColorConfig> = {
     // Named Colors (from PRD-001)
-    red: 'var(--color-red)',
+    default: 'var(--fg-primary)',
+    grey: 'var(--color-grey)',
+    brown: 'var(--color-brown)',
     orange: 'var(--color-orange)',
-    amber: 'var(--color-amber)',
+    yellow: 'var(--color-yellow)',
     green: 'var(--color-green)',
-    cyan: 'var(--color-cyan)',
     blue: 'var(--color-blue)',
     purple: 'var(--color-purple)',
     pink: 'var(--color-pink)',
+    red: 'var(--color-red)',
+    // Additional hues
+    amber: 'var(--color-amber)',
+    cyan: 'var(--color-cyan)',
 
     // Semantic aliases
     primary: 'var(--fg-primary)',
@@ -128,6 +133,22 @@ export const COLOR_REGISTRY: Record<string, ColorConfig> = {
     'emotion-magical': 'var(--fg-expressive-magical)',
     'emotion-grumpy': 'var(--fg-expressive-grumpy)',
     'emotion-dreamy': 'var(--fg-expressive-dreamy)',
+};
+
+/** ─── BGCOLOR REGISTRY (for text backgrounds) ─── */
+export const BGCOLOR_REGISTRY: Record<string, ColorConfig> = {
+    default: 'transparent',
+    grey: 'var(--color-bg-grey)',
+    brown: 'var(--color-bg-brown)',
+    orange: 'var(--color-bg-orange)',
+    yellow: 'var(--color-bg-yellow)',
+    green: 'var(--color-bg-green)',
+    blue: 'var(--color-bg-blue)',
+    purple: 'var(--color-bg-purple)',
+    pink: 'var(--color-bg-pink)',
+    red: 'var(--color-bg-red)',
+    amber: 'var(--color-bg-amber)',
+    cyan: 'var(--color-bg-cyan)',
 };
 
 /** ─── MOTION REGISTRY ─── */
@@ -243,6 +264,7 @@ export function getEmotionStyle(id: string): EmotionStyle {
 export interface StyleAttributes {
     font?: string;
     color?: string;
+    bgcolor?: string;
     motion?: string;
     size?: ExpressiveSize;
 }
@@ -252,6 +274,9 @@ export interface ResolvedStyle {
     fontFamily?: string;
     fontVariationSettings?: string;
     color?: string;
+    backgroundColor?: string;
+    padding?: string;
+    borderRadius?: string;
     animation?: string;
     animationDuration?: string;
     textShadow?: string;
@@ -301,6 +326,15 @@ export function resolveStyle(attrs: string | StyleAttributes): ResolvedStyle {
 
     if (attrs.size) {
         resolved.fontSize = getSizeScale(attrs.size);
+    }
+
+    if (attrs.bgcolor && BGCOLOR_REGISTRY[attrs.bgcolor]) {
+        resolved.backgroundColor = BGCOLOR_REGISTRY[attrs.bgcolor];
+        // Add padding and border-radius when bgcolor is applied
+        if (attrs.bgcolor !== 'default') {
+            resolved.padding = '0.1em 0.3em';
+            resolved.borderRadius = '0.25em';
+        }
     }
 
     return resolved;

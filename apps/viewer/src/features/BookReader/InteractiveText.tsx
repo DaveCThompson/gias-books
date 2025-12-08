@@ -84,13 +84,13 @@ function parseText(
         break;
       case 'style': {
         // NEW: Atomic style attributes
-        // Parse: font="handwritten" color="red" motion="bounce"
+        // Parse: font="handwritten" color="red" bgcolor="amber" motion="bounce"
         const attrs: StyleAttributes = {};
         const attrRegex = /(\w+)="([^"]+)"/g;
         let attrMatch;
         while ((attrMatch = attrRegex.exec(value || '')) !== null) {
           const [, attrKey, attrValue] = attrMatch;
-          if (attrKey === 'font' || attrKey === 'color' || attrKey === 'motion' || attrKey === 'size') {
+          if (attrKey === 'font' || attrKey === 'color' || attrKey === 'bgcolor' || attrKey === 'motion' || attrKey === 'size') {
             attrs[attrKey as keyof StyleAttributes] = attrValue as any;
           }
         }
@@ -102,6 +102,9 @@ function parseText(
         if (resolved.fontFamily) inlineStyle.fontFamily = resolved.fontFamily;
         if (resolved.fontVariationSettings) inlineStyle.fontVariationSettings = resolved.fontVariationSettings;
         if (resolved.color) inlineStyle.color = resolved.color;
+        if (resolved.backgroundColor) inlineStyle.backgroundColor = resolved.backgroundColor;
+        if (resolved.padding) inlineStyle.padding = resolved.padding;
+        if (resolved.borderRadius) inlineStyle.borderRadius = resolved.borderRadius;
         if (resolved.textShadow) inlineStyle.textShadow = resolved.textShadow;
         if (resolved.transform) inlineStyle.transform = resolved.transform;
         if (resolved.fontSize) inlineStyle.fontSize = resolved.fontSize;

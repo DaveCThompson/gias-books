@@ -41,7 +41,7 @@ export function EmotionDropdown({ editor, currentEmotion }: EmotionDropdownProps
             <Popover.Portal>
                 <Popover.Content className={styles.content} sideOffset={8} align="start">
                     <div className={styles.header}>
-                        <span className={styles.headerTitle}>Emotion</span>
+                        <span className={styles.headerTitle}>Font Style</span>
                         {currentEmotion && (
                             <button className={styles.clearButton} onClick={handleClear}>
                                 Clear
@@ -53,6 +53,7 @@ export function EmotionDropdown({ editor, currentEmotion }: EmotionDropdownProps
                             key={option.id}
                             className={cn(
                                 styles.option,
+                                styles[`font-${option.id}`],
                                 currentEmotion === option.id && styles.active
                             )}
                             onClick={() => handleEmotionSelect(option.id)}

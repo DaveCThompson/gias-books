@@ -118,33 +118,74 @@ export function htmlToDsl(html: string): string {
     dsl = dsl.replace(STRIKE_HTML_REGEX, '[s]$1[/s]');
     dsl = dsl.replace(CODE_HTML_REGEX, '[code]$1[/code]');
 
-    // Convert NEW atomic style spans back to DSL
-    // Match: <span data-font="..." data-color="..." data-motion="...">content</span>
-    dsl = dsl.replace(
-        /<span([^>]*data-(?:font|color|motion|size)="[^"]+"[^>]*)>(.*?)<\/span>/gi,
-        (fullMatch, attrString, content) => {
-            // Check if this is legacy (has data-expressive)
-            if (attrString.includes('data-expressive')) {
-                return fullMatch; // Let legacy handler deal with it
+    // Convert NEW atomic style spans back to DSL using DOM manipulation
+    // This handles nested spans reliably by processing from innermost to outermost
+    if (typeof DOMParser !== 'undefined') {
+        // Browser environment - use DOMParser for reliable parsing
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(`<div>${dsl}</div>`, 'text/html');
+        const container = doc.body.firstChild as Element;
+
+        // Process all spans with our data attributes, innermost first
+        const processSpans = () => {
+            let foundAny = false;
+            // Find all spans with our data attributes
+            const spans = container.querySelectorAll('span[data-color], span[data-bgcolor], span[data-font], span[data-motion], span[data-size]');
+
+            for (const span of Array.from(spans)) {
+                // Skip if has nested data-spans (process innermost first)
+                if (span.querySelector('span[data-color], span[data-bgcolor], span[data-font], span[data-motion], span[data-size]')) {
+                    continue;
+                }
+                // Skip legacy expressive spans
+                if (span.hasAttribute('data-expressive')) {
+                    continue;
+                }
+
+                // Build DSL attributes
+                const attrs: string[] = [];
+                if (span.getAttribute('data-font')) attrs.push(`font="${span.getAttribute('data-font')}"`);
+                if (span.getAttribute('data-color')) attrs.push(`color="${span.getAttribute('data-color')}"`);
+                if (span.getAttribute('data-bgcolor')) attrs.push(`bgcolor="${span.getAttribute('data-bgcolor')}"`);
+                if (span.getAttribute('data-motion')) attrs.push(`motion="${span.getAttribute('data-motion')}"`);
+                const size = span.getAttribute('data-size');
+                if (size && size !== 'regular') attrs.push(`size="${size}"`);
+
+                if (attrs.length > 0) {
+                    // Replace span with DSL text
+                    const dslText = `[style ${attrs.join(' ')}]${span.innerHTML}[/style]`;
+                    span.replaceWith(doc.createTextNode(dslText));
+                    foundAny = true;
+                }
             }
+            return foundAny;
+        };
 
-            // Parse data attributes
-            const attrs: string[] = [];
-            const fontMatch = /data-font="([^"]+)"/.exec(attrString);
-            const colorMatch = /data-color="([^"]+)"/.exec(attrString);
-            const motionMatch = /data-motion="([^"]+)"/.exec(attrString);
-            const sizeMatch = /data-size="([^"]+)"/.exec(attrString);
+        // Process until no more spans found (handles nested spans)
+        while (processSpans()) { /* keep processing */ }
 
-            if (fontMatch) attrs.push(`font="${fontMatch[1]}"`);
-            if (colorMatch) attrs.push(`color="${colorMatch[1]}"`);
-            if (motionMatch) attrs.push(`motion="${motionMatch[1]}"`);
-            if (sizeMatch && sizeMatch[1] !== 'regular') attrs.push(`size="${sizeMatch[1]}"`);
-
-            return attrs.length > 0
-                ? `[style ${attrs.join(' ')}]${content}[/style]`
-                : content;
-        }
-    );
+        dsl = container.innerHTML;
+    } else {
+        // Fallback: simple regex for SSR (won't handle nested spans perfectly)
+        dsl = dsl.replace(
+            /<span\s+([^>]*\bdata-(?:font|color|bgcolor|motion|size)="[^"]*"[^>]*)>([^<]*)<\/span>/gi,
+            (fullMatch, attrString, content) => {
+                if (attrString.includes('data-expressive')) return fullMatch;
+                const attrs: string[] = [];
+                const fontMatch = /data-font="([^"]+)"/.exec(attrString);
+                const colorMatch = /data-color="([^"]+)"/.exec(attrString);
+                const bgcolorMatch = /data-bgcolor="([^"]+)"/.exec(attrString);
+                const motionMatch = /data-motion="([^"]+)"/.exec(attrString);
+                const sizeMatch = /data-size="([^"]+)"/.exec(attrString);
+                if (fontMatch) attrs.push(`font="${fontMatch[1]}"`);
+                if (colorMatch) attrs.push(`color="${colorMatch[1]}"`);
+                if (bgcolorMatch) attrs.push(`bgcolor="${bgcolorMatch[1]}"`);
+                if (motionMatch) attrs.push(`motion="${motionMatch[1]}"`);
+                if (sizeMatch && sizeMatch[1] !== 'regular') attrs.push(`size="${sizeMatch[1]}"`);
+                return attrs.length > 0 ? `[style ${attrs.join(' ')}]${content}[/style]` : content;
+            }
+        );
+    }
 
     // Convert LEGACY expressive spans back to DSL (with optional size)
     // Pattern: data-expressive and data-style, optionally data-size

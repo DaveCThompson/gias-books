@@ -149,6 +149,17 @@
    --primitive-pink-800: oklch(34% 0.12 340);
    --primitive-pink-900: oklch(24% 0.08 340);
 
+   /* ─── Named Hues: Brown ─── */
+   --primitive-brown-100: oklch(92% 0.03 60);
+   --primitive-brown-200: oklch(85% 0.05 55);
+   --primitive-brown-300: oklch(72% 0.08 50);
+   --primitive-brown-400: oklch(58% 0.10 45);
+   --primitive-brown-500: oklch(48% 0.10 40);
+   --primitive-brown-600: oklch(40% 0.08 35);
+   --primitive-brown-700: oklch(32% 0.06 30);
+   --primitive-brown-800: oklch(25% 0.04 25);
+   --primitive-brown-900: oklch(18% 0.03 20);
+
    /* ─── Brand (alias to Blue) ─── */
    --primitive-brand-100: var(--primitive-blue-100);
    --primitive-brand-200: var(--primitive-blue-200);
@@ -221,6 +232,17 @@
 
    --color-pink: var(--primitive-pink-600);
    --color-bg-pink: var(--primitive-pink-100);
+
+   /* ─── Additional Named Colors ─── */
+   --color-brown: var(--primitive-brown-600);
+   --color-bg-brown: var(--primitive-brown-100);
+
+   --color-grey: var(--primitive-neutral-500);
+   --color-bg-grey: var(--primitive-neutral-200);
+
+   /* Yellow alias to Amber */
+   --color-yellow: var(--color-amber);
+   --color-bg-yellow: var(--color-bg-amber);
 
 
    /* ═══════════════════════════════════════════════════════════════════════════
@@ -487,6 +509,17 @@
 
    --color-pink: var(--primitive-pink-400);
    --color-bg-pink: var(--primitive-pink-900);
+
+   /* Additional Named Colors (Dark Mode) */
+   --color-brown: var(--primitive-brown-400);
+   --color-bg-brown: var(--primitive-brown-900);
+
+   --color-grey: var(--primitive-neutral-400);
+   --color-bg-grey: var(--primitive-neutral-800);
+
+   /* Yellow follows amber */
+   --color-yellow: var(--color-amber);
+   --color-bg-yellow: var(--color-bg-amber);
 
    /* ─── Backgrounds ─── */
    --bg-primary: var(--primitive-neutral-900);

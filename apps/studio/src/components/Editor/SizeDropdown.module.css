@@ -35,6 +35,40 @@
     max-height: 280px;
     overflow-y: auto;
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+/* Stealth scrollbar */
+.content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: var(--border-primary);
+    border-radius: 2px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-primary);
+    margin-bottom: 4px;
+}
+
+.headerTitle {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fg-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .option {
@@ -61,6 +95,32 @@
 .checkmark {
     font-size: 16px;
     color: var(--fg-brand);
+}
+
+.triggerLabel {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Size-specific font sizes for visual preview */
+.size-small {
+    font-size: 12px;
+}
+
+.size-regular {
+    font-size: 14px;
+}
+
+.size-large {
+    font-size: 16px;
+}
+
+.size-giant {
+    font-size: 18px;
+}
+
+.size-massive {
+    font-size: 22px;
 }
 
 /* Chevron with hover animation */
