@@ -1,127 +1,137 @@
-# Madoodle Design System
+# Madoodle Design System and Styling Guide
 
-This document defines the **shared styling architecture** for the monorepo.
-
-> **See also:** [CSS-PRINCIPLES.md](../CSS-PRINCIPLES.md) for the complete styling specification.
+This document defines the **styling architecture, token system, and UI principles** for the Gia Workspace.
 
 ---
 
-## Architecture Overview
+## 🏗 Architecture Overview
+
+The styling system is decoupled and layered:
 
 ```
-gia-workspace/
-├── packages/design-system/
-│   └── variables.css          ← Shared design tokens
-├── apps/viewer/
-│   └── src/styles/
-│       ├── globals.css        ← Viewer-specific globals
-│       └── *.module.css       ← Component styles
-└── apps/studio/
-    └── src/styles/
-        ├── globals.css        ← Studio-specific globals
-        └── *.module.css       ← Component styles
+packages/design-system/
+├── index.css           ← Entry point (imports all below)
+├── fonts.css           ← Google Fonts imports (Inter, Outfit, etc.)
+├── reset.css           ← CSS Modern Reset
+├── variables.css       ← Design tokens (SOURCE OF TRUTH)
+└── typography.css      ← Base typography
 ```
 
-Both apps import `@gia/design-system` for shared tokens.
+### App Integration
+
+- **Viewer (`apps/viewer`)**: Imports `@gia/design-system` in `src/styles/index.css`.
+- **Studio (`apps/studio`)**: Imports `@gia/design-system` in `src/app/globals.css`.
 
 ---
 
-## Core Principles
+## 🎨 Token Architecture
 
-### 1. OKLCH Color Space
+We use a **Three-Tier Token System** to ensure maintainability and theming support.
 
-All colors use `oklch(L C H / alpha)` for:
-- **Perceptual uniformity** – L (lightness) changes linearly
-- **Wide gamut** – P3 display support where available
-- **Easy theming** – Shift L for dark mode, H for brand variants
-
-```css
-/* Light: L = 85-92%, Dark: L = 25-38% */
---gradient-calm: linear-gradient(180deg, oklch(90% 0.03 220) 0%, oklch(85% 0.05 230) 100%);
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  PRIMITIVES         → Raw OKLCH values (never use in components)   │
+│  --primitive-*         e.g., --primitive-neutral-500               │
+├─────────────────────────────────────────────────────────────────────┤
+│  SEMANTIC TOKENS    → Role-based, theme-aware (USE THESE)          │
+│  --bg-*, --fg-*        e.g., --bg-primary, --fg-secondary          │
+│  --border-*, --shadow-*                                             │
+├─────────────────────────────────────────────────────────────────────┤
+│  BACKWARD-COMPAT    → Legacy aliases for migration                 │
+│  --color-*             e.g., --color-background → --bg-primary     │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-### 2. Semantic CSS Variables
+### Core Semantic Tokens
 
-Never use raw values in component styles. Use semantic tokens:
+| Token | Light Mode | Dark Mode | Usage |
+|-------|------------|-----------|-------|
+| `--bg-primary` | White | Neutral-900 | Main page background |
+| `--bg-secondary` | Neutral-050 | Neutral-800 | Cards, sidebars |
+| `--fg-primary` | Neutral-900 | Neutral-100 | Body text, headings |
+| `--fg-secondary` | Neutral-600 | Neutral-400 | Subtitles, captions |
+| `--fg-brand` | Brand-600 | Brand-400 | Active states, links |
+| `--border-primary` | Neutral-200 | Neutral-700 | Standard borders |
 
-```css
-/* ✅ Correct */
-.card { background: var(--color-surface); }
-
-/* ❌ Never */
-.card { background: #f0f0f0; }
-.card { background: oklch(94% 0 0); }
-```
-
-### 3. Dark Mode via `data-theme`
-
-Theme is applied by toggling `data-theme="dark"` on `<html>`:
-
-```css
-:root { --color-bg: oklch(98% 0 0); }
-:root[data-theme='dark'] { --color-bg: oklch(15% 0 0); }
-```
+> **Rule**: Always use semantic tokens (`--bg-primary`). Never hardcode hex values or use raw primitives.
 
 ---
 
-## Design Tokens
+## 🌈 The named Color System (OKLCH)
 
-### Semantic Mappings
+We use **OKLCH** colors for all specific hues to ensure perceptual uniformity and wide-gamut support.
 
-| Token | Light | Dark |
-|-------|-------|------|
-| `--color-background` | neutral-000 | neutral-900 |
-| `--color-text` | neutral-900 | neutral-100 |
-| `--color-surface` | neutral-050 | neutral-800 |
-| `--color-interactive` | brand-500 | brand-400 |
+| Hue | Foreground Token | Background Token |
+|-----|------------------|------------------|
+| Red | `--color-red` | `--color-bg-red` |
+| Orange | `--color-orange` | `--color-bg-orange` |
+| Green | `--color-green` | `--color-bg-green` |
+| Blue | `--color-blue` | `--color-bg-blue` |
+| Purple | `--color-purple` | `--color-bg-purple` |
+| Pink | `--color-pink` | `--color-bg-pink` |
 
-### Mood Gradients
-
-| Mood | Hue (H) | Light L | Dark L |
-|------|---------|---------|--------|
-| `calm` | 220-230 (blue) | 85-90% | 25-30% |
-| `tense` | 25-30 (red) | 75-85% | 28-35% |
-| `joyful` | 85-95 (yellow) | 88-92% | 32-38% |
+> These tokens automatically adapt lightness for Dark Mode.
 
 ---
 
-## Component Styling Rules
+## 📐 UI Principles
 
-### CSS Modules
-
-Every component MUST have a co-located `*.module.css`:
-
-```
-Button/
-├── Button.tsx
-└── Button.module.css
-```
-
-### Conditional Classes
-
-Use `cn()` utility (wrapping `clsx`) for conditional classes:
-
-```tsx
-import { cn } from '@/utils/cn';
-
-<button className={cn(styles.button, isActive && styles.active)} />
-```
-
-### Dark Mode in Components
-
-For theme-specific styles, use `:global()`:
+### 1. Concentric Radii
+When nesting rounded elements, use the formula: `Outer Radius = Inner Radius + Padding`.
 
 ```css
-:global([data-theme='dark']) .card {
-    box-shadow: var(--shadow-card-dark);
+/* Example: Toolbar */
+.toolbar {
+    padding: 6px;
+    border-radius: 12px;  /* 6px (child) + 6px (padding) */
+}
+.button {
+    border-radius: 6px;
 }
 ```
 
+### 2. Icons
+Use **Phosphor Icons** (`@phosphor-icons/react`). Never use emojis for UI elements.
+- **Sizes**: 16px (standard), 20px (large), 14px (subtle).
+
+### 3. Motion
+Use spring-based physics for "feel" animations, and standard eases for UI transitions.
+
+```css
+/* CSS Variables */
+--ease-out: cubic-bezier(0, 0, 0.2, 1);
+--duration-normal: 300ms;
+```
+
 ---
 
-## Adding New Components
+## ✍️ Text Styling System
 
-1. Create `ComponentName.module.css` next to component
-2. Use only semantic variables from `@gia/design-system`
-3. Add dark mode overrides if needed (rare – most should "just work")
-4. Use `cn()` for conditional classes
+The text engine supports complex expressivity through a registry pattern.
+
+### 1. DSL Format
+The custom markup language for our books:
+`[style font="handwritten" effect="glow" motion="bounce"]Text[/style]`
+
+### 2. Registries (`@gia/schemas`)
+
+*   **Font Registry**: `body`, `display`, `handwritten`, `fredoka`, `playpen`
+*   **Effect Registry**: `shadow`, `glow`, `outline`
+*   **Motion Registry**: `bounce`, `wiggle`, `shake`, `shimmer`
+
+---
+
+## 🛠 Developer Workflow
+
+1.  **New Components**: Create a `.module.css` file next to your component.
+2.  **Dark Mode**: Most tokens adapt automatically. For specific overrides, use `:global([data-theme='dark'])`.
+3.  **Classes**: Use the `cn()` utility to combine module classes.
+
+```tsx
+import { cn } from '@gia/utils';
+import styles from './Card.module.css';
+
+export function Card({ className }) {
+  return <div className={cn(styles.card, className)} />
+}
+```

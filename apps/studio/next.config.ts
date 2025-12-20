@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     // This allows Studio to read/write the shared content package
     CONTENT_PATH: path.resolve(__dirname, '../../packages/content'),
   },
+  transpilePackages: ['@gia/schemas', '@gia/utils'],
 };
 
 export default nextConfig;

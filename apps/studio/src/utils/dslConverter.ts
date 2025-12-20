@@ -55,45 +55,21 @@ function parseStyleAttributes(attrString: string): Record<string, string> {
 /**
  * Converts DSL markup to TipTap-compatible HTML.
  */
+/**
+ * Converts DSL markup to TipTap-compatible HTML.
+ * Handles nested tags (e.g., [style][style]...[/style][/style]) correctly.
+ */
 export function dslToHtml(dsl: string): string {
-    let html = dsl;
+    // 1. First, we need to protect strict tags that shouldn't be parsed recursively if we were doing a full parser,
+    // but here we just want to convert everything to HTML.
 
-    // Convert standard formatting DSL → HTML
-    html = html.replace(BOLD_DSL_REGEX, '<strong>$1</strong>');
-    html = html.replace(ITALIC_DSL_REGEX, '<em>$1</em>');
-    html = html.replace(UNDERLINE_DSL_REGEX, '<u>$1</u>');
-    html = html.replace(STRIKE_DSL_REGEX, '<s>$1</s>');
-    html = html.replace(CODE_DSL_REGEX, '<code>$1</code>');
+    // We'll use a recursive descent parser approach for the DSL
+    // This is necessary because regex cannot handle arbitrary nesting of the same tag (like [style]...[style]...[/style]...[/style])
 
-    // Convert NEW atomic style tags
-    html = html.replace(STYLE_DSL_REGEX, (_, attrString, content) => {
-        const attrs = parseStyleAttributes(attrString || '');
-        const dataAttrs = Object.entries(attrs)
-            .map(([key, value]) => `data-${key}="${value}"`)
-            .join(' ');
-        return dataAttrs ? `<span ${dataAttrs}>${content}</span>` : content;
-    });
+    let html = parseDslRecursive(dsl);
 
-    // Convert LEGACY expressive tags (with optional size)
-    html = html.replace(EXPRESSIVE_DSL_REGEX, (_, style, size, content) => {
-        const sizeAttr = size && size !== 'regular' ? ` data-size="${size}"` : '';
-        return `<span data-expressive data-style="${style}"${sizeAttr}>${content}</span>`;
-    });
-
-    // Convert standalone size tags
-    html = html.replace(SIZE_DSL_REGEX, (_, size, content) => {
-        return size && size !== 'regular'
-            ? `<span data-size="${size}">${content}</span>`
-            : content;
-    });
-
-    // Convert interactive tags
-    html = html.replace(INTERACTIVE_DSL_REGEX, (_, tooltip, word) => {
-        return `<span data-interactive data-tooltip="${tooltip}">${word}</span>`;
-    });
-
-    // Wrap in paragraph if no HTML structure
-    if (!html.includes('<p>') && !html.includes('<br>')) {
+    // Wrap in paragraph if no HTML structure (and not empty)
+    if (html.trim() && !html.includes('<p>') && !html.includes('<br>')) {
         const paragraphs = html.split('\n\n').filter(p => p.trim());
         if (paragraphs.length > 1) {
             html = paragraphs.map(p => `<p>${p}</p>`).join('');
@@ -103,6 +79,144 @@ export function dslToHtml(dsl: string): string {
     }
 
     return html;
+}
+
+/**
+ * Recursive parser for DSL tags
+ */
+function parseDslRecursive(text: string): string {
+    if (!text) return '';
+
+    // Find the first occurrence of ANY opening tag: [tagName ...]
+    const tagMatch = text.match(/\[([a-z]+)(?:\s+([^\]]+)|(?::([^\]]+)))?\]/i);
+
+    if (!tagMatch || tagMatch.index === undefined) {
+        return text; // No more tags
+    }
+
+    const { 0: fullOpenTag, 1: tagName, 2: attrString, 3: legacyVal } = tagMatch;
+    const startIndex = tagMatch.index;
+
+    // Text before the tag
+    const prefix = text.slice(0, startIndex);
+
+    // Find the matching closing tag [/tagName]
+    // We need to account for nesting depth of the SAME tag
+    const remainder = text.slice(startIndex + fullOpenTag.length);
+    const closeTag = `[/${tagName}]`;
+    const openTagStart = `[${tagName}`; // partial match for nested opens
+
+    let depth = 1;
+    let cursor = 0;
+    let contentEndIndex = -1;
+
+    while (cursor < remainder.length) {
+        if (remainder.startsWith(closeTag, cursor)) {
+            depth--;
+            if (depth === 0) {
+                contentEndIndex = cursor;
+                break;
+            }
+            cursor += closeTag.length;
+        } else if (remainder.startsWith(openTagStart, cursor)) {
+            // Check if it's a real open tag (followed by space, colon, or closing bracket)
+            const nextChar = remainder[cursor + openTagStart.length];
+            if (!nextChar || [' ', ':', ']'].includes(nextChar)) {
+                depth++;
+            }
+            cursor += openTagStart.length;
+        } else {
+            cursor++;
+        }
+    }
+
+    if (contentEndIndex === -1) {
+        // No matching closing tag found, treat this open tag as literal text
+        // and continue parsing the rest
+        return prefix + fullOpenTag + parseDslRecursive(remainder);
+    }
+
+    // We found the content block!
+    const rawContent = remainder.slice(0, contentEndIndex);
+    const textAfter = remainder.slice(contentEndIndex + closeTag.length);
+
+    // Recursively parse the inner content
+    const parsedContent = parseDslRecursive(rawContent);
+
+    // Transform the current tag
+    let transformedTag = '';
+
+    switch (tagName.toLowerCase()) {
+        case 'b':
+            transformedTag = `<strong>${parsedContent}</strong>`;
+            break;
+        case 'i':
+            transformedTag = `<em>${parsedContent}</em>`;
+            break;
+        case 'u':
+            transformedTag = `<u>${parsedContent}</u>`;
+            break;
+        case 's':
+            transformedTag = `<s>${parsedContent}</s>`;
+            break;
+        case 'code':
+            transformedTag = `<code>${parsedContent}</code>`;
+            break;
+        case 'style':
+            const attrs = parseStyleAttributes(attrString || '');
+            const dataAttrs = Object.entries(attrs)
+                .map(([key, value]) => `data-${key}="${value}"`)
+                .join(' ');
+            transformedTag = `<span ${dataAttrs}>${parsedContent}</span>`;
+            break;
+        case 'expressive':
+            // Logic for [expressive:style] or [expressive:style:size]
+            // We need to parse the legacyVal part if it exists (captured as group 3 usually for : separated)
+            // But our main regex might have captured it in group 2 or 3 depending on format.
+            // Let's re-parse the fullOpenTag to be sure about format
+
+            // Standardize legacy parsing
+            let style = '';
+            let size = '';
+
+            // Re-match specific legacy format
+            const legacyMatch = fullOpenTag.match(/\[expressive:([a-z_]+)(?::([a-z]+))?\]/i);
+            if (legacyMatch) {
+                style = legacyMatch[1];
+                size = legacyMatch[2];
+            }
+
+            if (style) {
+                const sizeAttr = size && size !== 'regular' ? ` data-size="${size}"` : '';
+                transformedTag = `<span data-expressive data-style="${style}"${sizeAttr}>${parsedContent}</span>`;
+            } else {
+                transformedTag = parsedContent; // Fallback
+            }
+            break;
+        case 'size':
+            // [size:giant]
+            const sizeMatch = fullOpenTag.match(/\[size:([a-z]+)\]/i);
+            const sizeVal = sizeMatch ? sizeMatch[1] : '';
+            if (sizeVal && sizeVal !== 'regular') {
+                transformedTag = `<span data-size="${sizeVal}">${parsedContent}</span>`;
+            } else {
+                transformedTag = parsedContent;
+            }
+            break;
+        case 'interactive':
+            // [interactive:tooltip]
+            const interactiveMatch = fullOpenTag.match(/\[interactive:([^\]]+)\]/i);
+            const tooltip = interactiveMatch ? interactiveMatch[1] : '';
+            transformedTag = `<span data-interactive data-tooltip="${tooltip}">${parsedContent}</span>`;
+            break;
+        default:
+            // Unknown tag, treat as text
+            transformedTag = fullOpenTag + parsedContent + closeTag;
+            break;
+    }
+
+    // Continue parsing the text AFTER this tag block
+    return prefix + transformedTag + parseDslRecursive(textAfter);
 }
 
 /**

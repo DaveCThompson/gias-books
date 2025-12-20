@@ -2,6 +2,10 @@
 
 Guidelines for AI agents working on the Madoodle monorepo.
 
+> **See [docs/SPEC-core.md](docs/SPEC-core.md)** for project spirit and core mechanics.
+> **See [docs/STRATEGY-roadmap.md](docs/STRATEGY-roadmap.md)** for high-level roadmap.
+> **See [docs/SPEC-design-system.md](docs/SPEC-design-system.md)** for styling and tokens.
+
 ---
 
 ## Project Purpose
