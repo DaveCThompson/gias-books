@@ -1,28 +1,16 @@
-# SPEC-rendering: Rendering Engine & UX
+# Rendering Engine Specification
 
-## 🎨 Visual Pipeline
+## 🎨 The Rendering Engine
 
-### 1. View Transitions
-We use the **View Transitions API** to create app-like continuity between pages.
-- **Mechanism**: The browser captures a snapshot of the old state and cross-fades to the new state.
-- **Enhancement**: We use custom CSS animations during the transition to slide pages (`::view-transition-group`).
+### VFX Layer
+- Canvas-based effects (rain, snow, particles) overlaid on the DOM.
+- Controlled by the "Mood" system defined in page data.
+- Optimized for performance (requestAnimationFrame, offscreen canvas where applicable).
 
-### 2. The VFX Layer
-A dedicated `<canvas>` or overlay layer sits atop the content for atmospheric effects.
-- **Particle Systems**: Rain, snow, confetti, floating dust.
-- **Performance**: Rendered independently of the DOM layout cycle.
-- **Scope**: Global (app-wide) or Local (page-specific).
+### Gesture System
+- Uses `@use-gesture/react` for natural touch interactions.
+- Core gestures: Swipe to turn page, long-press for interactions, pinch-zoom (where allowed).
 
-### 3. Gesture System
-Natural touch interaction is primary.
-- **Library**: `@use-gesture/react`.
-- **Interactions**:
-    - **Swipe**: Turn pages (Elastic banding effect on edges).
-    - **Tap**: Reveal controls or trigger interactive words.
-    - **Long Press**: Debug or save state (context dependent).
-
-### 4. Layout Engine
-- **Responsiveness**:
-    - **Mobile**: Stacked layout (Image top, Text bottom) or info-sheet overlay.
-    - **Desktop**: Split-screen (Book spread view).
-- **Scaling**: Fluid typography and spacing using `clamp()` and container queries.
+### View Transitions
+- Mobile-app-like navigation fluidity using the View Transitions API.
+- Semantic transitions based on navigation direction (forward/backward).

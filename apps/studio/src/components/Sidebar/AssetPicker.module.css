@@ -11,7 +11,7 @@
 
 .modal {
     background: var(--color-bg);
-    border-radius: 1rem;
+    border-radius: var(--radius-xl);
     max-width: 600px;
     width: 95%;
     max-height: 80vh;
@@ -37,7 +37,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 1.25rem;
+    padding: var(--space-4) var(--space-5);
     border-bottom: 1px solid var(--color-border);
 }
 
@@ -47,14 +47,14 @@
 }
 
 .closeButton {
-    width: 2rem;
-    height: 2rem;
+    width: var(--space-8);
+    height: var(--space-8);
     border: none;
     background: transparent;
     font-size: 1.5rem;
     cursor: pointer;
     color: var(--color-text-subtle);
-    border-radius: 0.25rem;
+    border-radius: var(--radius-sm);
     transition: background 0.15s;
 }
 
@@ -64,10 +64,10 @@
 
 /* Drop Zone */
 .dropZone {
-    margin: 1rem;
-    padding: 2rem;
+    margin: var(--space-4);
+    padding: var(--space-8);
     border: 2px dashed var(--color-border);
-    border-radius: 0.75rem;
+    border-radius: var(--radius-lg);
     text-align: center;
     cursor: pointer;
     transition: border-color 0.2s, background 0.2s;
@@ -84,7 +84,7 @@
 }
 
 .dropText {
-    margin: 0 0 0.5rem;
+    margin: 0 0 var(--space-2);
     font-size: 0.9375rem;
     color: var(--color-text);
 }
@@ -108,11 +108,11 @@
 .currentSelection {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin: 0 1rem 0.75rem;
-    padding: 0.5rem 0.75rem;
+    gap: var(--space-2);
+    margin: 0 var(--space-4) var(--space-3);
+    padding: var(--space-2) var(--space-3);
     background: var(--color-surface);
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md);
     font-size: 0.875rem;
 }
 
@@ -130,11 +130,11 @@
 }
 
 .clearButton {
-    padding: 0.25rem 0.5rem;
+    padding: var(--space-1) var(--space-2);
     border: none;
     background: var(--color-danger);
     color: var(--color-danger-contrast);
-    border-radius: 0.25rem;
+    border-radius: var(--radius-sm);
     font-size: 0.75rem;
     cursor: pointer;
     transition: opacity 0.15s;
@@ -148,10 +148,10 @@
 .assetGrid {
     flex: 1;
     overflow-y: auto;
-    padding: 0 1rem;
+    padding: 0 var(--space-4);
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 0.75rem;
+    gap: var(--space-3);
     min-height: 150px;
 }
 
@@ -160,16 +160,16 @@
     grid-column: 1 / -1;
     text-align: center;
     color: var(--color-text-subtle);
-    padding: 2rem;
+    padding: var(--space-8);
 }
 
 .assetCard {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0.5rem;
+    padding: var(--space-2);
     border: 2px solid transparent;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md);
     background: var(--color-surface);
     cursor: pointer;
     transition: border-color 0.15s, transform 0.15s;
@@ -186,16 +186,16 @@
 }
 
 .assetPreview {
-    width: 80px;
-    height: 80px;
+    width: var(--space-20);
+    height: var(--space-20);
     object-fit: cover;
-    border-radius: 0.25rem;
+    border-radius: var(--radius-sm);
     background: var(--color-bg);
 }
 
 .playButton {
-    width: 60px;
-    height: 60px;
+    width: var(--space-15);
+    height: var(--space-15);
     border: none;
     border-radius: 50%;
     background: var(--color-primary);
@@ -217,7 +217,7 @@
 }
 
 .assetName {
-    margin-top: 0.5rem;
+    margin-top: var(--space-2);
     font-size: 0.6875rem;
     color: var(--color-text-subtle);
     max-width: 100%;
@@ -228,16 +228,16 @@
 
 /* Footer */
 .footer {
-    padding: 1rem;
+    padding: var(--space-4);
     border-top: 1px solid var(--color-border);
     display: flex;
     justify-content: flex-end;
 }
 
 .cancelButton {
-    padding: 0.5rem 1rem;
+    padding: var(--space-2) var(--space-4);
     border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md);
     background: var(--color-bg);
     color: var(--color-text);
     cursor: pointer;

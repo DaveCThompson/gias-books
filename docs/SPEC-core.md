@@ -1,4 +1,4 @@
-# SPEC-core: Project Philosophy
+# Core Specification
 
 **Madoodle** is a high-craft, mobile-first interactive storybook platform designed to bring digital stories to life with the tangible warmth of physical books and the dynamic magic of the web.
 
@@ -20,3 +20,9 @@ Sound is a first-class citizen, not an afterthought.
 - **Foley & Ambience**: Background loops (rain, cafe noise) that cross-fade smoothly.
 - **Interaction Sounds**: Subtle "pop", "swish", "click" sounds on UI interactions.
 - **Narration**: Word-level timing (future goal) and high-quality voiceovers.
+
+## 🎨 Design Language (The "Feel")
+
+- **Color**: OKLCH space for perceptual uniformity.
+- **Theme**: "Moods" (Calm, Tense, Joyful) drive the entire color palette dynamically.
+- **Responsiveness**: Mobile-first design that scales up to desktop elegantly (split views).

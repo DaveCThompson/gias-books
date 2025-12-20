@@ -1,39 +1,16 @@
-# SPEC-data-model: Content & Data Structure
+# Data Model Specification
 
-## 📚 The Book Model
+## 📚 The Data Model
 
-Content is defined strictly by Zod schemas in `@gia/schemas`.
+### Books
+- **Structure**: JSON-based structure defined in `@gia/content`.
+- **Validation**: Strict Zod schemas in `@gia/schemas`.
+- **Portability**: Books are self-contained bundles (JSON + Assets) ready for static hosting.
 
-### Book Structure
-```typescript
-interface BookData {
-  slug: string;       // URL-safe identifier
-  title: string;
-  author: string;
-  pages: PageData[];  // Ordered list of pages
-}
-```
+### Schemas
+Refer to `packages/schemas/src/index.ts` for the authoritative TypeScript definitions.
 
-### Page Structure
-```typescript
-interface PageData {
-  pageNumber: number;
-  text: string;       // DSL-formatted text
-  illustration?: IllustrationData;
-  mood?: Mood;        // 'calm', 'tense', 'joyful', etc.
-  layout?: 'split' | 'fullbleed';
-  narrationUrl?: string;
-}
-```
-
-## 📦 Portability & Storage
-
-- **Format**: JSON (`data.json`).
-- **Location**: `packages/content/<slug>/data.json`.
-- **Assets**: Images and audio reside in `packages/content/<slug>/assets/`.
-- **Portability**: A book is a self-contained folder. It can be zipped, moved, or hosted anywhere. The Viewer "hydrates" from this static data.
-
-## 🛡 Validation
-
-- **Runtime**: Zod schemas validate data on load (in Studio) and build (in Viewer).
-- **Static Analysis**: TypeScript types are inferred from Zod schemas to ensure compile-time safety.
+**Key Types:**
+- `BookData`: The root object for a book.
+- `PageData`: Individual page content and metadata.
+- `IllustrationData`: Background/layer definitions.

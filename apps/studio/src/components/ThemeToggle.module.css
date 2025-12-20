@@ -2,10 +2,10 @@
 
 .toggle {
     position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    width: 2.5rem;
-    height: 2.5rem;
+    bottom: var(--space-4);
+    right: var(--space-4);
+    width: var(--space-10);
+    height: var(--space-10);
     border-radius: 50%;
     border: 1px solid var(--color-border);
     background: var(--color-surface);

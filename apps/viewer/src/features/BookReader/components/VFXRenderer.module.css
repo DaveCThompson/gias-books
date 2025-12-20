@@ -16,7 +16,7 @@
 
 .sparkle {
     position: absolute;
-    font-size: 1.5rem;
+    font-size: var(--space-6);
     animation: sparkleFloat 2s ease-in-out infinite;
     opacity: 0;
 }

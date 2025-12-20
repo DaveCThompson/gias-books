@@ -17,7 +17,7 @@ A comprehensive modernization of the `@gia/design-system` to implement a "Named 
 *   **Unified Color System**: Implement a Named Color system (Red, Blue, Green...) that is theme-aware.
 *   **OKLCH Backing**: All colors defined via `oklch()` to enable algorithmic Vibrancy and Theme switching.
 *   **Legacy Cleanup**: Remove all deprecated `--color-*` aliases.
-*   **Documentation**: Establish `docs/DESIGN-SYSTEM.md` as the single source of truth.
+*   **Documentation**: Establish `docs/SPEC-design-system.md` as the single source of truth.
 
 ## 3. Scope & Key Initiatives
 ### In Scope (Completed)

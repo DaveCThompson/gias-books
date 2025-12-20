@@ -9,7 +9,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   background-color: var(--color-button-background);
   backdrop-filter: blur(5px);
   border-bottom: 1px solid var(--color-button-border);
@@ -20,7 +20,7 @@
 .rightControls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   flex: 1;
 }
 
@@ -47,8 +47,8 @@
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
   transition: background-color 0.2s;
 }
 
@@ -64,7 +64,7 @@
 .pageInfo {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   font-size: 1rem;
   color: var(--color-text);
   justify-content: center;

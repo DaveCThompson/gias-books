@@ -1,13 +1,13 @@
 .container {
     min-height: 100vh;
-    padding: 2rem;
+    padding: var(--space-8);
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-8);
 }
 
 .header h1 {
@@ -16,11 +16,11 @@
 }
 
 .newButton {
-    padding: 0.75rem 1.5rem;
+    padding: var(--space-3) var(--space-6);
     background: var(--color-primary);
     color: var(--color-primary-contrast);
     border: none;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md);
     font-size: 1rem;
     cursor: pointer;
     transition: opacity 0.15s;
@@ -42,14 +42,14 @@
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
+    gap: var(--space-6);
 }
 
 .card {
     display: flex;
     flex-direction: column;
     background: var(--color-surface);
-    border-radius: 0.75rem;
+    border-radius: var(--radius-lg);
     overflow: hidden;
     text-decoration: none;
     color: inherit;
@@ -74,16 +74,16 @@
 }
 
 .cardInfo {
-    padding: 1rem;
+    padding: var(--space-4);
 }
 
 .cardInfo h2 {
-    margin: 0 0 0.25rem;
+    margin: 0 0 var(--space-1);
     font-size: 1.125rem;
 }
 
 .cardInfo p {
-    margin: 0 0 0.5rem;
+    margin: 0 0 var(--space-2);
     font-size: 0.875rem;
     color: var(--color-text-subtle);
 }
@@ -106,18 +106,18 @@
 
 .modal {
     background: var(--color-bg);
-    padding: 2rem;
-    border-radius: 1rem;
+    padding: var(--space-8);
+    border-radius: var(--radius-xl);
     width: 400px;
     max-width: 90vw;
 }
 
 .modal h2 {
-    margin: 0 0 1.5rem;
+    margin: 0 0 var(--space-6);
 }
 
 .field {
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-4);
 }
 
 .field label {
@@ -125,16 +125,16 @@
     font-size: 0.75rem;
     font-weight: 500;
     color: var(--color-text-subtle);
-    margin-bottom: 0.25rem;
+    margin-bottom: var(--space-1);
     text-transform: uppercase;
 }
 
 .field input {
     width: 100%;
-    padding: 0.75rem;
+    padding: var(--space-3);
     font-size: 1rem;
     border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md);
     background: var(--color-bg);
     color: var(--color-text);
 }
@@ -142,14 +142,14 @@
 .modalActions {
     display: flex;
     justify-content: flex-end;
-    gap: 0.75rem;
-    margin-top: 1.5rem;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
 }
 
 .modalActions button {
-    padding: 0.75rem 1.5rem;
+    padding: var(--space-3) var(--space-6);
     border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md);
     background: var(--color-bg);
     cursor: pointer;
 }

@@ -1,0 +1,18 @@
+:root {
+  /* ═══════════════════════════════════════════════════════════════════════════
+     ANIMATION TOKENS
+     packages/design-system/tokens/animation.css
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  /* ─── Durations ─── */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-morph: 400ms;
+  --duration-fade: 200ms;
+
+  /* ─── Easings ─── */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
